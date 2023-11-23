@@ -1,0 +1,29 @@
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+description = "A web platform for creatives and creators."
+license = "AGPL-3.0"
+repository = "https://github.com/CKAY-9/pinned"
+
+[package]
+name = "pinned-server"
+version.workspace = true
+edition.workspace = true
+description.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[workspace]
+members = [
+  "crates/api",
+  "crates/db",
+]
+
+[workspace.dependencies]
+pinned-api = { version = "0.1.0", path = "./crates/api" }
+pinned-db = { version = "0.1.0", path = "./crates/db" }
+
+[dependencies]
+actix-web = "4.4.0"
+diesel = { version = "2.1.4", default-features = false, features = ["postgres"] }
+serde = { version = "1.0.193", features = ["derive"] }
