@@ -1,5 +1,5 @@
 [package]
-name = "pinned_db"
+name = "pinned_db_schema"
 version.workspace = true
 edition.workspace = true
 description.workspace = true
@@ -7,11 +7,10 @@ license.workspace = true
 repository.workspace = true
 
 [lib]
-name = "pinned_api_routes"
+name = "pinned_db_schema"
 path = "src/lib.rs"
 doctest = false
 
 [dependencies]
 dotenv = { workspace = true }
 diesel = { workspace = true }
-
