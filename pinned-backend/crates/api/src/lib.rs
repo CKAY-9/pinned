@@ -1,14 +1,14 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+use actix_web::web;
+use pinned_api_routes::{
+    configure_user_routes,
+    configure_post_routes
+};
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+// setup broad api routes, see api_routes crates
+pub fn configure(cfg: &mut web::ServiceConfig) {
+    cfg.service(
+        web::scope("/api/v1")
+            .configure(configure_user_routes)
+            .configure(configure_post_routes)
+    );
 }

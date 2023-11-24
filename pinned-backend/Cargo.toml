@@ -6,7 +6,7 @@ license = "AGPL-3.0"
 repository = "https://github.com/CKAY-9/pinned"
 
 [package]
-name = "pinned-server"
+name = "pinned_server"
 version.workspace = true
 edition.workspace = true
 description.workspace = true
@@ -16,14 +16,22 @@ repository.workspace = true
 [workspace]
 members = [
   "crates/api",
+  "crates/api_routes",
   "crates/db",
 ]
 
 [workspace.dependencies]
-pinned-api = { version = "0.1.0", path = "./crates/api" }
-pinned-db = { version = "0.1.0", path = "./crates/db" }
-
-[dependencies]
+pinned_api = { version = "0.1.0", path = "./crates/api" }
+pinned_db = { version = "0.1.0", path = "./crates/db" }
+pinned_api_routes = { version = "0.1.0", path = "./crates/api_routes" }
 actix-web = "4.4.0"
 diesel = { version = "2.1.4", default-features = false, features = ["postgres"] }
 serde = { version = "1.0.193", features = ["derive"] }
+dotenv = "0.15.0"
+
+[dependencies]
+pinned_db = { workspace = true }
+pinned_api = { workspace = true }
+pinned_api_routes = { workspace = true }
+actix-web = { workspace = true }
+
