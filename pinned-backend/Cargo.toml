@@ -18,7 +18,8 @@ members = [
   "crates/api",
   "crates/api_routes",
   "crates/db",
-  "crates/db_schema"
+  "crates/db_schema",
+  "crates/utils"
 ]
 
 [workspace.dependencies]
@@ -26,15 +27,19 @@ pinned_api = { version = "0.1.0", path = "./crates/api" }
 pinned_db = { version = "0.1.0", path = "./crates/db" }
 pinned_db_schema = { version = "0.1.0", path = "./crates/db_schema" }
 pinned_api_routes = { version = "0.1.0", path = "./crates/api_routes" }
+pinned_utils = { version = "0.1.0", path = "./crates/utils" }
 actix-web = "4.4.0"
 diesel = { version = "2.1.4", default-features = false, features = ["postgres"] }
 serde = { version = "1.0.193", features = ["derive"] }
 dotenv = "0.15.0"
+reqwest = "0.11.22"
+serde_json = "1.0"
 
 [dependencies]
 pinned_db = { workspace = true }
 pinned_db_schema = { workspace = true }
 pinned_api = { workspace = true }
 pinned_api_routes = { workspace = true }
+pinned_utils = { workspace = true }
 actix-web = { workspace = true }
 

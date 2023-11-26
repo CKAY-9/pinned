@@ -1,0 +1,32 @@
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+ 
+}
+
+.link {
+  width: fit-content; 
+  padding: 1rem 3rem;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+.link img {
+  width: 2rem;
+  height: 2rem;
+}
+
+#discord {
+  color: white;
+  background-color: #5865F2;
+}
+
+#github {
+  color: white;
+  background-color: #181818;
+}
+
