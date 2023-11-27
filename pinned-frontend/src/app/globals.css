@@ -1,0 +1,23 @@
+:root {
+  --text: #f1f3f4;
+  --background: #151819;
+  --primary: #9f9089;
+  --secondary: #151819;
+  --accent: #897970;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background-color: var(--background);
+}
+
+h1, h2, h3 {
+  margin: 0;
+}
+
+.container {
+  margin: 5rem 10rem;
+  display: flex;
+  flex-direction: column;
+}

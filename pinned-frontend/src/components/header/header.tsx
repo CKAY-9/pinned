@@ -1,15 +1,14 @@
-import "./header.css";
+import Link from "next/link";
+import style from "./header.module.scss";
 
 const Header = () => {
   return (
-    <header>
+    <header className={style.header}>
       <section>
-        <a href="/">
-          <h1>LOGO</h1>
-        </a>
+        <Link href="/">LOGO</Link>
       </section>
       <section>
-        <a href="/user/auth">Login/Register</a>
+        <Link href="/user/login">Login</Link>
       </section>
     </header>
   );
