@@ -7,11 +7,11 @@ license.workspace = true
 repository.workspace = true
 
 [lib]
-name = "pinned_api_routes"
+name = "pinned_db"
 path = "src/lib.rs"
 doctest = false
 
 [dependencies]
 dotenv = { workspace = true }
 diesel = { workspace = true }
-
+pinned_utils = { workspace = true }

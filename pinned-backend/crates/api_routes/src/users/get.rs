@@ -1,5 +1,7 @@
 use std::collections::HashMap;
+use pinned_api_routes::create_connection;
 use pinned_utils::{get_env_var, get_discord_api_url, get_local_api_url};
+use pinned_db_schema::{schema::{self, users}, models::{NewUser, User}};
 use actix_web::{get, Responder, HttpResponse, web, HttpRequest};
 use serde::{Deserialize, Serialize};
 
@@ -19,7 +21,8 @@ pub struct DiscordInitialResponse {
 #[derive(Deserialize)]
 pub struct DiscordUserResponse {
     pub global_name: String,
-    pub avatar: String
+    pub avatar: String,
+    pub id: String 
 }
 
 #[derive(Deserialize)]
@@ -65,7 +68,19 @@ pub async fn discord_user_authentication(data: web::Query<OAuthCode>) -> Result<
         .send()
         .await?;
     let user_response_parsed: DiscordUserResponse = serde_json::from_str(user_response.text().await?.as_str())?;
-    
+
+    let new_user = NewUser {
+        username: user_response_parsed.global_name,
+        avatar: format!("https://cdn.discordapp.com/avatars/{}/{}", user_response_parsed.id, user_response_parsed.avatar),
+        bio: "No bio provided.".to_string(),
+        token: "".to_string()
+    };
+
+    let connection = create_connection();
+    diesel::insert_into(users::table)
+        .values(&new_user)
+        .execute(&connection);
+
     let response: TokenResponse = TokenResponse { message: "Logged in with Discord".to_string(), token: "test".to_string() };
 
     Ok(HttpResponse::Ok().json(&response))
