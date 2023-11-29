@@ -2,6 +2,7 @@ import { DISCORD_OAUTH_LINK, GITHUB_OAUTH_LINK } from "@/api/resources";
 import Header from "@/components/header/header";
 import Link from "next/link";
 import style from "./login.module.scss";
+import LoginClient from "./client";
 
 const LoginPage = () => {
   return (
@@ -21,6 +22,7 @@ const LoginPage = () => {
             </Link>
           }
         </div>
+        <LoginClient />
       </main>
     </>
   );

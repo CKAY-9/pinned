@@ -1,5 +1,7 @@
-import axios from "axios"
+import axios, { AxiosResponse } from "axios"
 import { API_URL } from "../resources";
+import { User } from "./dto";
+import { cookies } from "next/headers";
 
 export const getUserFromID = async (id: number) => {
   const user_request = await axios({
@@ -13,8 +15,15 @@ export const getUserFromID = async (id: number) => {
   return user_request.data;
 }
 
-export const getUserFromToken = async (token: string = "") => {
-  const user_request = await axios({
+export const getUserFromToken = async (token: string = ""): Promise<null | User> => {
+  if (token === "") {
+    let temp_token = cookies().get("token")?.value; 
+    if (temp_token === undefined)
+      return null;
+    token = temp_token;
+  }
+
+  const user_request: AxiosResponse<null | User> = await axios({
     "url": API_URL + "/users",
     "method": "GET",
     "headers": {

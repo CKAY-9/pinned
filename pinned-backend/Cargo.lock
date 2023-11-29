@@ -993,6 +993,7 @@ dependencies = [
  "pinned_db",
  "pinned_db_schema",
  "pinned_utils",
+ "rand",
  "reqwest",
  "serde",
  "serde_json",
@@ -1022,6 +1023,7 @@ name = "pinned_server"
 version = "0.1.0"
 dependencies = [
  "actix-web",
+ "dotenv",
  "pinned_api",
  "pinned_api_routes",
  "pinned_db",

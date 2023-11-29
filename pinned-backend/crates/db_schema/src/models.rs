@@ -5,6 +5,7 @@ use diesel::prelude::*;
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct User {
     pub id: i32,
+    pub oauth_id: String,
     pub bio: String,
     pub username: String,
     pub token: String,
@@ -16,6 +17,7 @@ pub struct User {
 #[diesel(table_name = crate::schema::users)]
 pub struct NewUser {
     pub token: String,
+    pub oauth_id: String,
     pub bio: String,
     pub username: String,
     pub avatar: String,

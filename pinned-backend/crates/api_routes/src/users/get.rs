@@ -1,9 +1,13 @@
-use std::collections::HashMap;
-use pinned_api_routes::create_connection;
+use std::{collections::HashMap, env::args};
+use diesel::{PgConnection, RunQueryDsl, QueryDsl, ExpressionMethods};
+use pinned_db::create_connection;
 use pinned_utils::{get_env_var, get_discord_api_url, get_local_api_url};
-use pinned_db_schema::{schema::{self, users}, models::{NewUser, User}};
-use actix_web::{get, Responder, HttpResponse, web, HttpRequest};
+use pinned_db_schema::{schema::users, models::{NewUser, User}};
+use actix_web::{get, Responder, HttpResponse, web::{self, Redirect}, HttpRequest};
 use serde::{Deserialize, Serialize};
+use sha2::{Sha256, Digest};
+use pinned_db_schema::schema::users::dsl::*;
+use rand::prelude::*;
 
 // Authentication
 
@@ -54,7 +58,7 @@ pub async fn discord_user_authentication(data: web::Query<OAuthCode>) -> Result<
     initial_code_request_data.insert("client_secret", get_env_var("DISCORD_CLIENT_SECRET"));
     initial_code_request_data.insert("code", data.code.to_string());
     initial_code_request_data.insert("grant_type", "authorization_code".to_string());
-    initial_code_request_data.insert("redirect_uri", get_local_api_url() + "/users/discord"); 
+    initial_code_request_data.insert("redirect_uri", get_local_api_url() + "/users/auth/discord"); 
 
     let inital_response = client.post(format!("{}/oauth2/token", get_discord_api_url()))
         .form(&initial_code_request_data)
@@ -69,21 +73,37 @@ pub async fn discord_user_authentication(data: web::Query<OAuthCode>) -> Result<
         .await?;
     let user_response_parsed: DiscordUserResponse = serde_json::from_str(user_response.text().await?.as_str())?;
 
+    let oauth: String = format!("discord-{}", user_response_parsed.id).to_string();
+
+    let user: User = users::table.
+    if user.into().is_ok() {
+
+    }
+
+    let mut rng = rand::thread_rng();
+    let random_number: f64 = rng.gen();
+
+    let mut hasher = Sha256::new();
+    hasher.update(format!("{}{}", user_response_parsed.id, random_number * 2_000_000_000f64).into_bytes());
+
+    let user_token: String = format!("{:X}", hasher.finalize()).to_string();
+
     let new_user = NewUser {
         username: user_response_parsed.global_name,
+        oauth_id: format!("discord-{}", user_response_parsed.id),
         avatar: format!("https://cdn.discordapp.com/avatars/{}/{}", user_response_parsed.id, user_response_parsed.avatar),
         bio: "No bio provided.".to_string(),
-        token: "".to_string()
+        token: user_token.clone()
     };
 
-    let connection = create_connection();
-    diesel::insert_into(users::table)
-        .values(&new_user)
-        .execute(&connection);
+    let mut connection: PgConnection = create_connection();
+    let _ = diesel::insert_into(users::table)
+        .values(new_user)
+        .execute(&mut connection)
+        .expect("Failed to insert user");
+    
 
-    let response: TokenResponse = TokenResponse { message: "Logged in with Discord".to_string(), token: "test".to_string() };
-
-    Ok(HttpResponse::Ok().json(&response))
+    Ok(Redirect::to(format!("{}/user/login?token={}", get_env_var("FRONTEND_HOST"), user_token)))
 }
 
 #[get("/github")]
@@ -122,8 +142,13 @@ pub struct AccountID {
 
 #[get("/")]
 pub async fn get_account(request: HttpRequest, data: web::Query<AccountID>) -> Result<impl Responder, Box<dyn std::error::Error>> {
-    let token = request.headers().get("Authorization").unwrap();
-    let id = data.account_id.to_owned();
+    let headers = request.headers();
+    let user_token = headers.get("Authorization").unwrap();
+    if user_token.len() <= 0 {
+        return Ok(HttpResponse::Unauthorized());
+    }
+
+    let user = users.filter();
 
     Ok(HttpResponse::Ok())
 }
