@@ -9,9 +9,9 @@ use serde::{Deserialize, Serialize};
 use sha2::{Sha256, Digest};
 use pinned_db_schema::schema::users::dsl::*;
 use rand::prelude::*;
+use crate::dto::Message;
 
 // Authentication
-
 #[derive(Deserialize)]
 pub struct OAuthCode {
     pub code: String,
@@ -141,7 +141,6 @@ pub async fn github_user_authentication(data: web::Query<OAuthCode>) -> Result<i
     let oauth = format!("gituhb-{}", user_response_parsed.id);
     let connection = &mut create_connection();
     let user: QueryResult<User> = users.filter(oauth_id.eq(oauth)).first::<User>(connection);
-
     // Check if a user already exists with OAuth provider
     if user.is_ok() {
         // TODO: Update user
@@ -174,16 +173,55 @@ pub async fn github_user_authentication(data: web::Query<OAuthCode>) -> Result<i
 // Information
 #[derive(Deserialize)]
 pub struct AccountID {
-    pub account_id: usize 
+    pub id: i32
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct AccountResponse {
+    pub message: String,
+    pub user: User
 }
 
 #[get("/")]
-pub async fn get_account(request: HttpRequest, data: web::Query<AccountID>) -> Result<impl Responder, Box<dyn std::error::Error>> {
+pub async fn get_account(request: HttpRequest) -> Result<impl Responder, Box<dyn std::error::Error>> {
     let headers = request.headers();
-    let user_token = headers.get("Authorization").unwrap();
-    if user_token.len() <= 0 {
+    let user_token = headers.get("Authorization").unwrap().to_str();
+    if user_token.is_err() {
         return Ok(HttpResponse::Unauthorized());
     }
 
-    Ok(HttpResponse::Ok())
+    let connection = &mut create_connection();
+    let user: QueryResult<User> = users.filter(token.eq(user_token.unwrap())).first(connection);
+    match user {
+        Ok(user) => {
+            let user_response = AccountResponse { message: "Fetched personal account".to_string(), user };
+            Ok(HttpResponse::Ok().json(user_response))
+        },
+        Err(e) => {
+            let error_message = Message { message: e.to_string() };
+            Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(error_message))
+        }
+    }
+}
+
+#[get("/public")]
+pub async fn get_profile(data: web::Query<AccountID>) -> Result<impl Responder, Box<dyn std::error::Error>> {
+    let user_id = data.id;
+    if user_id <= 0 {
+        let error_response = Message { message: "Failed to parse user ID".to_string() };
+        return Ok(HttpResponse::Ok().status(StatusCode::BAD_GATEWAY).json(error_response));
+    }
+
+    let connection = &mut create_connection();
+    let user: QueryResult<User> = users.find(user_id).first(connection);
+    match user {
+        Ok(user) => {
+            let user_response = AccountResponse { message: "Fetched public profile".to_string(), user };
+            Ok(HttpResponse::Ok().json(user_response))
+        },
+        Err(e) => {
+            let error_message = Message { message: e.to_string() };
+            Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(error_message))
+        }
+    }
 }

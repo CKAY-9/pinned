@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 export const getUserFromID = async (id: number) => {
   try {
     const user_request = await axios({
-      "url": API_URL + "/users",
+      "url": API_URL + "/users/public",
       "method": "GET",
       "params": {
         "id": id

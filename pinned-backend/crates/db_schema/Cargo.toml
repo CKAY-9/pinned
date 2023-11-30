@@ -13,5 +13,6 @@ doctest = false
 
 [dependencies]
 dotenv = { workspace = true }
+serde = { workspace = true }
 diesel = { workspace = true }
 pinned_utils = { workspace = true }
