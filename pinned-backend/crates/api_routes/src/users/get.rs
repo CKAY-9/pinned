@@ -5,53 +5,23 @@ use pinned_utils::{get_env_var, get_discord_api_url, get_local_api_url};
 use pinned_db_schema::{schema::users, models::{NewUser, User}};
 use actix_web::{get, Responder, HttpResponse, web::{self, Redirect}, HttpRequest};
 use reqwest::StatusCode;
-use serde::{Deserialize, Serialize};
 use sha2::{Sha256, Digest};
 use pinned_db_schema::schema::users::dsl::*;
 use rand::prelude::*;
 use crate::dto::Message;
+use crate::users::dto::{
+    DiscordUserResponse,
+    DiscordInitialResponse,
+    GithubUserResponse,
+    GithubInitialResponse,
+    AccountID,
+    AccountResponse,
+    OAuthCode
+};
 
 // Authentication
-#[derive(Deserialize)]
-pub struct OAuthCode {
-    pub code: String,
-}
-
-#[derive(Deserialize)]
-pub struct DiscordInitialResponse {
-    pub access_token: String,
-    pub token_type: String
-}
-
-#[derive(Deserialize)]
-pub struct DiscordUserResponse {
-    pub global_name: String,
-    pub avatar: String,
-    pub id: String 
-}
-
-#[derive(Deserialize)]
-pub struct GithubInitialResponse {
-    pub access_token: String,
-    pub token_type: String,
-    pub scope: String
-}
-
-#[derive(Deserialize)]
-pub struct GithubUserResponse {
-    pub login: String,
-    pub avatar_url: String,
-    pub id: u64
-}
-
-#[derive(Serialize)]
-struct TokenResponse {
-    message: String,
-    token: String
-}
-
 #[get("/discord")]
-pub async fn discord_user_authentication(data: web::Query<OAuthCode>) -> Result<impl Responder, Box<dyn std::error::Error>> {
+pub async fn get_discord_user_authentication(data: web::Query<OAuthCode>) -> Result<Redirect, Box<dyn std::error::Error>> {
     let client = reqwest::Client::new();
 
     let mut initial_code_request_data = HashMap::new();
@@ -77,7 +47,7 @@ pub async fn discord_user_authentication(data: web::Query<OAuthCode>) -> Result<
 
     // Prevent parsing invalid data
     if user_response.status() != 200 {
-        return Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).finish());
+        return Ok(Redirect::to(format!("{}/user/login?msg=ue", get_env_var("FRONTEND_HOST"))).permanent());
     }
 
     let user_response_parsed: DiscordUserResponse = serde_json::from_str(user_response.text().await?.as_str())?;
@@ -90,8 +60,7 @@ pub async fn discord_user_authentication(data: web::Query<OAuthCode>) -> Result<
     // Check if a user already exists with OAuth provider
     if user.is_ok() {
         // TODO: Update user
-        let response: TokenResponse = TokenResponse { message: "Logged in with Discord".to_string(), token: user.unwrap().token };
-        return Ok(HttpResponse::Ok().json(response));
+        return Ok(Redirect::to(format!("{}/user/login?token={}", get_env_var("FRONTEND_HOST"), user.unwrap().token)));
     }
 
     let mut rng = rand::thread_rng();
@@ -113,11 +82,11 @@ pub async fn discord_user_authentication(data: web::Query<OAuthCode>) -> Result<
         .execute(connection)
         .expect("Failed to insert user");
 
-    Ok(Redirect::to(format!("{}/user/login?token={}", get_env_var("FRONTEND_HOST"), user_token)))
+    Ok(Redirect::to(format!("{}/user/login?token={}", get_env_var("FRONTEND_HOST"), user_token)).permanent())
 }
 
 #[get("/github")]
-pub async fn github_user_authentication(data: web::Query<OAuthCode>) -> Result<impl Responder, Box<dyn std::error::Error>> {
+pub async fn get_github_user_authentication(data: web::Query<OAuthCode>) -> Result<Redirect, Box<dyn std::error::Error>> {
     let client = reqwest::Client::new();
     
     let initial_token_response = client.post("https://github.com/login/oauth/access_token")
@@ -144,8 +113,7 @@ pub async fn github_user_authentication(data: web::Query<OAuthCode>) -> Result<i
     // Check if a user already exists with OAuth provider
     if user.is_ok() {
         // TODO: Update user
-        let response: TokenResponse = TokenResponse { message: "Logged in with GitHub".to_string(), token: user.unwrap().token };
-        return Ok(HttpResponse::Ok().json(response));
+        return Ok(Redirect::to(format!("{}/user/login?token={}", get_env_var("FRONTEND_HOST"), user.unwrap().token)));
     }
 
     let mut rng = rand::thread_rng();
@@ -171,23 +139,12 @@ pub async fn github_user_authentication(data: web::Query<OAuthCode>) -> Result<i
 }
 
 // Information
-#[derive(Deserialize)]
-pub struct AccountID {
-    pub id: i32
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct AccountResponse {
-    pub message: String,
-    pub user: User
-}
-
 #[get("/")]
 pub async fn get_account(request: HttpRequest) -> Result<impl Responder, Box<dyn std::error::Error>> {
     let headers = request.headers();
     let user_token = headers.get("Authorization").unwrap().to_str();
     if user_token.is_err() {
-        return Ok(HttpResponse::Unauthorized());
+        return Ok(HttpResponse::Ok().status(StatusCode::UNAUTHORIZED).body("Invalid user token"));
     }
 
     let connection = &mut create_connection();
@@ -224,4 +181,9 @@ pub async fn get_profile(data: web::Query<AccountID>) -> Result<impl Responder, 
             Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(error_message))
         }
     }
+}
+
+#[get("/search")]
+pub async fn get_search_users() -> impl Responder {
+    HttpResponse::Ok().body("Search")
 }

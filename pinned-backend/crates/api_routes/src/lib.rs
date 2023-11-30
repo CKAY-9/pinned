@@ -5,8 +5,8 @@ pub mod posts;
 pub mod dto;
 
 use users::{get::{
-    discord_user_authentication, 
-    github_user_authentication, 
+    get_discord_user_authentication, 
+    get_github_user_authentication, 
     get_account, 
     get_profile
 }, delete::delete_user};
@@ -23,8 +23,8 @@ pub fn configure_user_routes(cfg: &mut web::ServiceConfig) {
             .service(delete_user) // authorization header - token
             .service(
                 web::scope("/auth")
-                    .service(discord_user_authentication) // code parameter - provided by oauth
-                    .service(github_user_authentication) // code parameter - provided by oauth
+                    .service(get_discord_user_authentication) // code parameter - provided by oauth
+                    .service(get_github_user_authentication) // code parameter - provided by oauth
             )
     );
 }

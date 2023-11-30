@@ -3,7 +3,7 @@ import { API_URL } from "../resources";
 import { User } from "./dto";
 import { cookies } from "next/headers";
 
-export const getUserFromID = async (id: number) => {
+export const getUserFromID = async (id: number): Promise<null | User> => {
   try {
     const user_request = await axios({
       "url": API_URL + "/users/public",
@@ -38,6 +38,24 @@ export const getUserFromToken = async (token: string = ""): Promise<null | User>
     });
 
     return user_request.data;
+  } catch (ex) {
+    console.log(ex);
+    return null;
+  }
+}
+
+export const searchUsers = async (username: string = "", id: number = 0): Promise<null | User[]> => {
+  try {
+    const users_request: AxiosResponse<User[]> = await axios({
+      "url": API_URL + "/users/search",
+      "method": "GET",
+      "params": {
+        "username": username,
+        "id": id
+      }
+    });
+
+    return users_request.data;
   } catch (ex) {
     console.log(ex);
     return null;
