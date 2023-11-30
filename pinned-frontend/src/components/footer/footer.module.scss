@@ -1,0 +1,26 @@
+.footer {
+  padding: 5rem;
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
+  background-color: var(--primary);
+
+  section {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.links {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+
+  a {
+    img {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+}
+

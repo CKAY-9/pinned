@@ -3,11 +3,23 @@ import Header from "@/components/header/header";
 import Link from "next/link";
 import style from "./login.module.scss";
 import LoginClient from "./client";
+import { getUserFromToken } from "@/api/user/user";
+import Footer from "@/components/footer/footer";
+import { Metadata } from "next";
 
-const LoginPage = () => {
+export const generateMetadata = (): Metadata => {
+  return {
+    "title": "Login to Pinned",
+    "description": "Login to Pinned using your GitHub, and Discord accounts."
+  }
+}
+
+const LoginPage = async () => {
+  const user = await getUserFromToken();
+
   return (
     <>
-      <Header />
+      <Header user={user} />
       <main className="container">
         <h1>User Login</h1>
         <div className={style.oauths}>
@@ -24,6 +36,7 @@ const LoginPage = () => {
         </div>
         <LoginClient />
       </main>
+      <Footer user={user} />
     </>
   );
 }
