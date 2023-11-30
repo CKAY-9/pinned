@@ -22,3 +22,42 @@ pub struct NewUser {
     pub username: String,
     pub avatar: String,
 }
+
+#[derive(Queryable, Selectable)]
+#[diesel(table_name = crate::schema::posts)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
+pub struct Post {
+    pub id: i32,
+    pub file_id: String,
+    pub description: String,
+    pub creator: i32,
+    pub likes: Vec<i32>,
+    pub dislikes: Vec<i32>,
+    pub comments: Vec<i32>
+}
+
+#[derive(Insertable)]
+#[diesel(table_name = crate::schema::posts)]
+pub struct NewPost {
+    pub file_id: String, 
+    pub description: String,
+    pub creator: i32,
+}
+
+#[derive(Queryable, Selectable)]
+#[diesel(table_name = crate::schema::comments)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
+pub struct Comment {
+    pub id: i32,
+    pub creator: i32,
+    pub content: String,
+    pub likes: Vec<i32>,
+    pub dislikes: Vec<i32>
+}
+
+#[derive(Insertable)]
+#[diesel(table_name = crate::schema::comments)]
+pub struct NewComment {
+    pub content: String,
+    pub creator: i32,
+}
