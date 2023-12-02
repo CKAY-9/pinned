@@ -7,10 +7,10 @@ use serde::{Deserialize, Serialize};
 pub struct User {
     pub id: i32,
     pub oauth_id: String,
-    pub bio: String,
     pub username: String,
-    pub token: String,
     pub avatar: String,
+    pub bio: String,
+    pub token: String,
     pub collections: Vec<i32>
 }
 
@@ -22,6 +22,7 @@ pub struct NewUser {
     pub bio: String,
     pub username: String,
     pub avatar: String,
+    pub collections: Vec<i32>
 }
 
 #[derive(Queryable, Selectable)]
@@ -40,9 +41,12 @@ pub struct Post {
 #[derive(Insertable)]
 #[diesel(table_name = crate::schema::posts)]
 pub struct NewPost {
-    pub file_id: String, 
+    pub file_id: String,
     pub description: String,
     pub creator: i32,
+    pub likes: Vec<i32>,
+    pub dislikes: Vec<i32>,
+    pub comments: Vec<i32>
 }
 
 #[derive(Queryable, Selectable)]
@@ -59,6 +63,8 @@ pub struct Comment {
 #[derive(Insertable)]
 #[diesel(table_name = crate::schema::comments)]
 pub struct NewComment {
-    pub content: String,
     pub creator: i32,
+    pub content: String,
+    pub likes: Vec<i32>,
+    pub dislikes: Vec<i32>
 }

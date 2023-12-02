@@ -6,7 +6,7 @@ use pinned_db_schema::schema::users::dsl::*;
 use reqwest::StatusCode;
 use crate::dto::Message;
 
-#[delete("/")]
+#[delete("")]
 pub async fn delete_user(request: HttpRequest) -> Result<impl Responder, Box<dyn std::error::Error>> {
     let auth_header = request.headers().get("Authorization");
     if auth_header.is_none() {

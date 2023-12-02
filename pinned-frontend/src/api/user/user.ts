@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 
 export const getUserFromID = async (id: number): Promise<null | User> => {
   try {
-    const user_request = await axios({
+    const user_request: AxiosResponse<{message: string, user: User}> = await axios({
       "url": API_URL + "/users/public",
       "method": "GET",
       "params": {
@@ -13,7 +13,7 @@ export const getUserFromID = async (id: number): Promise<null | User> => {
       }
     });
 
-    return user_request.data;
+    return user_request.data.user;
   } catch (ex) {
     console.log(ex);
     return null;
@@ -29,7 +29,7 @@ export const getUserFromToken = async (token: string = ""): Promise<null | User>
       token = temp_token;
     }
 
-    const user_request: AxiosResponse<null | User> = await axios({
+    const user_request: AxiosResponse<{message: string, user: User}> = await axios({
       "url": API_URL + "/users",
       "method": "GET",
       "headers": {
@@ -37,7 +37,9 @@ export const getUserFromToken = async (token: string = ""): Promise<null | User>
       }
     });
 
-    return user_request.data;
+    console.log(user_request.data);
+
+    return user_request.data.user;
   } catch (ex) {
     console.log(ex);
     return null;

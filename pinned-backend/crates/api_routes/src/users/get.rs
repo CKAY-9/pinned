@@ -74,7 +74,8 @@ pub async fn get_discord_user_authentication(data: web::Query<OAuthCode>) -> Res
         oauth_id: format!("discord-{}", user_response_parsed.id),
         avatar: format!("https://cdn.discordapp.com/avatars/{}/{}", user_response_parsed.id, user_response_parsed.avatar),
         bio: "No bio provided.".to_string(),
-        token: user_token.clone()
+        token: user_token.clone(),
+        collections: vec![]
     };
 
     let _ = diesel::insert_into(users::table)
@@ -127,7 +128,8 @@ pub async fn get_github_user_authentication(data: web::Query<OAuthCode>) -> Resu
         oauth_id: format!("discord-{}", user_response_parsed.id),
         avatar: user_response_parsed.avatar_url,
         bio: "No bio provided.".to_string(),
-        token: user_token.clone()
+        token: user_token.clone(),
+        collections: vec![] 
     };
 
     let _ = diesel::insert_into(users::table)
@@ -139,7 +141,7 @@ pub async fn get_github_user_authentication(data: web::Query<OAuthCode>) -> Resu
 }
 
 // Information
-#[get("/")]
+#[get("")]
 pub async fn get_account(request: HttpRequest) -> Result<impl Responder, Box<dyn std::error::Error>> {
     let headers = request.headers();
     let user_token = headers.get("Authorization").unwrap().to_str();
@@ -148,13 +150,14 @@ pub async fn get_account(request: HttpRequest) -> Result<impl Responder, Box<dyn
     }
 
     let connection = &mut create_connection();
-    let user: QueryResult<User> = users.filter(token.eq(user_token.unwrap())).first(connection);
+    let user: QueryResult<User> = users.filter(token.eq(user_token.unwrap())).first::<User>(connection);
     match user {
-        Ok(user) => {
-            let user_response = AccountResponse { message: "Fetched personal account".to_string(), user };
+        Ok(u) => {
+            let user_response = AccountResponse { message: "Fetched personal account".to_string(), user: u };
             Ok(HttpResponse::Ok().json(user_response))
         },
         Err(e) => {
+            println!("{}", e.to_string());
             let error_message = Message { message: e.to_string() };
             Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(error_message))
         }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import style from "./header.module.scss";
 import { User } from "@/api/user/dto";
+import Image from "next/image";
 
 const Header = (props: {
   user: User | null
@@ -13,7 +14,10 @@ const Header = (props: {
       <section>
         {props.user === null
           ? <Link href="/user/login">Login</Link>
-          : <Link href={`/user/${props.user.id}`}>My Profile</Link>
+          : <Link href={`/user/${props.user.id}`} className={style.user}>
+            <Image src={props.user.avatar} alt="Profile Picture" sizes="100%" width={0} height={0} className={style.pfp} />
+            <span>{props.user.username}</span>
+          </Link>
         }
       </section>
     </header>

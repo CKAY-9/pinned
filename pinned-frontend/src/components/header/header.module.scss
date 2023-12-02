@@ -5,3 +5,15 @@
   justify-content: space-between;
   background-color: var(--primary);
 }
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .pfp {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+  }
+}
