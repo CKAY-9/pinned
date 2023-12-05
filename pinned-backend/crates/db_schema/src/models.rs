@@ -14,7 +14,7 @@ pub struct User {
     pub collections: Vec<i32>
 }
 
-#[derive(Insertable)]
+#[derive(Insertable, AsChangeset)]
 #[diesel(table_name = crate::schema::users)]
 pub struct NewUser {
     pub token: String,
