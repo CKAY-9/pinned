@@ -37,27 +37,7 @@ export const getUserFromToken = async (token: string = ""): Promise<null | User>
       }
     });
 
-    console.log(user_request.data);
-
     return user_request.data.user;
-  } catch (ex) {
-    console.log(ex);
-    return null;
-  }
-}
-
-export const searchUsers = async (username: string = "", id: number = 0): Promise<null | User[]> => {
-  try {
-    const users_request: AxiosResponse<User[]> = await axios({
-      "url": API_URL + "/users/search",
-      "method": "GET",
-      "params": {
-        "username": username,
-        "id": id
-      }
-    });
-
-    return users_request.data;
   } catch (ex) {
     console.log(ex);
     return null;

@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use diesel::{RunQueryDsl, QueryDsl, ExpressionMethods, QueryResult};
+use diesel::{RunQueryDsl, QueryDsl, ExpressionMethods, QueryResult, SelectableHelper};
 use pinned_db::create_connection;
 use pinned_utils::{get_env_var, get_discord_api_url, get_local_api_url};
 use pinned_db_schema::{schema::users, models::{NewUser, User}};
@@ -16,7 +16,9 @@ use crate::users::dto::{
     GithubInitialResponse,
     AccountID,
     AccountResponse,
-    OAuthCode
+    OAuthCode,
+    SearchRequest,
+    UserSearchResponse
 };
 
 // Authentication
@@ -187,6 +189,18 @@ pub async fn get_profile(data: web::Query<AccountID>) -> Result<impl Responder, 
 }
 
 #[get("/search")]
-pub async fn get_search_users() -> impl Responder {
-    HttpResponse::Ok().body("Search")
+pub async fn get_search_users(data: web::Query<SearchRequest>) -> Result<impl Responder, Box<dyn std::error::Error>> {
+    let name: String = data.username.clone();
+    let identifier: i32 = data.id;
+
+    let connection = &mut create_connection();
+    let results = users
+        .filter(username.eq(name))
+        .limit(10)
+        .select(User::as_select())
+        .load(connection)
+        .expect("Failed to get users");
+
+    let response = UserSearchResponse { users: results };
+    Ok(HttpResponse::Ok().json(response))
 }

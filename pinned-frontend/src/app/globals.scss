@@ -1,18 +1,22 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,500;6..12,600;6..12,700;6..12,800;6..12,900;6..12,1000&display=swap");
 
 :root {
-  --text: #e1e5ff;
-  --background: #00020f;
-  --primary: #021bc0;
-  --secondary: #00041e;
-  --accent: #0221e8;
+  --text: #ffffff;
+  --background: #000000;
+  --primary: #171717;
+  --secondary: #292929;
+  --accent: #424242;
+}
+
+* {
+  font-family: "Nunito Sans", sans-serif;
 }
 
 body {
-  font-family: "Nunito Sans", sans-serif;
   margin: 0;
   color: var(--text);
   background-color: var(--background);
+  font-size: 18px;
 }
 
 a {
@@ -22,6 +26,24 @@ a {
 
 h1, h2, h3 {
   margin: 0;
+}
+
+input, textarea, button {
+  background-color: var(--secondary);
+  color: var(--text);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: 0.35s ease all;
+
+  &:active, &:focus {
+    outline: none;
+    border-radius: 0;
+  }
+}
+
+button:hover, input[type="submit"]:hover {
+  cursor: pointer;
 }
 
 .container {

@@ -4,6 +4,19 @@
   flex-direction: row;
   justify-content: space-between;
   background-color: var(--primary);
+
+  section {
+    display: flex;
+    gap: 1rem;
+    flex-direction: row;
+    align-items: center; 
+  }
+
+  .add {
+    width: 2rem;
+    height: 2rem;
+    filter: invert(1);
+  }
 }
 
 .user {

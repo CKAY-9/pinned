@@ -10,6 +10,18 @@ const Header = (props: {
     <header className={style.header}>
       <section>
         <Link href="/">LOGO</Link>
+        {props.user !== null &&
+          <Link href="/post/new">
+            <Image
+              src="/icons/add.svg"
+              alt="New"
+              sizes="100%"
+              width={0}
+              height={0}
+              className={style.add}
+            />
+          </Link>
+        }
       </section>
       <section>
         {props.user === null

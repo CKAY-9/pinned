@@ -2,6 +2,7 @@ import { getUserFromToken } from "@/api/user/user";
 import Footer from "@/components/footer/footer";
 import Header from "@/components/header/header";
 import { Metadata } from "next";
+import PostSearchClient from "./client";
 
 export const generateMetadata = (): Metadata => {
   return {
@@ -17,6 +18,7 @@ const PostSearchPage = async () => {
     <>
       <Header user={user} /> 
       <main className="container">
+        <PostSearchClient />
       </main>
       <Footer user={user} />
     </>

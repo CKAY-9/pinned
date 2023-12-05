@@ -27,6 +27,7 @@ const Footer = (props: {
         <strong>Posts</strong>
         <Link href="/post/explore">Explore</Link> 
         <Link href="/post/search">Search</Link> 
+        {props.user !== null && <Link href="/post/new">New Post</Link>}
         <Link href="/post/collection/explore">Collections</Link> 
       </section>
       <section>

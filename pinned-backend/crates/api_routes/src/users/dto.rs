@@ -55,3 +55,8 @@ pub struct SearchRequest {
     pub username: String,
     pub id: i32
 }
+
+#[derive(Serialize)]
+pub struct UserSearchResponse {
+    pub users: Vec<User>
+}

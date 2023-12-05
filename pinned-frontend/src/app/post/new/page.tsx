@@ -2,25 +2,32 @@ import { getUserFromToken } from "@/api/user/user";
 import Footer from "@/components/footer/footer";
 import Header from "@/components/header/header";
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
+import NewPostClient from "./client";
 
 export const generateMetadata = (): Metadata => {
   return {
-    "title": "Explore Collections // Pinned",
-    "description": "Explore all public collections on Pinned."
+    "title": "New Post // Pinned",
+    "description": "Create a new post to Pinned."
   }
 }
 
-const PostExplorePage = async () => {
+const NewPostPage = async () => {
   const user = await getUserFromToken();
+
+  if (user === null) {
+    redirect("/user/login");
+  }
 
   return (
     <>
-      <Header user={user} /> 
+      <Header user={user} />
       <main className="container">
+        <NewPostClient user={user} />
       </main>
       <Footer user={user} />
     </>
   );
 }
 
-export default PostExplorePage;
+export default NewPostPage;

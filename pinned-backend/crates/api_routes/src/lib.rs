@@ -8,7 +8,7 @@ use users::{get::{
     get_discord_user_authentication, 
     get_github_user_authentication, 
     get_account, 
-    get_profile
+    get_profile, get_search_users
 }, delete::delete_user};
 use posts::post::{
     create_new_post, 
@@ -21,6 +21,7 @@ pub fn configure_user_routes(cfg: &mut web::ServiceConfig) {
             .service(get_account) // authorization header - token
             .service(get_profile) // id parameter - >0 user id
             .service(delete_user) // authorization header - token
+            .service(get_search_users)
             .service(
                 web::scope("/auth")
                     .service(get_discord_user_authentication) // code parameter - provided by oauth
