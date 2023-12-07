@@ -30,23 +30,23 @@ pub struct NewUser {
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Post {
     pub id: i32,
+    pub title: String,
     pub file_id: String,
     pub description: String,
     pub creator: i32,
     pub likes: Vec<i32>,
     pub dislikes: Vec<i32>,
-    pub comments: Vec<i32>
 }
 
 #[derive(Insertable)]
 #[diesel(table_name = crate::schema::posts)]
 pub struct NewPost {
     pub file_id: String,
+    pub title: String,
     pub description: String,
     pub creator: i32,
     pub likes: Vec<i32>,
     pub dislikes: Vec<i32>,
-    pub comments: Vec<i32>
 }
 
 #[derive(Queryable, Selectable)]
@@ -54,6 +54,7 @@ pub struct NewPost {
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Comment {
     pub id: i32,
+    pub post: i32,
     pub creator: i32,
     pub content: String,
     pub likes: Vec<i32>,
@@ -64,6 +65,7 @@ pub struct Comment {
 #[diesel(table_name = crate::schema::comments)]
 pub struct NewComment {
     pub creator: i32,
+    pub post: i32,
     pub content: String,
     pub likes: Vec<i32>,
     pub dislikes: Vec<i32>

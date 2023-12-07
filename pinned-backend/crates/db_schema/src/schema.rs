@@ -5,6 +5,7 @@ diesel::table! {
         id -> Int4,
         creator -> Int4,
         content -> Text,
+        post -> Int4,
         likes -> Array<Int4>,
         dislikes -> Array<Int4>,
     }
@@ -13,12 +14,12 @@ diesel::table! {
 diesel::table! {
     posts (id) {
         id -> Int4,
+        title -> Text,
         file_id -> Text,
         description -> Text,
         creator -> Int4,
         likes -> Array<Int4>,
         dislikes -> Array<Int4>,
-        comments -> Array<Int4>,
     }
 }
 

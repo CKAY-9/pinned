@@ -37,8 +37,8 @@ pub async fn post_reset_user(request: HttpRequest) -> Result<impl Responder, Box
                 .filter(schema::posts::creator.eq(user.id))
                 .execute(connection);
 
-            let _ = diesel::delete(comments)
-                .filter(schema::posts::creator.eq(user.id))
+            let _ = diesel::delete(schema::comments::table)
+                .filter(schema::comments::creator.eq(user.id))
                 .execute(connection);
 
             Ok(HttpResponse::Ok().body("Reset"))

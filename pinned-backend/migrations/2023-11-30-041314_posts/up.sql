@@ -1,5 +1,6 @@
 CREATE TABLE posts (
   id          SERIAL NOT NULL PRIMARY KEY,
+  title       TEXT NOT NULL,
   file_id     TEXT NOT NULL,
   description TEXT NOT NULL DEFAULT "No description provided.",
   creator     SERIAL NOT NULL,
