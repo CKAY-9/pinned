@@ -2,18 +2,19 @@ import axios from "axios";
 import { uploadFile } from "../cdn/cdn.client";
 import { API_URL } from "../resources";
 import { getCookie } from "@/utils/cookies";
+import { NewPostResponseDTO } from "./dto";
 
-export const newPost = async (data: {
-  title: string,
-  user_id: number,
-  file: File | null,
-  description: string
-}) => {
+export const newPost = async (
+  title: string, 
+  description: string, 
+  upload_file: File | null, 
+  user_id: number
+): Promise<NewPostResponseDTO | null> => {
   try {
     let dest = "";
-    if (data.file != null) {
-      const dest_response = await uploadFile(data.file, {
-        "folder_id": `user_${data.user_id}`,
+    if (upload_file != null) {
+      const dest_response = await uploadFile(upload_file, {
+        "folder_id": `user_${user_id}`,
         "previous_file_dest": ""
       });
       if (dest_response !== null) {
@@ -25,8 +26,8 @@ export const newPost = async (data: {
       "url": API_URL + "/posts",
       "method": "POST",
       "data": {
-        "title": data.title,
-        "description": data.description,
+        "title": title,
+        "description": description,
         "file_dest": dest,
       },
       "headers": {

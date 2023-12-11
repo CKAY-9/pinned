@@ -14,12 +14,13 @@ const NewPostClient = (props: {
 
   const post = async (e: BaseSyntheticEvent) => {
     e.preventDefault();
-    const result = await newPost({
-      "title": title,
-      "user_id": props.user.id,
-      "file": file,
-      "description": description
-    });
+    const result = await newPost(title, description, file, props.user.id);
+    if (result !== null) {
+      createNotification("Successfully created post, redirecting...");
+      window.location.href = `/post/${result.post_id}`
+      return;
+    }
+    createNotification("Failed to create post!");
   }
 
   return (

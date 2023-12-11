@@ -46,6 +46,15 @@ button:hover, input[type="submit"]:hover {
   cursor: pointer;
 }
 
+.notifications {
+  display: flex;
+  flex-direction: column-reverse;
+  position: absolute;
+  z-index: 999;
+  bottom: 1rem;
+  right: 1rem;
+}
+
 .container {
   margin: 5rem 10rem;
   display: flex;

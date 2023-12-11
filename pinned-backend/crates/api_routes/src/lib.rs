@@ -2,8 +2,10 @@ use actix_web::web;
 
 pub mod users;
 pub mod posts;
+pub mod comments;
 pub mod dto;
 
+use comments::{post::create_new_comment, get::get_comment};
 use users::{get::{
     get_discord_user_authentication, 
     get_github_user_authentication, 
@@ -33,5 +35,13 @@ pub fn configure_post_routes(cfg: &mut web::ServiceConfig) {
         web::scope("/posts")
             .service(create_new_post) // authorization header - token
             .service(get_post) // id paramater - >0 post id
+    );
+}
+
+pub fn configure_comment_routes(cfg: &mut web::ServiceConfig) {
+    cfg.service(
+        web::scope("/comments")
+            .service(create_new_comment)
+            .service(get_comment)
     );
 }
