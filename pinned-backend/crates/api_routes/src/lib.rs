@@ -5,14 +5,26 @@ pub mod posts;
 pub mod comments;
 pub mod dto;
 
-use comments::{post::create_new_comment, get::get_comment};
-use users::{get::{
-    get_discord_user_authentication, 
-    get_github_user_authentication, 
-    get_account, 
-    get_profile, get_search_users
-}, delete::delete_user, post::post_reset_user};
-use posts::{post::create_new_post, get::get_post};
+use comments::{
+    post::create_new_comment, 
+    get::get_comment, 
+    delete::delete_comment
+};
+use users::{
+    get::{
+        get_discord_user_authentication, 
+        get_github_user_authentication, 
+        get_account, 
+        get_profile, get_search_users
+    }, 
+    delete::delete_user, 
+    post::post_reset_user
+};
+use posts::{
+    post::create_new_post, 
+    get::get_post, 
+    delete::delete_post
+};
 
 pub fn configure_user_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
@@ -35,13 +47,15 @@ pub fn configure_post_routes(cfg: &mut web::ServiceConfig) {
         web::scope("/posts")
             .service(create_new_post) // authorization header - token
             .service(get_post) // id paramater - >0 post id
+            .service(delete_post) // auth header, post id
     );
 }
 
 pub fn configure_comment_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/comments")
-            .service(create_new_comment)
-            .service(get_comment)
+            .service(create_new_comment) // auth header, new post dto
+            .service(get_comment) // comment id query
+            .service(delete_comment) // auth header, comment id data 
     );
 }

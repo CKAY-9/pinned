@@ -25,7 +25,7 @@ pub struct NewUser {
     pub collections: Vec<i32>
 }
 
-#[derive(Queryable, Selectable)]
+#[derive(Queryable, Selectable, Serialize, Deserialize)]
 #[diesel(table_name = crate::schema::posts)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Post {
@@ -49,7 +49,7 @@ pub struct NewPost {
     pub dislikes: Vec<i32>,
 }
 
-#[derive(Queryable, Selectable)]
+#[derive(Queryable, Selectable, Serialize, Deserialize)]
 #[diesel(table_name = crate::schema::comments)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Comment {
