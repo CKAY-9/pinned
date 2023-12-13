@@ -11,7 +11,7 @@ export const getPostFromID = async (post_id: number): Promise<Post | null> => {
         "post_id": post_id
       }
     });
-    return post_request.data;
+    return post_request.data.post;
   } catch (ex) {
     console.log(ex);
     return null;

@@ -35,7 +35,23 @@ export const getCommentFromID = async (comment_id: number): Promise<Comment | nu
         "comment_id": comment_id
       }
     });
-    return comment_request.data;
+    return comment_request.data.comment;
+  } catch (ex) {
+    console.log(ex);
+    return null;
+  }
+}
+
+export const deleteComment = async (comment_id: number) => {
+  try {
+    const delete_request = await axios({
+      "url": API_URL + "/comments",
+      "method": "DELETE",
+      "data": {
+        "comment_id": comment_id
+      }
+    });
+    return delete_request.data;
   } catch (ex) {
     console.log(ex);
     return null;

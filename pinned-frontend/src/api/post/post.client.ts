@@ -41,3 +41,20 @@ export const newPost = async (
     return null;
   }
 }
+
+export const deletePost = async (post_id: number) => {
+  try {
+    const delete_request = await axios({
+      "url": API_URL + "/posts",
+      "method": "DELETE",
+      "data": {
+        "post_id": post_id
+      }
+    });
+
+    return delete_request.data;
+  } catch (ex) {
+    console.log(ex);
+    return null;
+  }
+}
