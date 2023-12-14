@@ -1,7 +1,7 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, time::SystemTime};
 use diesel::{RunQueryDsl, QueryDsl, ExpressionMethods, QueryResult, SelectableHelper};
 use pinned_db::create_connection;
-use pinned_utils::{get_env_var, get_discord_api_url, get_local_api_url};
+use pinned_utils::{get_env_var, get_discord_api_url, get_local_api_url, iso8601};
 use pinned_db_schema::{schema::users, models::{NewUser, User}};
 use actix_web::{get, Responder, HttpResponse, web::{self, Redirect}, HttpRequest};
 use reqwest::StatusCode;
@@ -73,6 +73,7 @@ pub async fn get_discord_user_authentication(data: web::Query<OAuthCode>) -> Res
 
     let new_user = NewUser {
         username: user_response_parsed.global_name,
+        joined: iso8601(&SystemTime::now()),
         oauth_id: format!("discord-{}", user_response_parsed.id),
         avatar: format!("https://cdn.discordapp.com/avatars/{}/{}", user_response_parsed.id, user_response_parsed.avatar),
         bio: "No bio provided.".to_string(),
@@ -128,6 +129,7 @@ pub async fn get_github_user_authentication(data: web::Query<OAuthCode>) -> Resu
     let new_user = NewUser {
         username: user_response_parsed.login,
         oauth_id: format!("discord-{}", user_response_parsed.id),
+        joined: iso8601(&SystemTime::now()),
         avatar: user_response_parsed.avatar_url,
         bio: "No bio provided.".to_string(),
         token: user_token.clone(),
@@ -152,14 +154,16 @@ pub async fn get_account(request: HttpRequest) -> Result<impl Responder, Box<dyn
     }
 
     let connection = &mut create_connection();
-    let user: QueryResult<User> = users.filter(token.eq(user_token.unwrap())).first::<User>(connection);
+    let user: QueryResult<User> = users.filter(token.eq(user_token.unwrap()))
+        .select(User::as_select())
+        .first::<User>(connection);
+
     match user {
         Ok(u) => {
             let user_response = AccountResponse { message: "Fetched personal account".to_string(), user: u };
             Ok(HttpResponse::Ok().json(user_response))
         },
         Err(e) => {
-            println!("{}", e.to_string());
             let error_message = Message { message: e.to_string() };
             Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(error_message))
         }
@@ -175,7 +179,10 @@ pub async fn get_profile(data: web::Query<AccountID>) -> Result<impl Responder, 
     }
 
     let connection = &mut create_connection();
-    let user: QueryResult<User> = users.find(user_id).first(connection);
+    let user: QueryResult<User> = users.find(user_id)
+        .select(User::as_select()) 
+        .first(connection);
+
     match user {
         Ok(user) => {
             let user_response = AccountResponse { message: "Fetched public profile".to_string(), user };

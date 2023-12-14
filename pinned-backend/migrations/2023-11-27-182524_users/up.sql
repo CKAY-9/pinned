@@ -5,5 +5,6 @@ CREATE TABLE users (
   avatar      TEXT NOT NULL,
   bio         TEXT NOT NULL,
   token       TEXT NOT NULL,
+  joined      TEXT NOT NULL,
   collections INTEGER[] NOT NULL
 );

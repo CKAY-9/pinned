@@ -1,4 +1,4 @@
-const createNotification = (
+export const createNotification = (
   message: string = "No message provided", 
   time_on_screen_ms: number = 5000
 ) => {

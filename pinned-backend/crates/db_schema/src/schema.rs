@@ -3,9 +3,10 @@
 diesel::table! {
     comments (id) {
         id -> Int4,
+        post -> Int4,
         creator -> Int4,
         content -> Text,
-        post -> Int4,
+        posted -> Text,
         likes -> Array<Int4>,
         dislikes -> Array<Int4>,
     }
@@ -17,9 +18,11 @@ diesel::table! {
         title -> Text,
         file_id -> Text,
         description -> Text,
+        posted -> Text,
         creator -> Int4,
         likes -> Array<Int4>,
         dislikes -> Array<Int4>,
+        comments -> Array<Int4>,
     }
 }
 
@@ -31,6 +34,7 @@ diesel::table! {
         avatar -> Text,
         bio -> Text,
         token -> Text,
+        joined -> Text,
         collections -> Array<Int4>,
     }
 }

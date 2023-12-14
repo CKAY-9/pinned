@@ -30,6 +30,8 @@ pinned_api_routes = { version = "0.1.0", path = "./crates/api_routes" }
 pinned_utils = { version = "0.1.0", path = "./crates/utils" }
 sha2 = "0.10.8"
 actix-web = "4.4.0"
+actix-cors = "0.6.5"
+chrono = "0.4.31"
 diesel = { version = "2.1.4", default-features = false, features = ["postgres"] }
 serde = { version = "1.0.193", features = ["derive"] }
 dotenv = "0.15.0"
@@ -44,4 +46,5 @@ pinned_api = { workspace = true }
 pinned_api_routes = { workspace = true }
 pinned_utils = { workspace = true }
 actix-web = { workspace = true }
+actix-cors = { workspace = true }
 dotenv = { workspace = true }

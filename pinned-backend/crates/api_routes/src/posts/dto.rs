@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 pub struct NewPostDTO {
     pub title: String,
     pub file_id: String,
-    pub content: String
+    pub description: String
 }
 
 #[derive(Serialize)]

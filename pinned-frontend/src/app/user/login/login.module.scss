@@ -4,8 +4,16 @@
   gap: 1rem;
 
   .oauth {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
     width: fit-content;
     padding: 1rem 3rem;
     border-radius: 0.5rem;
+
+    img {
+      width: 2rem;
+      height: 2rem;
+    }
   }
 }

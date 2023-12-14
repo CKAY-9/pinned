@@ -6,6 +6,7 @@ export interface NewPostResponseDTO {
 export interface Post {
   id: number,
   title: string,
+  posted: string,
   file_id: string,
   description: string,
   creator: number,

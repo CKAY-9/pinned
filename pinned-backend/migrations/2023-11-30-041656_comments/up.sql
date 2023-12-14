@@ -3,6 +3,7 @@ CREATE TABLE comments (
   post        INTEGER NOT NULL,
   creator     SERIAL NOT NULL,
   content     TEXT NOT NULL,
-  likes       INTEGER[] NOT NULL DEFAULT {},
-  dislikes    INTEGER[] NOT NULL DEFAULT {}
+  posted      TEXT NOT NULL,
+  likes       INTEGER[] NOT NULL,
+  dislikes    INTEGER[] NOT NULL
 );

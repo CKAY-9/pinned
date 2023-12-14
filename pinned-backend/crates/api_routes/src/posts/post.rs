@@ -1,7 +1,10 @@
+use std::time::SystemTime;
+
 use actix_web::{post, Responder, HttpResponse, web, HttpRequest};
-use diesel::{RunQueryDsl, QueryDsl, ExpressionMethods, QueryResult};
+use diesel::{RunQueryDsl, QueryDsl, ExpressionMethods, QueryResult, SelectableHelper};
 use pinned_db::create_connection;
-use pinned_db_schema::{models::{User, NewPost}, schema::{users::{self, token}, posts}};
+use pinned_db_schema::{models::{User, NewPost, Post}, schema::{users::{self, token}, posts}};
+use pinned_utils::iso8601;
 use reqwest::StatusCode;
 use crate::{posts::dto::{NewPostDTO, NewPostOTD}, dto::Message};
 
@@ -21,15 +24,18 @@ pub async fn create_new_post(request: HttpRequest, post: web::Json<NewPostDTO>) 
         Ok(user) => {
             let new_post = NewPost {
                 title: post.title.clone(),
-                description: post.content.clone(),
+                description: post.description.clone(),
                 file_id: post.file_id.clone(),
+                posted: iso8601(&SystemTime::now()),
                 creator: user.id,
                 dislikes: vec![],
-                likes: vec![]
+                likes: vec![],
+                comments: vec![]
             };
 
             let insert = diesel::insert_into(posts::table)
                 .values(new_post)
+                .returning(Post::as_returning())
                 .execute(connection)
                 .expect("Failed to insert user");
 

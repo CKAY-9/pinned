@@ -1,7 +1,10 @@
+use std::time::SystemTime;
+
 use actix_web::{post, Responder, HttpResponse, HttpRequest};
 use diesel::{RunQueryDsl, QueryDsl, ExpressionMethods, QueryResult};
 use pinned_db_schema::{schema::{users::dsl::*, posts::dsl::*, self}, models::{User, NewUser}};
 use pinned_db::create_connection;
+use pinned_utils::iso8601;
 use pinned_db_schema::schema::users::id;
 use reqwest::StatusCode;
 
@@ -26,6 +29,7 @@ pub async fn post_reset_user(request: HttpRequest) -> Result<impl Responder, Box
                 .set(&NewUser {
                     username: user.username,
                     bio: "No bio provided".to_string(), 
+                    joined: iso8601(&SystemTime::now()),
                     avatar: user.avatar,
                     token: user.token,
                     oauth_id: user.oauth_id,

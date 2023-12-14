@@ -28,7 +28,7 @@ export const newPost = async (
       "data": {
         "title": title,
         "description": description,
-        "file_dest": dest,
+        "file_id": dest || "",
       },
       "headers": {
         "Authorization": getCookie("token") || ""

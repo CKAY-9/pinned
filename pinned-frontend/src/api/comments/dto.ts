@@ -2,6 +2,7 @@ export interface Comment {
   id: number,
   creator: number,
   content: string,
+  posted: string,
   post: number,
   likes: number[],
   dislikes: number[]

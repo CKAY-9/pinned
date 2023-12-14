@@ -4,6 +4,7 @@ import { newPost } from "@/api/post/post.client"
 import { User } from "@/api/user/dto"
 import { BaseSyntheticEvent, useState } from "react"
 import style from "./new.module.scss";
+import { createNotification } from "@/utils/notification";
 
 const NewPostClient = (props: {
   user: User 
