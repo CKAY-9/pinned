@@ -42,6 +42,27 @@ export const newPost = async (
   }
 }
 
+export const updatePost = async (post_id: number, title: string, description: string) => {
+  try {
+    const update_request = await axios({
+      "url": API_URL + "/posts",
+      "method": "PUT",
+      "data": {
+        "title": title,
+        "description": description,
+        "post_id": post_id
+      },
+      "headers": {
+        "Authorization": getCookie("token") || ""
+      }
+    });
+    return update_request.data;
+  } catch (ex) {
+    console.log(ex);
+    return null;
+  }
+}
+
 export const deletePost = async (post_id: number) => {
   try {
     const delete_request = await axios({

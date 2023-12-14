@@ -9,8 +9,7 @@ use comments::{
     post::create_new_comment, 
     get::get_comment, 
     delete::delete_comment
-};
-use users::{
+}; use users::{
     get::{
         get_discord_user_authentication, 
         get_github_user_authentication, 
@@ -22,8 +21,12 @@ use users::{
 };
 use posts::{
     post::create_new_post, 
-    get::get_post, 
-    delete::delete_post
+    get::{
+        get_post, 
+        get_today_pinned
+    }, 
+    delete::delete_post, 
+    put::update_post
 };
 
 pub fn configure_user_routes(cfg: &mut web::ServiceConfig) {
@@ -48,6 +51,8 @@ pub fn configure_post_routes(cfg: &mut web::ServiceConfig) {
             .service(create_new_post) // authorization header - token
             .service(get_post) // id paramater - >0 post id
             .service(delete_post) // auth header, post id
+            .service(update_post) // auth header, post id : title : descripition body
+            .service(get_today_pinned)
     );
 }
 

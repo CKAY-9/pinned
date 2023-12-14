@@ -184,7 +184,8 @@ pub async fn get_profile(data: web::Query<AccountID>) -> Result<impl Responder, 
         .first(connection);
 
     match user {
-        Ok(user) => {
+        Ok(mut user) => {
+            user.token = "".to_string(); // TODO: better solution
             let user_response = AccountResponse { message: "Fetched public profile".to_string(), user };
             Ok(HttpResponse::Ok().json(user_response))
         },
@@ -198,16 +199,19 @@ pub async fn get_profile(data: web::Query<AccountID>) -> Result<impl Responder, 
 #[get("/search")]
 pub async fn get_search_users(data: web::Query<SearchRequest>) -> Result<impl Responder, Box<dyn std::error::Error>> {
     let name: String = data.username.clone();
-    let identifier: i32 = data.id;
 
     let connection = &mut create_connection();
-    let results = users
-        .filter(username.eq(name))
+    let results: QueryResult<Vec<User>> = users::table
+        .filter(users::username.eq(name))
         .limit(10)
         .select(User::as_select())
-        .load(connection)
-        .expect("Failed to get users");
+        .load(connection);
 
-    let response = UserSearchResponse { users: results };
+    if results.is_err() {
+        let results_error_message = Message { message: "Failed to complete search".to_string() };
+        return Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(results_error_message));
+    }
+
+    let response = UserSearchResponse { users: results.unwrap() };
     Ok(HttpResponse::Ok().json(response))
 }

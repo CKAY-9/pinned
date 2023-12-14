@@ -20,9 +20,9 @@ const LoginPage = async () => {
 
   return (
     <>
-      <Header user={user} />
-      <main className="container">
-        <h1>User Login</h1>
+      <main className={style.container} style={{"gap": "1rem"}}>
+        <Link href="/">Back</Link>
+        <h1 style={{"textAlign": "center", "fontSize": "3rem", "fontWeight": "900"}}>Pinned</h1>
         <div className={style.oauths}>
           {DISCORD_OAUTH_LINK !== undefined &&
             <Link className={style.oauth} style={{"backgroundColor": "#5865F2"}} href={DISCORD_OAUTH_LINK}>
@@ -51,7 +51,6 @@ const LoginPage = async () => {
         </div>
         <LoginClient />
       </main>
-      <Footer user={user} />
     </>
   );
 }

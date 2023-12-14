@@ -28,6 +28,16 @@ h1, h2, h3 {
   margin: 0;
 }
 
+h1 {
+  font-weight: 900;
+}
+h2 {
+  font-weight: 800;
+}
+h3 {
+  font-weight: 700;
+}
+
 input, textarea, button {
   background-color: var(--secondary);
   color: var(--text);
