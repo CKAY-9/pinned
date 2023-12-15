@@ -9,7 +9,7 @@ pub mod collections;
 use collections::{
     post::create_new_collection, 
     get::get_collection, 
-    put::update_add_to_collection,
+    put::{update_add_to_collection, update_collection},
     delete::delete_collection
 };
 use comments::{
@@ -66,12 +66,12 @@ pub fn configure_user_routes(cfg: &mut web::ServiceConfig) {
 pub fn configure_post_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/posts")
-            .service(create_new_post) // authorization header - token
-            .service(get_post) // id paramater - >0 post id
-            .service(delete_post) // auth header, post id
-            .service(update_post) // auth header, post id : title : descripition body
-            .service(get_today_pinned)
-            .service(update_likes_on_post)
+            .service(create_new_post) // auth header
+            .service(get_post) // post_id parameter
+            .service(delete_post) // auth header, post_id
+            .service(update_post) // auth header, post_id, title, descripition body
+            .service(get_today_pinned) // no inputs 
+            .service(update_likes_on_post) // post_id, type: -1 = dislike, 0 = reset, 1 = like, auth header
     );
 }
 
@@ -87,9 +87,10 @@ pub fn configure_comment_routes(cfg: &mut web::ServiceConfig) {
 pub fn configure_collections_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/collections")
-            .service(create_new_collection)
-            .service(get_collection)
-            .service(update_add_to_collection)
-            .service(delete_collection)
+            .service(create_new_collection) // name, description data, auth header
+            .service(get_collection) // collection_id parameter
+            .service(update_add_to_collection) // collection_id, post_id data, auth header
+            .service(update_collection) // name, description, collection_id data, auth header
+            .service(delete_collection) // collection_id data, auth header
     );
 }

@@ -17,6 +17,13 @@ pub struct NewCollectionsMessage {
 }
 
 #[derive(Deserialize)]
+pub struct UpdateCollectionDTO {
+    pub name: String,
+    pub description: String,
+    pub collection_id: i32
+}
+
+#[derive(Deserialize)]
 pub struct GetCollectionDTO {
     pub collection_id: i32
 }
