@@ -26,6 +26,26 @@ export const createComment = async (
   }
 }
 
+export const likeComment = async (comment_id: number, like_type: number) => {
+  try {
+    const like_request = await axios({
+      "url": API_URL + "/comments/like",
+      "method": "PUT",
+      "data": {
+        "like_type": like_type,
+        "comment_id": comment_id
+      },
+      "headers": {
+        "Authorization": getCookie("token") || ""
+      }
+    });
+    return like_request.data;
+  } catch (ex) {
+    console.log(ex);
+    return null;
+  }
+}
+
 export const getCommentFromID = async (comment_id: number): Promise<Comment | null> => {
   try {
     const comment_request = await axios({

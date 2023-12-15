@@ -26,3 +26,9 @@ pub struct NewCommentMessage {
     pub message: String,
     pub comment_id: i32,
 }
+
+#[derive(Deserialize)]
+pub struct LikeCommentDTO {
+    pub comment_id: i32,
+    pub like_type: i32
+}

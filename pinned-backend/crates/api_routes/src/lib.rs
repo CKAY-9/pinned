@@ -9,13 +9,16 @@ pub mod collections;
 use collections::{
     post::create_new_collection, 
     get::get_collection, 
-    put::{update_add_to_collection, update_collection},
+    put::{
+        update_add_to_collection, 
+        update_collection
+    },
     delete::delete_collection
 };
 use comments::{
     delete::delete_comment, 
     get::get_comment, 
-    post::create_new_comment
+    post::create_new_comment, put::update_likes_on_comment
 };
 use posts::{
     delete::delete_post,
@@ -79,8 +82,9 @@ pub fn configure_comment_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/comments")
             .service(create_new_comment) // auth header, new post dto
-            .service(get_comment) // comment id query
-            .service(delete_comment), // auth header, comment id data
+            .service(get_comment) // comment_id query
+            .service(delete_comment) // auth header, comment_id data
+            .service(update_likes_on_comment) // auth header, comment_id, like_type data 
     );
 }
 
