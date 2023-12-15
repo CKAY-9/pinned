@@ -1,17 +1,33 @@
-use actix_web::{delete, web, HttpRequest, HttpResponse, Responder};
-use diesel::{ExpressionMethods, QueryDsl, QueryResult, RunQueryDsl, SelectableHelper};
+use actix_web::{
+    delete, 
+    web, 
+    HttpRequest, 
+    HttpResponse, 
+    Responder
+};
+use diesel::{
+    ExpressionMethods, 
+    QueryDsl, 
+    QueryResult, 
+    RunQueryDsl, 
+    SelectableHelper
+};
 use pinned_db::create_connection;
 use pinned_db_schema::{
-    models::{Comment, User},
+    models::{
+        Comment, 
+        User
+    },
     schema::{
         comments::{self},
-        users::{self, token},
+        users::{
+            self, 
+            token
+        },
     },
 };
 use reqwest::StatusCode;
-
 use crate::dto::Message;
-
 use super::dto::GetCommentDTO;
 
 #[delete("")]

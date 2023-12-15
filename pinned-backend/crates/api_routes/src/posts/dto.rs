@@ -1,5 +1,8 @@
 use pinned_db_schema::models::Post;
-use serde::{Deserialize, Serialize};
+use serde::{
+    Deserialize, 
+    Serialize
+};
 
 #[derive(Deserialize)]
 pub struct NewPostDTO {
@@ -30,4 +33,10 @@ pub struct GetPostDTO {
 pub struct GetPostMessage {
     pub message: String,
     pub post: Post,
+}
+
+#[derive(Deserialize)]
+pub struct LikePostDTO {
+    pub like_type: i32,
+    pub post_id: i32
 }

@@ -14,6 +14,12 @@
   }
 }
 
+.user_interaction {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
 .creation {
   display: flex;
   flex-direction: column;

@@ -15,7 +15,7 @@ use pinned_db::create_connection;
 use pinned_db_schema::{
     models::{
         User, 
-        NewCollections
+        NewCollection
     }, 
     schema::{
         users, 
@@ -51,7 +51,7 @@ pub async fn create_new_collection(request: HttpRequest, data: web::Json<NewColl
         .first::<User>(connection);
     match user {
         Ok(user) => {
-            let new_collection = NewCollections {
+            let new_collection = NewCollection {
                 name: data.name.clone(),
                 description: data.description.clone(),
                 likes: vec![],

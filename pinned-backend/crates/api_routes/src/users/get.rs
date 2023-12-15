@@ -1,26 +1,69 @@
 use crate::dto::Message;
 use crate::users::dto::{
-    AccountID, AccountResponse, DiscordInitialResponse, DiscordUserResponse, GithubInitialResponse,
-    GithubUserResponse, OAuthCode, SearchRequest, UserCollectionsMessage, UserCommentsMessage,
-    UserPostsDTO, UserPostsMessage, UserSearchResponse,
+    AccountID, 
+    AccountResponse, 
+    DiscordInitialResponse, 
+    DiscordUserResponse, 
+    GithubInitialResponse,
+    GithubUserResponse, 
+    OAuthCode, 
+    SearchRequest, 
+    UserCollectionsMessage, 
+    UserCommentsMessage,
+    UserPostsDTO, 
+    UserPostsMessage, 
+    UserSearchResponse,
 };
 use actix_web::{
     get,
-    web::{self, Redirect},
-    HttpRequest, HttpResponse, Responder,
+    web::{
+        self, 
+        Redirect
+    },
+    HttpRequest, 
+    HttpResponse, 
+    Responder,
 };
-use diesel::{ExpressionMethods, QueryDsl, QueryResult, RunQueryDsl, SelectableHelper};
+use diesel::{
+    ExpressionMethods, 
+    QueryDsl, 
+    QueryResult, 
+    RunQueryDsl, 
+    SelectableHelper
+};
 use pinned_db::create_connection;
 use pinned_db_schema::schema::users::dsl::*;
 use pinned_db_schema::{
-    models::{Collection, Comment, NewUser, Post, User},
-    schema::{collections, comments, posts, users},
+    models::{
+        Collection, 
+        Comment, 
+        NewUser, 
+        Post, 
+        User
+    },
+    schema::{
+        collections, 
+        comments, 
+        posts, 
+        users
+    },
 };
-use pinned_utils::{get_discord_api_url, get_env_var, get_local_api_url, iso8601};
+use pinned_utils::{
+    get_discord_api_url, 
+    get_env_var, 
+    get_local_api_url, 
+    iso8601
+};
 use rand::prelude::*;
 use reqwest::StatusCode;
-use sha2::{Digest, Sha256};
-use std::{collections::HashMap, time::SystemTime};
+use sha2::{
+    Digest, 
+    Sha256
+};
+use std::{
+    collections::HashMap, 
+    time::SystemTime
+};
 
 // Authentication
 #[get("/discord")]

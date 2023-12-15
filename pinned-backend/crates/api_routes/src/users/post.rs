@@ -1,16 +1,32 @@
 use std::time::SystemTime;
 
-use actix_web::{post, HttpRequest, HttpResponse, Responder};
-use diesel::{ExpressionMethods, QueryDsl, QueryResult, RunQueryDsl};
+use actix_web::{
+    post, 
+    HttpRequest, 
+    HttpResponse, 
+    Responder
+};
+use diesel::{
+    ExpressionMethods, 
+    QueryDsl, 
+    QueryResult, 
+    RunQueryDsl
+};
 use pinned_db::create_connection;
 use pinned_db_schema::schema::users::id;
 use pinned_db_schema::{
-    models::{NewUser, User},
-    schema::{self, posts::dsl::*, users::dsl::*},
+    models::{
+        NewUser, 
+        User
+    },
+    schema::{
+        self, 
+        posts::dsl::*, 
+        users::dsl::*
+    },
 };
 use pinned_utils::iso8601;
 use reqwest::StatusCode;
-
 use crate::dto::Message;
 
 #[post("/reset")]

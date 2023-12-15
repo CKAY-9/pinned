@@ -4,7 +4,7 @@ import Header from "@/components/header/header";
 import style from "./user.module.scss";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import UserCreations from "./client";
+import UserCreations, { UserInteraction } from "./client";
 import { Metadata } from "next";
 import { getUserFromToken } from "@/api/user/user";
 
@@ -41,6 +41,7 @@ const UserPage = async ({params}: {
   }
 
   const self_user = await getUserFromToken();
+  const is_user = self_user !== null && self_user.id === user.id;
 
   return (
     <>
@@ -52,6 +53,7 @@ const UserPage = async ({params}: {
             <h1>{user.username}</h1>
             <span>{user.bio}</span>
           </div>
+          {is_user && <UserInteraction user={self_user} profile={user} />}
         </div>
         <UserCreations user={self_user} profile={user} />
       </main>

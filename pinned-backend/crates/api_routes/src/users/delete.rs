@@ -1,9 +1,22 @@
 use crate::dto::Message;
-use actix_web::{delete, HttpRequest, HttpResponse, Responder};
-use diesel::{ExpressionMethods, QueryDsl, QueryResult, RunQueryDsl};
+use actix_web::{
+    delete, 
+    HttpRequest, 
+    HttpResponse, 
+    Responder
+};
+use diesel::{
+    ExpressionMethods, 
+    QueryDsl, 
+    QueryResult, 
+    RunQueryDsl
+};
 use pinned_db::create_connection;
 use pinned_db_schema::schema::users::dsl::*;
-use pinned_db_schema::{models::User, schema::users};
+use pinned_db_schema::{
+    models::User, 
+    schema::users
+};
 use reqwest::StatusCode;
 
 #[delete("")]

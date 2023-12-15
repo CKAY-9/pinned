@@ -1,9 +1,34 @@
-use actix_web::{put, HttpRequest, Responder, web, HttpResponse};
-use diesel::{RunQueryDsl, QueryResult, QueryDsl, ExpressionMethods};
+use actix_web::{
+    put, 
+    HttpRequest, 
+    Responder, 
+    web, 
+    HttpResponse
+};
+use diesel::{
+    RunQueryDsl, 
+    QueryResult, 
+    QueryDsl, 
+    ExpressionMethods
+};
 use pinned_db::create_connection;
-use pinned_db_schema::{models::{User, Collection, Post}, schema::{users, collections, posts}};
+use pinned_db_schema::{
+    models::{
+        User, 
+        Collection, 
+        Post
+    }, 
+    schema::{
+        users, 
+        collections, 
+        posts
+    }
+};
 use reqwest::StatusCode;
-use crate::{collections::dto::AddToCollectionDTO, dto::Message};
+use crate::{
+    collections::dto::AddToCollectionDTO, 
+    dto::Message
+};
 
 #[put("/add")]
 pub async fn update_add_to_collection(request: HttpRequest, data: web::Json<AddToCollectionDTO>) -> Result<impl Responder, Box<dyn std::error::Error>> {

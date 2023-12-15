@@ -8,7 +8,9 @@ pub mod collections;
 
 use collections::{
     post::create_new_collection, 
-    get::get_collection, put::update_add_to_collection
+    get::get_collection, 
+    put::update_add_to_collection,
+    delete::delete_collection
 };
 use comments::{
     delete::delete_comment, 
@@ -22,7 +24,10 @@ use posts::{
         get_today_pinned
     },
     post::create_new_post,
-    put::update_post,
+    put::{
+        update_post, 
+        update_likes_on_post
+    },
 };
 use users::{
     delete::delete_user,
@@ -65,7 +70,8 @@ pub fn configure_post_routes(cfg: &mut web::ServiceConfig) {
             .service(get_post) // id paramater - >0 post id
             .service(delete_post) // auth header, post id
             .service(update_post) // auth header, post id : title : descripition body
-            .service(get_today_pinned),
+            .service(get_today_pinned)
+            .service(update_likes_on_post)
     );
 }
 
@@ -84,5 +90,6 @@ pub fn configure_collections_routes(cfg: &mut web::ServiceConfig) {
             .service(create_new_collection)
             .service(get_collection)
             .service(update_add_to_collection)
+            .service(delete_collection)
     );
 }

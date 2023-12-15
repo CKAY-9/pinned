@@ -25,7 +25,8 @@ use diesel::{
 use pinned_db::create_connection;
 use pinned_db_schema::{
     models::Post, 
-    schema::posts};
+    schema::posts
+};
 use reqwest::StatusCode;
 
 #[get("")]

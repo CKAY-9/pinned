@@ -96,7 +96,7 @@ pub struct Collection {
 
 #[derive(Insertable)]
 #[diesel(table_name = crate::schema::collections)]
-pub struct NewCollections {
+pub struct NewCollection {
     pub name: String,
     pub description: String,
     pub linked_posts: Vec<i32>,

@@ -1,5 +1,13 @@
-use pinned_db_schema::models::{Collection, Comment, Post, User};
-use serde::{Deserialize, Serialize};
+use pinned_db_schema::models::{
+    Collection, 
+    Comment, 
+    Post, 
+    User
+};
+use serde::{
+    Deserialize, 
+    Serialize
+};
 
 #[derive(Deserialize)]
 pub struct OAuthCode {

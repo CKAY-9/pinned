@@ -1,11 +1,27 @@
 use crate::{
-    comments::dto::{GetCommentDTO, GetCommentMessage},
+    comments::dto::{
+        GetCommentDTO, 
+        GetCommentMessage
+    },
     dto::Message,
 };
-use actix_web::{get, web, HttpResponse, Responder};
-use diesel::{QueryDsl, QueryResult, RunQueryDsl, SelectableHelper};
+use actix_web::{
+    get, 
+    web, 
+    HttpResponse, 
+    Responder
+};
+use diesel::{
+    QueryDsl, 
+    QueryResult, 
+    RunQueryDsl, 
+    SelectableHelper
+};
 use pinned_db::create_connection;
-use pinned_db_schema::{models::Comment, schema::comments};
+use pinned_db_schema::{
+    models::Comment, 
+    schema::comments
+};
 use reqwest::StatusCode;
 
 #[get("")]

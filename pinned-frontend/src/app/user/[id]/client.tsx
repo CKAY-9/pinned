@@ -5,11 +5,23 @@ import style from "./user.module.scss";
 import { useEffect, useState } from "react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { Post } from "@/api/post/dto";
-import { getUserCollections, getUserComments, getUserPosts } from "@/api/user/user.client";
+import { getUserCollections, getUserComments, getUserPosts, logoutUser } from "@/api/user/user.client";
 import UserPosts from "./posts";
 import UserCollections from "./collections";
 import UserComments from "./comments";
 import Link from "next/link";
+
+export const UserInteraction = (props: {
+  profile: User,
+  user: User | null
+}) => {
+  return (
+    <div className={style.user_interaction}>
+      <button onClick={logoutUser} className="impact">Logout</button>
+      <Link href={`/user/settings`} className="impact">Settings</Link>
+    </div>
+  );
+}
 
 export const UserCreations = (props: {
   profile: User,

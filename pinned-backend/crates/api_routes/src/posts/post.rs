@@ -1,17 +1,36 @@
 use std::time::SystemTime;
-
 use crate::{
     dto::Message,
-    posts::dto::{NewPostDTO, NewPostOTD},
+    posts::dto::{
+        NewPostDTO, 
+        NewPostOTD
+    },
 };
-use actix_web::{post, web, HttpRequest, HttpResponse, Responder};
-use diesel::{ExpressionMethods, QueryDsl, QueryResult, RunQueryDsl};
+use actix_web::{
+    post, 
+    web, 
+    HttpRequest, 
+    HttpResponse, 
+    Responder
+};
+use diesel::{
+    ExpressionMethods, 
+    QueryDsl, 
+    QueryResult, 
+    RunQueryDsl
+};
 use pinned_db::create_connection;
 use pinned_db_schema::{
-    models::{NewPost, User},
+    models::{
+        NewPost, 
+        User
+    },
     schema::{
         posts,
-        users::{self, token},
+        users::{
+            self, 
+            token
+        },
     },
 };
 use pinned_utils::iso8601;

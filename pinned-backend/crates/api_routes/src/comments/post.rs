@@ -1,21 +1,41 @@
-use actix_web::{post, web, HttpRequest, HttpResponse, Responder};
-use diesel::{ExpressionMethods, QueryDsl, QueryResult, RunQueryDsl, SelectableHelper};
+use actix_web::{
+    post, 
+    web, 
+    HttpRequest, 
+    HttpResponse, 
+    Responder
+};
+use diesel::{
+    ExpressionMethods, 
+    QueryDsl, 
+    QueryResult, 
+    RunQueryDsl, 
+    SelectableHelper
+};
 use pinned_db::create_connection;
 use pinned_db_schema::{
-    models::{NewComment, Post, User},
+    models::{
+        NewComment, 
+        Post, 
+        User
+    },
     schema::{
-        comments::{self, id},
+        comments,
         posts::{self},
-        users::{self, token},
+        users::{
+            self, 
+            token
+        },
     },
 };
 use pinned_utils::iso8601;
 use reqwest::StatusCode;
 use std::time::SystemTime;
-
 use crate::dto::Message;
-
-use super::dto::{NewCommentDTO, NewCommentMessage};
+use super::dto::{
+    NewCommentDTO, 
+    NewCommentMessage
+};
 
 #[post("")]
 pub async fn create_new_comment(
@@ -80,7 +100,7 @@ pub async fn create_new_comment(
 
             let insert = insert_result.unwrap();
 
-            post_unwrap.comments.push(0);
+            post_unwrap.comments.push(insert.0);
 
             let _ = diesel::update(posts::table)
                 .filter(posts::id.eq(post.post.clone()))
