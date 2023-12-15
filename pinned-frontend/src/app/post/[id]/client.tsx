@@ -8,23 +8,14 @@ import { useEffect, useState } from "react";
 import { getUserFromID } from "@/api/user/user.client";
 import LoadingWheel from "@/components/loading/loading";
 import Link from "next/link";
+import UserChip from "@/components/user-chip/user-chip";
 
 const PostClient = (props: {
   post: Post,
   user: User | null
 }) => {
-  const [creator, setCreator] = useState<null | User>(null);
-  const [loading_creator, setLoadingCreator] = useState<boolean>(true);
   const is_owner = props.user?.id == props.post.creator;
     
-  useEffect(() => {
-    (async () => {
-      const get_creator = await getUserFromID(props.post.creator);
-      setCreator(get_creator);
-      setLoadingCreator(false);
-    })();
-  }, [props.post.creator]);
-
   return (
     <>
       <div className={style.post_container}>
@@ -53,22 +44,7 @@ const PostClient = (props: {
             <span>{props.post.dislikes.length}</span>
           </button>
         </section>
-        {loading_creator 
-          ? <div className={style.creator}>
-            <LoadingWheel size_in_rems={2} />
-          </div>
-          : <Link className={style.creator} href={`/user/${creator?.id || 0}`}>
-            <Image 
-              src={creator?.avatar || ""}
-              alt="Creator PFP"
-              sizes="100%"
-              width={0}
-              height={0}
-              className={style.pfp}
-            />
-            <span>{creator?.username || ""}</span>
-          </Link>
-        }
+        <UserChip user_id={props.post.creator} />
         <p>{props.post.description}</p>
       </div>
       <div>

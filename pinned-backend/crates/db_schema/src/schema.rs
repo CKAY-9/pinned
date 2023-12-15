@@ -1,6 +1,20 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
+    collections (id) {
+        id -> Int4,
+        name -> Text,
+        description -> Text,
+        linked_posts -> Array<Int4>,
+        linked_comments -> Array<Int4>,
+        recommended_collections -> Array<Int4>,
+        creator -> Int4,
+        likes -> Array<Int4>,
+        dislikes -> Array<Int4>,
+    }
+}
+
+diesel::table! {
     comments (id) {
         id -> Int4,
         post -> Int4,
@@ -39,8 +53,4 @@ diesel::table! {
     }
 }
 
-diesel::allow_tables_to_appear_in_same_query!(
-    comments,
-    posts,
-    users,
-);
+diesel::allow_tables_to_appear_in_same_query!(collections, comments, posts, users,);

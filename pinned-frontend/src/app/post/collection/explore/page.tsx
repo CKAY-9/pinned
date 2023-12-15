@@ -5,8 +5,8 @@ import { Metadata } from "next";
 
 export const generateMetadata = (): Metadata => {
   return {
-    "title": "Explore Posts // Pinned",
-    "description": "Explore all the public posts on Pinned."
+    "title": "Explore Collections // Pinned",
+    "description": "Explore all the public collections on Pinned."
   }
 }
 
@@ -17,6 +17,7 @@ const PostExplorePage = async () => {
     <>
       <Header user={user} />
       <main className="container">
+        <h1>Explore Collections</h1>
       </main>
       <Footer user={user} />
     </>

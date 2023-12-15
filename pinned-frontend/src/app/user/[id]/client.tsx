@@ -9,9 +9,11 @@ import { getUserCollections, getUserComments, getUserPosts } from "@/api/user/us
 import UserPosts from "./posts";
 import UserCollections from "./collections";
 import UserComments from "./comments";
+import Link from "next/link";
 
 export const UserCreations = (props: {
-  profile: User
+  profile: User,
+  user: User | null
 }) => {
   const params = useSearchParams();
   const router = useRouter();
@@ -55,6 +57,8 @@ export const UserCreations = (props: {
     router.push(pathname + "?" + "view=" + view.view);
   }
 
+  const is_user = (props.user !== null && props.user !== undefined) && (props.user.id === props.profile.id);
+
   return (
     <>
       <section className={style.nav_buttons}>
@@ -63,9 +67,23 @@ export const UserCreations = (props: {
         <button onClick={() => changeView({index: 2, view: "comments"})} style={{"backgroundColor": current_view === 2 ? "var(--primary)" : "transparent"}}>Comments</button>
       </section>
       <section>
-        <div style={{"display": current_view === 0 ? "block" : "none"}}><UserPosts posts={user_posts} /></div>
-        <div style={{"display": current_view === 1 ? "block" : "none"}}><UserCollections collections={user_collections} /></div>
-        <div style={{"display": current_view === 2 ? "block" : "none"}}><UserComments comments={user_comments} /></div>
+        <div style={{"display": current_view === 0 ? "flex" : "none"}} className={style.creation}>
+          {is_user && <>
+            <Link className={`${style.interact} impact`} href="/post/new">New Post</Link> 
+          </>
+          }
+          <UserPosts posts={user_posts} />
+        </div>
+        <div style={{"display": current_view === 1 ? "flex" : "none"}} className={style.creation}>
+          {is_user && <>
+            <Link className={`${style.interact} impact`} href="/post/collection/new">New Collection</Link> 
+          </>
+          }
+          <UserCollections collections={user_collections} />
+        </div>
+        <div style={{"display": current_view === 2 ? "flex" : "none"}} className={style.creation}>  
+          <UserComments comments={user_comments} />
+        </div>
       </section>
     </>
   );

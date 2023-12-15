@@ -12,7 +12,7 @@ pub struct User {
     pub bio: String,
     pub token: String,
     pub joined: String,
-    pub collections: Vec<i32>
+    pub collections: Vec<i32>,
 }
 
 #[derive(Insertable, AsChangeset)]
@@ -24,7 +24,7 @@ pub struct NewUser {
     pub joined: String,
     pub username: String,
     pub avatar: String,
-    pub collections: Vec<i32>
+    pub collections: Vec<i32>,
 }
 
 #[derive(Queryable, Selectable, Serialize, Deserialize)]
@@ -39,7 +39,7 @@ pub struct Post {
     pub creator: i32,
     pub likes: Vec<i32>,
     pub dislikes: Vec<i32>,
-    pub comments: Vec<i32>
+    pub comments: Vec<i32>,
 }
 
 #[derive(Insertable, Debug)]
@@ -65,7 +65,7 @@ pub struct Comment {
     pub posted: String,
     pub content: String,
     pub likes: Vec<i32>,
-    pub dislikes: Vec<i32>
+    pub dislikes: Vec<i32>,
 }
 
 #[derive(Insertable)]
@@ -76,5 +76,33 @@ pub struct NewComment {
     pub posted: String,
     pub content: String,
     pub likes: Vec<i32>,
-    pub dislikes: Vec<i32>
+    pub dislikes: Vec<i32>,
+}
+
+#[derive(Queryable, Selectable, Serialize, Deserialize)]
+#[diesel(table_name = crate::schema::collections)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
+pub struct Collection {
+    pub id: i32,
+    pub name: String,
+    pub description: String,
+    pub linked_posts: Vec<i32>,
+    pub linked_comments: Vec<i32>,
+    pub recommended_collections: Vec<i32>,
+    pub creator: i32,
+    pub likes: Vec<i32>,
+    pub dislikes: Vec<i32>,
+}
+
+#[derive(Insertable)]
+#[diesel(table_name = crate::schema::collections)]
+pub struct NewCollections {
+    pub name: String,
+    pub description: String,
+    pub linked_posts: Vec<i32>,
+    pub linked_comments: Vec<i32>,
+    pub recommended_collections: Vec<i32>,
+    pub creator: i32,
+    pub likes: Vec<i32>,
+    pub dislikes: Vec<i32>,
 }

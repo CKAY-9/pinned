@@ -34,7 +34,7 @@ const NewPostClient = (props: {
         <input type="file" onChange={(e: BaseSyntheticEvent) => setFile(e.target.files[0])} />
         <label>Description</label>
         <textarea placeholder="Post Description" minLength={0} maxLength={500} required={true} cols={50} rows={10} onChange={(e: BaseSyntheticEvent) => setDescription(e.target.value)} />
-        <input type="submit" value="Post" />
+        <button className="impact">Create Post</button>
       </form>
     </>
   );

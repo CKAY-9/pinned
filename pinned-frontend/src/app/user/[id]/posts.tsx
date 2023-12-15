@@ -13,7 +13,6 @@ const UserPosts = (props: {
         return (
           <Link className={style.post} key={index} href={`/post/${post.id}`}>
             <h1>{post.title}</h1> 
-            
             <p>{post.description.substring(0, 50)}</p>
           </Link>
         )

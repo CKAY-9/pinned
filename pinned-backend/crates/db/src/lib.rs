@@ -1,4 +1,4 @@
-use diesel::{PgConnection, Connection};
+use diesel::{Connection, PgConnection};
 use dotenv::dotenv;
 use pinned_utils::get_env_var;
 

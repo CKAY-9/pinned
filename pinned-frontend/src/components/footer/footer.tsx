@@ -2,12 +2,13 @@ import Link from "next/link";
 import style from "./footer.module.scss";
 import { User } from "@/api/user/dto";
 import Image from "next/image";
+import FooterClient from "./client";
 
 const Footer = (props: {
   user: User | null
 }) => {
   return (
-    <footer className={style.footer}>
+    <footer id="footer_main" className={style.footer}>
       <section>
         <h1>Pinned</h1>
         <span>Made with ❤️ by <Link href="/team">the team</Link></span>
@@ -28,7 +29,12 @@ const Footer = (props: {
         <Link href="/post/explore">Explore</Link> 
         <Link href="/post/search">Search</Link> 
         {props.user !== null && <Link href="/post/new">New Post</Link>}
-        <Link href="/post/collection/explore">Collections</Link> 
+      </section>
+      <section>
+        <strong>Collections</strong>
+        <Link href="/post/collection/explore">Explore</Link> 
+        <Link href="/post/collection/search">Search</Link> 
+        {props.user !== null && <Link href="/post/collection/new">New Collection</Link>}
       </section>
       <section>
         <strong>Users</strong>
@@ -38,6 +44,7 @@ const Footer = (props: {
           : <Link href={`/user/${props.user.id}`}>My Profile</Link>
         }
       </section>
+      <FooterClient />
     </footer>
   );
 }

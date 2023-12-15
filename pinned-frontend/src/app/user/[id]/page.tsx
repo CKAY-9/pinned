@@ -41,7 +41,6 @@ const UserPage = async ({params}: {
   }
 
   const self_user = await getUserFromToken();
-  const is_self = (self_user === null ? 0 : self_user.id) === user.id;
 
   return (
     <>
@@ -54,7 +53,7 @@ const UserPage = async ({params}: {
             <span>{user.bio}</span>
           </div>
         </div>
-        <UserCreations profile={user} />
+        <UserCreations user={self_user} profile={user} />
       </main>
       <Footer user={self_user} />
     </>

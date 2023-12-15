@@ -19,9 +19,16 @@ body {
   font-size: 18px;
 }
 
-a {
+a, button {
   color: var(--text);
   text-decoration: none;
+
+  &.impact {
+    padding: 1rem 2rem;
+    background: var(--accent);
+    font-weight: 900;
+    text-transform: uppercase;
+  }
 }
 
 h1, h2, h3 {
@@ -59,10 +66,16 @@ button:hover, input[type="submit"]:hover {
 .notifications {
   display: flex;
   flex-direction: column-reverse;
-  position: absolute;
+  position: fixed;
   z-index: 999;
   bottom: 1rem;
   right: 1rem;
+
+  .notification {
+    background-color: var(--accent);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+  }
 }
 
 .container {

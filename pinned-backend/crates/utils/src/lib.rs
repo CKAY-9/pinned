@@ -1,12 +1,12 @@
-use std::env;
 use chrono::prelude::{DateTime, Utc};
+use std::env;
 
 pub fn get_env_var(key: &str) -> String {
     let env_var: String = env::var(key).unwrap_or_else(|e| {
         println!("{}", e);
         "".to_owned()
     });
-    env_var 
+    env_var
 }
 
 pub fn get_discord_api_url() -> String {
