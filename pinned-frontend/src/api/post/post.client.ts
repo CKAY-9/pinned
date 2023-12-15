@@ -3,7 +3,6 @@ import { uploadFile } from "../cdn/cdn.client";
 import { API_URL } from "../resources";
 import { getCookie } from "@/utils/cookies";
 import { NewPostResponseDTO } from "./dto";
-import { request } from "http";
 
 export const newPost = async (
   title: string, 
@@ -75,6 +74,23 @@ export const deletePost = async (post_id: number) => {
     });
 
     return delete_request.data;
+  } catch (ex) {
+    console.log(ex);
+    return null;
+  }
+}
+
+export const likePost = async (like_type: number, post_id: number) => {
+  try {
+    const like_request = await axios({
+      "url": API_URL + "/posts/like",
+      "method": "PUT",
+      "data": {
+        "post_id": post_id,
+        "like_type": like_type
+      }
+    });
+    return like_request.data;
   } catch (ex) {
     console.log(ex);
     return null;

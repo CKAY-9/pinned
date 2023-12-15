@@ -11,6 +11,7 @@ import Popup from "@/components/popup/popup";
 import { Collection } from "@/api/collections/dto";
 import { addToCollection } from "@/api/collections/collections.client";
 import { createNotification } from "@/utils/notification";
+import { likePost } from "@/api/post/post.client";
 
 const AddToCollection = (props: {
   collection: Collection,
@@ -48,6 +49,11 @@ const PostClient = (props: {
       setMyCollections(collections);
     })();
   }, []);
+
+  const like = async (e: BaseSyntheticEvent, like_type: number) => {
+    e.preventDefault();
+    await likePost(like_type, props.post.id);
+  }
     
   return (
     <>
@@ -65,7 +71,7 @@ const PostClient = (props: {
       <div className={style.post_container}>
         <h1>{props.post.title}</h1>
         <section className={style.interaction}>
-          <button className={style.like}>
+          <button onClick={async (e: BaseSyntheticEvent) => await like(e, 1)} className={style.like}>
             <Image
               src="/icons/like.svg"
               alt="Likes"
@@ -76,7 +82,7 @@ const PostClient = (props: {
             />
             <span>{props.post.likes.length}</span>
           </button>
-          <button className={style.like}>
+          <button onClick={async (e: BaseSyntheticEvent) => await like(e, -1)} className={style.like}>
             <Image
               src="/icons/dislike.svg"
               alt="Likes"
