@@ -26,3 +26,9 @@ pub struct GetCollectionMessage {
     pub message: String,
     pub collection: Collection
 }
+
+#[derive(Deserialize)]
+pub struct AddToCollectionDTO {
+    pub collection_id: i32,
+    pub post_id: i32
+}

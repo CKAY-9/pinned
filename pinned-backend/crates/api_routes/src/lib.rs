@@ -8,7 +8,7 @@ pub mod collections;
 
 use collections::{
     post::create_new_collection, 
-    get::get_collection
+    get::get_collection, put::update_add_to_collection
 };
 use comments::{
     delete::delete_comment, 
@@ -83,5 +83,6 @@ pub fn configure_collections_routes(cfg: &mut web::ServiceConfig) {
         web::scope("/collections")
             .service(create_new_collection)
             .service(get_collection)
+            .service(update_add_to_collection)
     );
 }

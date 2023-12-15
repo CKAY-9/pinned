@@ -37,3 +37,23 @@ export const getCollection = async (collection_id: number) => {
     return null;
   }
 }
+
+export const addToCollection = async (collection_id: number, post_id: number) => {
+  try {
+    const add_request = await axios({
+      "url": API_URL + "/collections/add",
+      "method": "PUT",
+      "data": {
+        "collection_id": collection_id,
+        "post_id": post_id
+      },
+      "headers": {
+        "Authorization": getCookie("token") || ""
+      }
+    });
+    return add_request.data;
+  } catch (ex) {
+    console.log(ex);
+    return null;
+  }
+}

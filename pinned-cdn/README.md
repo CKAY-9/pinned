@@ -9,5 +9,5 @@
 
 ```
 pip install [packages]
-flash --app main run
+flask --app main run
 ```
