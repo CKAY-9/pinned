@@ -1,4 +1,4 @@
-import { getUserFromID, getUserFromToken } from "@/api/user/user";
+import { getUserFromID } from "@/api/user/user.client";
 import Footer from "@/components/footer/footer";
 import Header from "@/components/header/header";
 import style from "./user.module.scss";
@@ -6,6 +6,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import UserCreations from "./client";
 import { Metadata } from "next";
+import { getUserFromToken } from "@/api/user/user";
 
 export const generateMetadata = async ({params}: {
   params: {

@@ -2,7 +2,7 @@ use std::{collections::HashMap, time::SystemTime};
 use diesel::{RunQueryDsl, QueryDsl, ExpressionMethods, QueryResult, SelectableHelper};
 use pinned_db::create_connection;
 use pinned_utils::{get_env_var, get_discord_api_url, get_local_api_url, iso8601};
-use pinned_db_schema::{schema::users, models::{NewUser, User}};
+use pinned_db_schema::{schema::{users, posts}, models::{NewUser, User, Post}};
 use actix_web::{get, Responder, HttpResponse, web::{self, Redirect}, HttpRequest};
 use reqwest::StatusCode;
 use sha2::{Sha256, Digest};
@@ -18,7 +18,9 @@ use crate::users::dto::{
     AccountResponse,
     OAuthCode,
     SearchRequest,
-    UserSearchResponse
+    UserSearchResponse,
+    UserPostsDTO,
+    UserPostsMessage
 };
 
 // Authentication
@@ -61,8 +63,16 @@ pub async fn get_discord_user_authentication(data: web::Query<OAuthCode>) -> Res
 
     // Check if a user already exists with OAuth provider
     if user.is_ok() {
-        // TODO: Update user
-        return Ok(Redirect::to(format!("{}/user/login?token={}", get_env_var("FRONTEND_HOST"), user.unwrap().token)));
+        let user_unwrap = user.unwrap();
+
+        let _ = diesel::update(users::table)
+            .filter(users::id.eq(user_unwrap.id))
+            .set((
+                users::username.eq(user_response_parsed.global_name),
+                users::avatar.eq(format!("https://cdn.discordapp.com/avatars/{}/{}", user_response_parsed.id, user_response_parsed.avatar))
+            ))
+            .execute(connection);
+        return Ok(Redirect::to(format!("{}/user/login?token={}", get_env_var("FRONTEND_HOST"), user_unwrap.token)));
     }
 
     let mut rng = rand::thread_rng();
@@ -114,10 +124,20 @@ pub async fn get_github_user_authentication(data: web::Query<OAuthCode>) -> Resu
     let oauth = format!("gituhb-{}", user_response_parsed.id);
     let connection = &mut create_connection();
     let user: QueryResult<User> = users.filter(oauth_id.eq(oauth)).first::<User>(connection);
+
     // Check if a user already exists with OAuth provider
     if user.is_ok() {
-        // TODO: Update user
-        return Ok(Redirect::to(format!("{}/user/login?token={}", get_env_var("FRONTEND_HOST"), user.unwrap().token)));
+        let user_unwrap = user.unwrap();
+
+        let _ = diesel::update(users::table)
+            .filter(users::id.eq(user_unwrap.id))
+            .set((
+                users::username.eq(user_response_parsed.login),
+                users::avatar.eq(user_response_parsed.avatar_url)
+            ))
+            .execute(connection);
+
+        return Ok(Redirect::to(format!("{}/user/login?token={}", get_env_var("FRONTEND_HOST"), user_unwrap.token)));
     }
 
     let mut rng = rand::thread_rng();
@@ -194,6 +214,37 @@ pub async fn get_profile(data: web::Query<AccountID>) -> Result<impl Responder, 
             Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(error_message))
         }
     }
+}
+
+#[get("/posts")]
+pub async fn get_users_posts(data: web::Query<UserPostsDTO>) -> Result<impl Responder, Box<dyn std::error::Error>> {
+    let connection = &mut create_connection();
+
+    let user_result: QueryResult<User> = users::table
+        .find(data.user_id)
+        .select(User::as_select())
+        .first::<User>(connection);
+
+    if user_result.is_err() {
+        let user_message = Message { message: "Failed to get user".to_string() };
+        return Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(user_message));
+    }
+
+    let user_unwrap = user_result.unwrap();
+    let posts_result: QueryResult<Vec<Post>> = posts::table
+        .filter(posts::creator.eq(user_unwrap.id)) 
+        .select(Post::as_select()) 
+        .load(connection);
+
+    if posts_result.is_err() {
+        let posts_message = Message { message: "Failed to get posts".to_string() };
+        return Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(posts_message));
+    }
+
+    let posts_unwrap = posts_result.unwrap();
+
+    let success_message = UserPostsMessage { message: "Fetched user's posts".to_string(), posts: posts_unwrap }; 
+    Ok(HttpResponse::Ok().json(success_message))
 }
 
 #[get("/search")]

@@ -21,5 +21,5 @@ pub struct NewCommentDTO {
 #[derive(Serialize)]
 pub struct NewCommentMessage {
     pub message: String,
-    pub comment_id: usize 
+    pub comment_id: i32 
 }

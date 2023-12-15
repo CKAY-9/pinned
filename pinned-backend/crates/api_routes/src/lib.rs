@@ -14,7 +14,9 @@ use comments::{
         get_discord_user_authentication, 
         get_github_user_authentication, 
         get_account, 
-        get_profile, get_search_users
+        get_profile, 
+        get_search_users, 
+        get_users_posts
     }, 
     delete::delete_user, 
     post::post_reset_user
@@ -37,6 +39,7 @@ pub fn configure_user_routes(cfg: &mut web::ServiceConfig) {
             .service(delete_user) // authorization header - token
             .service(get_search_users) // id and username parameter
             .service(post_reset_user) // authorization header
+            .service(get_users_posts) // user id parameter
             .service(
                 web::scope("/auth")
                     .service(get_discord_user_authentication) // code parameter - provided by oauth

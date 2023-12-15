@@ -3,6 +3,7 @@ import { uploadFile } from "../cdn/cdn.client";
 import { API_URL } from "../resources";
 import { getCookie } from "@/utils/cookies";
 import { NewPostResponseDTO } from "./dto";
+import { request } from "http";
 
 export const newPost = async (
   title: string, 

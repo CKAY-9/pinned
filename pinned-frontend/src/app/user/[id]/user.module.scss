@@ -18,6 +18,8 @@
   display: grid;
   place-content: center;
   grid-template-columns: repeat(auto-fit, minmax(250px, 250px));
+  margin-bottom: 1rem;
+  gap: 1rem;
 
   button {
     color: var(--text);

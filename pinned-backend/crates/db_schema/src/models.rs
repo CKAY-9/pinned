@@ -8,10 +8,10 @@ pub struct User {
     pub id: i32,
     pub oauth_id: String,
     pub username: String,
-    pub joined: String,
     pub avatar: String,
     pub bio: String,
     pub token: String,
+    pub joined: String,
     pub collections: Vec<i32>
 }
 

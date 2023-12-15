@@ -1,0 +1,15 @@
+.posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 250px);
+  gap: 1rem;
+
+  .post {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    height: 250px;
+    background: var(--secondary);
+  }
+}

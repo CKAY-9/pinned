@@ -1,5 +1,5 @@
 use actix_web::{get, Responder, HttpResponse, web};
-use chrono::{Local, DateTime, TimeZone};
+use chrono::{Local, DateTime};
 use diesel::{QueryResult, RunQueryDsl, QueryDsl, SelectableHelper, ExpressionMethods};
 use pinned_db::create_connection;
 use pinned_db_schema::{models::Post, schema::posts};

@@ -1,9 +1,9 @@
 use std::time::SystemTime;
 
 use actix_web::{post, Responder, HttpResponse, web, HttpRequest};
-use diesel::{RunQueryDsl, QueryDsl, ExpressionMethods, QueryResult, SelectableHelper};
+use diesel::{RunQueryDsl, QueryDsl, ExpressionMethods, QueryResult};
 use pinned_db::create_connection;
-use pinned_db_schema::{models::{User, NewPost, Post}, schema::{users::{self, token}, posts}};
+use pinned_db_schema::{models::{User, NewPost}, schema::{users::{self, token}, posts}};
 use pinned_utils::iso8601;
 use reqwest::StatusCode;
 use crate::{posts::dto::{NewPostDTO, NewPostOTD}, dto::Message};
@@ -33,13 +33,18 @@ pub async fn create_new_post(request: HttpRequest, post: web::Json<NewPostDTO>) 
                 comments: vec![]
             };
 
-            let insert = diesel::insert_into(posts::table)
+            let insert_result = diesel::insert_into(posts::table)
                 .values(new_post)
-                .returning(Post::as_returning())
-                .execute(connection)
-                .expect("Failed to insert user");
+                .get_result::<(i32, String, String, String, String, i32, Vec<i32>, Vec<i32>, Vec<i32>)>(connection);
+            
+            if insert_result.is_err() {
+                let insert_message = Message { message: "Failed to create user".to_string() };
+                return Ok(HttpResponse::Ok().status(StatusCode::INTERNAL_SERVER_ERROR).json(insert_message));
+            }
 
-            let success_message = NewPostOTD { message: "Created new post!".to_string(), post_id: insert };
+            let insert = insert_result.unwrap();
+
+            let success_message = NewPostOTD { message: "Created new post!".to_string(), post_id: insert.0 };
             Ok(HttpResponse::Ok().json(success_message))
 
         },

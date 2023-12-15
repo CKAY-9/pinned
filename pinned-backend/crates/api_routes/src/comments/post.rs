@@ -47,8 +47,7 @@ pub async fn create_new_comment(request: HttpRequest, post: web::Json<NewComment
 
             let insert_result = diesel::insert_into(comments::table)
                 .values(new_comment)
-                .returning(id)
-                .execute(connection);
+                .get_result::<(i32, i32, i32, String, String, Vec<i32>, Vec<i32>)>(connection);
 
             if insert_result.is_err() {
                 let insert_error_message = Message { message: "Failed to insert post".to_string() };
@@ -64,7 +63,7 @@ pub async fn create_new_comment(request: HttpRequest, post: web::Json<NewComment
                 .set(posts::comments.eq(post_unwrap.comments))
                 .execute(connection);
 
-            let success_message = NewCommentMessage { message: "Created new comment".to_string(), comment_id: insert };
+            let success_message = NewCommentMessage { message: "Created new comment".to_string(), comment_id: insert.0 };
             Ok(HttpResponse::Ok().json(success_message))
         },
         Err(e) => {

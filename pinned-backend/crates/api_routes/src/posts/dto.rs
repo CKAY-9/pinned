@@ -18,7 +18,7 @@ pub struct UpdatePostDTO {
 #[derive(Serialize)]
 pub struct NewPostOTD {
     pub message: String,
-    pub post_id: usize 
+    pub post_id: i32 
 }
 
 #[derive(Deserialize)]

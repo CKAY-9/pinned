@@ -1,4 +1,4 @@
-use pinned_db_schema::models::User;
+use pinned_db_schema::models::{User, Post};
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
@@ -54,6 +54,17 @@ pub struct AccountResponse {
 pub struct SearchRequest {
     pub username: String,
     pub id: i32
+}
+
+#[derive(Deserialize)]
+pub struct UserPostsDTO {
+    pub user_id: i32
+}
+
+#[derive(Serialize)]
+pub struct UserPostsMessage {
+    pub message: String,
+    pub posts: Vec<Post>
 }
 
 #[derive(Serialize)]

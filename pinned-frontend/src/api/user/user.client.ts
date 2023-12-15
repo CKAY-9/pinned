@@ -21,6 +21,71 @@ export const searchUsers = async (username: string = "", id: number = 0): Promis
   }
 }
 
+export const getUserPosts = async (user_id: number) => {
+  try {
+    const posts_request = await axios({
+      "url": API_URL + "/users/posts",
+      "method": "GET",
+      "params": {
+        "user_id": user_id
+      }
+    });
+    return posts_request.data.posts;
+  } catch (ex) {
+    console.log(ex);
+    return null;
+  }
+}
+
+export const getUserCollections = async (user_id: number) => {
+  try {
+    const posts_request = await axios({
+      "url": API_URL + "/users/collections",
+      "method": "GET",
+      "params": {
+        "user_id": user_id
+      }
+    });
+    return posts_request.data.collections;
+  } catch (ex) {
+    console.log(ex);
+    return null;
+  }
+}
+
+export const getUserComments = async (user_id: number) => {
+  try {
+    const posts_request = await axios({
+      "url": API_URL + "/users/comments",
+      "method": "GET",
+      "params": {
+        "user_id": user_id
+      }
+    });
+    return posts_request.data.comments;
+  } catch (ex) {
+    console.log(ex);
+    return null;
+  }
+}
+
+export const getUserFromID = async (id: number): Promise<null | User> => {
+  try {
+    const user_request: AxiosResponse<{message: string, user: User}> = await axios({
+      "url": API_URL + "/users/public",
+      "method": "GET",
+      "params": {
+        "id": id
+      }
+    });
+
+    return user_request.data.user;
+  } catch (ex) {
+    console.log(ex);
+    return null;
+  }
+}
+
 export const deleteUser = async () => {
   try {
     const delete_request = await axios({
