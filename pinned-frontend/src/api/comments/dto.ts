@@ -5,7 +5,7 @@ export interface Comment {
   posted: string,
   post: number,
   likes: number[],
-  dislikes: number[]
+  dislikes: number[],
 }
 
 export interface NewCommentResponseDTO {

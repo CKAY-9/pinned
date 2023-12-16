@@ -11,5 +11,6 @@ export interface Post {
   description: string,
   creator: number,
   likes: number[],
-  dislikes: number[]
+  dislikes: number[],
+  comments: number[]
 }

@@ -14,6 +14,7 @@ import { createNotification } from "@/utils/notification";
 import { deletePost } from "@/api/post/post.client";
 import { CDN_URL } from "@/api/resources";
 import LikeChip from "@/components/like-chip/like-chip";
+import Comments from "@/components/comments/comments";
 
 const AddToCollection = (props: {
   collection: Collection,
@@ -126,8 +127,8 @@ const PostClient = (props: {
     <>
       {popup && 
         <Popup>
+          <button onClick={() => setPopup(false)}>X</button>
           <div style={{"display": "flex", "flexDirection": "column", "gap": "1rem"}}>
-            <button onClick={() => setPopup(false)} style={{"backgroundColor": "transparent", "padding": "0"}}>X</button>
             <h2>Add to Collection</h2>
             {my_collections.map((collection: Collection, index: number) => {
               return (<AddToCollection post_id={props.post.id} collection={collection} key={index} />)
@@ -155,6 +156,7 @@ const PostClient = (props: {
           {is_owner && <button className="impact" onClick={deleteP}>Delete Post</button>
           }
         </section>
+        <Comments post_id={props.post.id} user={props.user} comment_ids={props.post.comments} />
       </div>
       <div>
         <h2>More Posts Like This</h2>

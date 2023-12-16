@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_URL } from "../resources";
 import { getCookie } from "@/utils/cookies";
-import { NewCommentResponseDTO } from "./dto";
+import { NewCommentResponseDTO, Comment } from "./dto";
 
 export const createComment = async (
   content: string,
