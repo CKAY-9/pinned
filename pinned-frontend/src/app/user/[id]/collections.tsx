@@ -1,7 +1,7 @@
 "use client"
 import { Collection } from "@/api/collections/dto";
-import style from "./posts.module.scss";
-import Link from "next/link";
+import CollectionPreview from "@/components/post-preview/collection-preview";
+import style from "@/components/post-preview/post-preview.module.scss";
 
 const UserCollections = (props: {
   collections: [] | null
@@ -12,10 +12,7 @@ const UserCollections = (props: {
     <div className={style.posts}>
       {props.collections.map((collection: Collection, index: number) => {
         return (
-          <Link key={index} href={`/post/collection/${collection.id}`} className={style.post}>
-            <h1>{collection.name}</h1>
-            <span>{collection.description.substring(0, 50)}</span>
-          </Link>
+          <CollectionPreview collection={collection} key={index} />
         )
       })}
     </div>

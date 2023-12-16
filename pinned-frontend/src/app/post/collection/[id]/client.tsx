@@ -3,15 +3,13 @@
 import { Collection } from "@/api/collections/dto";
 import UserChip from "@/components/user-chip/user-chip";
 import style from "./collection.module.scss";
-import posts_style from "@/app/user/[id]/posts.module.scss";
+import posts_style from "@/components/post-preview/post-preview.module.scss";
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import { Post } from "@/api/post/dto";
 import { getPostFromID } from "@/api/post/post";
-import Link from "next/link";
 import { deleteCollection } from "@/api/collections/collections.client";
 import { createNotification } from "@/utils/notification";
-import { CDN_URL } from "@/api/resources";
-import Image from "next/image";
+import PostPreview from "@/components/post-preview/post-preview";
 
 const Posts = (props: {
   posts: number[]
@@ -35,19 +33,7 @@ const Posts = (props: {
     <div className={posts_style.posts}>
       {posts.map((post: Post, index: number) => {
         return (
-          <Link key={index} href={`/post/${post.id}`} className={posts_style.post}>
-            <h1>{post.title}</h1>
-            {post.file_id.length >= 1 &&
-              <Image 
-                src={CDN_URL + post.file_id}
-                alt="Post Picture"
-                sizes="100%"
-                width={0}
-                height={0}
-              />
-            }
-            <span>{post.description.substring(0, 50)}</span>
-          </Link>
+          <PostPreview post={post} key={index} />
         )
       })}
     </div>

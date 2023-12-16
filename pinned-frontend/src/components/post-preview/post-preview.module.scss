@@ -2,8 +2,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, 300px);
   gap: 1rem;
+}
 
-  .post {
+.post {
     display: flex;
     flex-direction: column;
     border-radius: 0.5rem;
@@ -24,5 +25,4 @@
     h1 {
       flex: 1;
     }
-  }
-}
+} 

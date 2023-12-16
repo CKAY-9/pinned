@@ -5,14 +5,15 @@ import { User } from "@/api/user/dto"
 import style from "./post.module.scss";
 import Image from "next/image";
 import { BaseSyntheticEvent, useEffect, useState } from "react";
-import { deleteUser, getUserCollections, getUserFromID } from "@/api/user/user.client";
+import { getUserCollections } from "@/api/user/user.client";
 import UserChip from "@/components/user-chip/user-chip";
 import Popup from "@/components/popup/popup";
 import { Collection } from "@/api/collections/dto";
 import { addToCollection, newCollection } from "@/api/collections/collections.client";
 import { createNotification } from "@/utils/notification";
-import { deletePost, likePost } from "@/api/post/post.client";
+import { deletePost } from "@/api/post/post.client";
 import { CDN_URL } from "@/api/resources";
+import LikeChip from "@/components/like-chip/like-chip";
 
 const AddToCollection = (props: {
   collection: Collection,
@@ -96,11 +97,6 @@ const PostClient = (props: {
     })();
   }, []);
 
-  const like = async (e: BaseSyntheticEvent, like_type: number) => {
-    e.preventDefault();
-    await likePost(like_type, props.post.id);
-  }
- 
   const deleteP = async (e: BaseSyntheticEvent) => {
     e.preventDefault();
     await deletePost(props.post.id);
@@ -152,34 +148,7 @@ const PostClient = (props: {
           <PostPicture post_title={props.post.title} pic_url={CDN_URL + props.post.file_id} />
         }
         <p>{props.post.description}</p>
-        <section className={style.interaction}>
-          <button onClick={async (e: BaseSyntheticEvent) => {
-            await like(e, 1);
-          }} className={style.like}>
-            <Image
-              src="/icons/like.svg"
-              alt="Likes"
-              sizes="100%"
-              width={0}
-              height={0}
-              style={{"opacity": props.post.likes.includes(props.user?.id || 0) ? 1 : 0.5}}
-            />
-            <span>{props.post.likes.length}</span>
-          </button>
-          <button onClick={async (e: BaseSyntheticEvent) => {
-            await like(e, -1);
-          }} className={style.like}>
-            <Image
-              src="/icons/dislike.svg"
-              alt="Likes"
-              sizes="100%"
-              width={0}
-              height={0}
-              style={{"opacity": props.post.dislikes.includes(props.user?.id || 0) ? 1 : 0.5}}
-            />
-            <span>{props.post.dislikes.length}</span>
-          </button>
-        </section>
+        <LikeChip user={props.user} post_id={props.post.id} likes={props.post.likes} dislikes={props.post.dislikes} post_type={"post"} />
         <section className={style.post_interaction}>
           <UserChip user_id={props.post.creator} />
           {props.user !== null && <button onClick={() => setPopup(!popup)} className="impact">Add to Collection</button>}
