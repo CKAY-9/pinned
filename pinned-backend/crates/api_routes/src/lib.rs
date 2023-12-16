@@ -11,14 +11,16 @@ use collections::{
     get::get_collection, 
     put::{
         update_add_to_collection, 
-        update_collection
+        update_collection,
+        update_likes_on_collection
     },
     delete::delete_collection
 };
 use comments::{
     delete::delete_comment, 
     get::get_comment, 
-    post::create_new_comment, put::update_likes_on_comment
+    post::create_new_comment, 
+    put::update_likes_on_comment
 };
 use posts::{
     delete::delete_post,
@@ -96,5 +98,6 @@ pub fn configure_collections_routes(cfg: &mut web::ServiceConfig) {
             .service(update_add_to_collection) // collection_id, post_id data, auth header
             .service(update_collection) // name, description, collection_id data, auth header
             .service(delete_collection) // collection_id data, auth header
+            .service(update_likes_on_collection)
     );
 }

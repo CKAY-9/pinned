@@ -5,6 +5,7 @@ import style from "./like-chip.module.scss";
 import { BaseSyntheticEvent, useState } from "react";
 import { User } from "@/api/user/dto";
 import { likePost } from "@/api/post/post.client";
+import { likeCollection } from "@/api/collections/collections.client";
 
 const LikeChip = (props: {
   likes: number[],
@@ -25,6 +26,7 @@ const LikeChip = (props: {
         await likePost(like_type, props.post_id);
         break;
       case "collection":
+        await likeCollection(like_type, props.post_id);
         break;
       case "comment":
         break;

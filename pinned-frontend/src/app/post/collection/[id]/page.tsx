@@ -22,7 +22,7 @@ const CollectionPage = async ({params}: {
     <>
       <Header user={user} />
       <main className="container">
-        <CollectionClient collection={collection} />
+        <CollectionClient user={user} collection={collection} />
       </main>
       <Footer user={user} />
     </>

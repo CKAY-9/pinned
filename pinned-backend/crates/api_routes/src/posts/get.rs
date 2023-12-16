@@ -77,10 +77,10 @@ pub async fn get_today_pinned() -> Result<impl Responder, Box<dyn std::error::Er
     let dt = Local::now();
     let naive_utc = dt.naive_utc();
     let offset = dt.offset().clone();
-    let dt_new = DateTime::<Local>::from_naive_utc_and_offset(naive_utc, offset);
+    let _dt_new = DateTime::<Local>::from_naive_utc_and_offset(naive_utc, offset);
 
     for post in posts_unwrap {
-        let date_posted: iso8601::DateTime = iso8601::datetime(post.posted.as_str()).unwrap();
+        let _date_posted: iso8601::DateTime = iso8601::datetime(post.posted.as_str()).unwrap();
         // TODO: purge posts older than a day
     }
 

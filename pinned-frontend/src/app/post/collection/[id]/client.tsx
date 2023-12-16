@@ -10,6 +10,8 @@ import { getPostFromID } from "@/api/post/post";
 import { deleteCollection } from "@/api/collections/collections.client";
 import { createNotification } from "@/utils/notification";
 import PostPreview from "@/components/post-preview/post-preview";
+import LikeChip from "@/components/like-chip/like-chip";
+import { User } from "@/api/user/dto";
 
 const Posts = (props: {
   posts: number[]
@@ -41,7 +43,8 @@ const Posts = (props: {
 }
 
 const CollectionClient = (props: {
-  collection: Collection
+  collection: Collection,
+  user: User | null
 }) => {
   const deleteColl = async (e: BaseSyntheticEvent) => {
     e.preventDefault();
@@ -59,7 +62,8 @@ const CollectionClient = (props: {
       <div className={style.collection_header}>
         <h1>{props.collection.name}</h1>
         <p>{props.collection.description}</p>
-        <div style={{"display": "flex", "gap": "1rem"}}>
+        <LikeChip user={props.user} likes={props.collection.likes} dislikes={props.collection.dislikes} post_id={props.collection.id} post_type="collection" />
+        <div style={{"display": "flex", "gap": "1rem", "marginTop": "1rem"}}>
           <UserChip user_id={props.collection.creator} />
           <button className="impact" onClick={deleteColl}>Delete Collection</button>
         </div>

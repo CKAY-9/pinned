@@ -39,3 +39,9 @@ pub struct AddToCollectionDTO {
     pub collection_id: i32,
     pub post_id: i32
 }
+
+#[derive(Deserialize)]
+pub struct LikeCollectionDTO {
+    pub collection_id: i32,
+    pub like_type: i32
+}

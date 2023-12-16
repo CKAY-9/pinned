@@ -61,7 +61,7 @@ pub async fn delete_collection(request: HttpRequest, data: web::Json<GetCollecti
                         .execute(connection);
 
                     match delete_result {
-                        Ok(delete) => {
+                        Ok(_delete) => {
                             let success_message = Message { message: "Deleted collection".to_string() };
                             Ok(HttpResponse::Ok().json(success_message))
                         },
@@ -71,7 +71,7 @@ pub async fn delete_collection(request: HttpRequest, data: web::Json<GetCollecti
                         }
                     }
                 },
-                Err(e) => {
+                Err(_e) => {
                     let collection_message = Message { message: "Failed to get collection".to_string() };
                     Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(collection_message))
                 }

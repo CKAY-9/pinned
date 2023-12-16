@@ -12,7 +12,8 @@ const FooterClient = () => {
 
     const body_height = body.scrollHeight;
     const window_height = window.innerHeight;
-    if (body_height / window_height < 0.88) {
+    console.log(body_height / window_height);
+    if (body_height / window_height < 0.7) {
       footer.style.position = "fixed";
       footer.style.bottom = "0";
       footer.style.width = "100%";

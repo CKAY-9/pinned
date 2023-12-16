@@ -111,7 +111,7 @@ pub async fn update_likes_on_comment(request: HttpRequest, data: web::Json<LikeC
                         .execute(connection);
 
                     match update_result {
-                        Ok(update) => {
+                        Ok(_update) => {
                             let success_message = Message { message: "Updated comment".to_string() };
                             Ok(HttpResponse::Ok().json(success_message))
                         },
@@ -121,8 +121,8 @@ pub async fn update_likes_on_comment(request: HttpRequest, data: web::Json<LikeC
                         }
                     }
                 },
-                Err(e) => {
-                    let post_message = Message { message: "Failed to get post".to_string() };
+                Err(_e) => {
+                    let post_message = Message { message: "Failed to get comment".to_string() };
                     Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(post_message))
                 }
             }

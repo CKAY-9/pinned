@@ -199,7 +199,7 @@ pub async fn update_likes_on_post(request: HttpRequest, data: web::Json<LikePost
                         .execute(connection);
 
                     match update_result {
-                        Ok(update) => {
+                        Ok(_update) => {
                             let success_message = Message { message: "Updated post".to_string() };
                             Ok(HttpResponse::Ok().json(success_message))
                         },
@@ -209,7 +209,7 @@ pub async fn update_likes_on_post(request: HttpRequest, data: web::Json<LikePost
                         }
                     }
                 },
-                Err(e) => {
+                Err(_e) => {
                     let post_message = Message { message: "Failed to get post".to_string() };
                     Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(post_message))
                 }

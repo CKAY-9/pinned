@@ -97,3 +97,23 @@ export const updateCollection = async (collection_id: number, name: string, desc
     return null;
   }
 }
+
+export const likeCollection = async (collection_id: number, like_type: number) => {
+  try {
+    const like_request = await axios({
+      "url": API_URL + "/collections/like",
+      "method": "PUT",
+      "data": {
+        "collection_id": collection_id,
+        "like_type": like_type
+      },
+      "headers": {
+        "Authorization": getCookie("token") || ""
+      }
+    });
+    return like_request.data;
+  } catch (ex) {
+    console.log(ex);
+    return null;
+  }
+}
