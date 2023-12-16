@@ -2,7 +2,7 @@
 This will include information about Pinned's layout and data
 
 ## Models
-Information about data models such as users, posts, etc. For exact schema, see `pinned-backend/crates/db_schema/src/schema.rs` or `migrations/*`
+Information about data models such as users, posts, etc. For exact schema, see `pinned-backend/crates/db_schema/src/schema.rs` or `pinned-backend/migrations/*`
 
 ### User
 - id: number
