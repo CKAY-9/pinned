@@ -11,7 +11,7 @@ Information about data models such as users, posts, etc. For exact schema, see `
 - bio: string
 - joined: string (iso8601)
 - token: string
-- collections: array<id>
+- collections: array(id)
 
 ### Post
 - id: number
@@ -20,9 +20,9 @@ Information about data models such as users, posts, etc. For exact schema, see `
 - description: string
 - posted: string (iso8601)
 - creator: id 
-- likes: array<id>
-- dislikes: array<id>
-- comments: array<id>
+- likes: array(id)
+- dislikes: array(id)
+- comments: array(id)
 
 ### Comment
 - id: number
@@ -30,19 +30,19 @@ Information about data models such as users, posts, etc. For exact schema, see `
 - creator: id 
 - content: string
 - posted: string (iso8601)
-- likes: array<id>
-- dislikes: array<id>
+- likes: array(id)
+- dislikes: array(id)
 
 ### Collection
 - id: number
 - name: string
 - description: string
-- linked_posts: array<id>
-- linked_comments: array<id>
-- recommended_collections: array<id>
+- linked_posts: array(id)
+- linked_comments: array(id)
+- recommended_collections: array(id)
 - creator: id,
-- likes: array<id>
-- dislikes: array<id>
+- likes: array(id)
+- dislikes: array(id)
 
 ## API Routes
 Current API version: 1 <br/>
