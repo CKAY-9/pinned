@@ -18,7 +18,7 @@ pub struct GetCommentMessage {
 #[derive(Deserialize)]
 pub struct NewCommentDTO {
     pub content: String,
-    pub post: i32,
+    pub post_id: i32,
 }
 
 #[derive(Serialize)]

@@ -61,7 +61,7 @@ pub async fn create_new_comment(
     match user {
         Ok(user) => {
             let parent_post: QueryResult<Post> = posts::table
-                .filter(posts::id.eq(post.post.clone()))
+                .filter(posts::id.eq(post.post_id.clone()))
                 .select(Post::as_select())
                 .first::<Post>(connection);
 
@@ -79,7 +79,7 @@ pub async fn create_new_comment(
             let new_comment = NewComment {
                 content: post.content.clone(),
                 posted: iso8601(&SystemTime::now()),
-                post: post.post.clone(),
+                post: post.post_id.clone(),
                 creator: user.id,
                 likes: vec![],
                 dislikes: vec![],
@@ -103,7 +103,7 @@ pub async fn create_new_comment(
             post_unwrap.comments.push(insert.0);
 
             let _ = diesel::update(posts::table)
-                .filter(posts::id.eq(post.post.clone()))
+                .filter(posts::id.eq(post.post_id.clone()))
                 .set(posts::comments.eq(post_unwrap.comments))
                 .execute(connection);
 

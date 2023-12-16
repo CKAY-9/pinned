@@ -13,7 +13,7 @@ export const createComment = async (
       "method": "POST",
       "data": {
         "content": content,
-        "post": post
+        "post_id": post
       },
       "headers": {
         "Authorization": getCookie("token") || ""
