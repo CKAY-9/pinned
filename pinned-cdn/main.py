@@ -28,7 +28,7 @@ def get_file(id, file):
         return str(e)
     
 # UPLOADING
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route("/upload", methods=["POST"])
 def upload_file():
     if (request.method == 'POST'):
         # check if the post request has the file part
@@ -53,7 +53,9 @@ def upload_file():
             }), 400
         
         if (file):
-            unique_id = md5(bytes(str(random.randint(0, 1_000_000_000)).encode("ascii", "utf-8"))).hexdigest()
+            unique_id = md5(bytes(str(random.randint(0, 2_000_000_000)).encode("ascii", "utf-8"))).hexdigest()
+            if file.filename == None:
+                file.filename = "generice_file"
             filename = secure_filename(unique_id + file.filename)
 
             if (not os.path.exists(f"./files/{request.form['folder_id']}")):
@@ -68,3 +70,6 @@ def upload_file():
                 "message": "Uploaded file",
                 "dest": f"/{request.form['folder_id']}/{filename}"
             }), 200
+    return jsonify({
+        "message": "Failed"
+    }), 500

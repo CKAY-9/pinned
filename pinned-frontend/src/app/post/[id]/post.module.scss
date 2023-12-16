@@ -39,3 +39,54 @@
   display: flex;
   gap: 1rem;
 }
+
+@keyframes zoom_in {
+  0% {
+    filter: blur(5px);
+    transform: scale(0);
+  }
+  100% {
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+.post_image {
+  animation: zoom_in 1.5s ease forwards;
+  width: auto;
+  object-fit: contain;
+  height: 500px;
+  border-radius: 0.5rem;
+}
+
+.post_image_expanded {
+  object-fit: contain;
+  width: 90rem;
+  height: auto; 
+  border-radius: 0.5rem;
+}
+
+@keyframes fade_in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.expand_image {
+  width: fit-content;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: transparent;
+
+  img {
+    opacity: 0;
+    animation: fade_in 0.5s 1.5s ease forwards;
+    width: 2rem;
+    height: 2rem;
+    filter: invert(1);
+  }
+}

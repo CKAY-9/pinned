@@ -1,15 +1,28 @@
 .posts {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 250px);
+  grid-template-columns: repeat(auto-fit, 300px);
   gap: 1rem;
 
   .post {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     border-radius: 0.5rem;
-    padding: 1rem;
-    height: 250px;
-    background: var(--secondary);
+    height: 300px;
+        
+    img {
+      width: auto;
+      object-fit: cover;
+      height: 100%;
+    }
+
+    h1, span { 
+      justify-content: space-between;
+      background: var(--secondary);
+      padding: 0.5rem 1rem;
+    }
+
+    h1 {
+      flex: 1;
+    }
   }
 }

@@ -21,6 +21,8 @@
   place-content: center;
 
   .content {
+    display: flex;
+    flex-direction: column;
     animation: popup_open 0.5s ease forwards;
     background-color: var(--background);
     padding: 1rem 2rem;

@@ -13,8 +13,8 @@ const UserCollections = (props: {
       {props.collections.map((collection: Collection, index: number) => {
         return (
           <Link key={index} href={`/post/collection/${collection.id}`} className={style.post}>
-            <h2>{collection.name}</h2>
-            <p>{collection.description.substring(0, 50)}</p>
+            <h1>{collection.name}</h1>
+            <span>{collection.description.substring(0, 50)}</span>
           </Link>
         )
       })}

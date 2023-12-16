@@ -141,6 +141,13 @@ pub async fn update_likes_on_post(request: HttpRequest, data: web::Json<LikePost
                                 index += 1;
                             }
                             if !flag {
+                                index = 0;
+                                for like in post.likes.iter() {
+                                    if like.to_owned() == user.id {
+                                        post.likes.remove(index);
+                                        break;
+                                    }
+                                }
                                 post.dislikes.push(user.id);
                             }
                         },
@@ -154,6 +161,13 @@ pub async fn update_likes_on_post(request: HttpRequest, data: web::Json<LikePost
                                 index += 1;
                             }
                             if !flag {
+                                index = 0;
+                                for dislike in post.dislikes.iter() {
+                                    if dislike.to_owned() == user.id {
+                                        post.dislikes.remove(index);
+                                        break;
+                                    }
+                                }
                                 post.likes.push(user.id);
                             }
                         },

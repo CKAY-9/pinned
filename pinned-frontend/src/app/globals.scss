@@ -25,8 +25,10 @@ a, button {
 
   &.impact {
     padding: 1rem 2rem;
+    border-radius: 0.5rem;
     background: var(--accent);
     font-weight: 900;
+    font-size: 1rem;
     text-transform: uppercase;
   }
 }

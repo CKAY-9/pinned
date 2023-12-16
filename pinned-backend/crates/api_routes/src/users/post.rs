@@ -71,6 +71,10 @@ pub async fn post_reset_user(
             let _ = diesel::delete(schema::comments::table)
                 .filter(schema::comments::creator.eq(user.id))
                 .execute(connection);
+            
+            let _ = diesel::delete(schema::collections::table)
+                .filter(schema::collections::creator.eq(user.id))
+                .execute(connection);
 
             Ok(HttpResponse::Ok().body("Reset"))
         }

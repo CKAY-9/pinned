@@ -26,10 +26,11 @@ const UserSettingsClient = (props: {
 
   return ( 
     <>
-      <section className={style.unsafe_options}>
+      <h1 style={{"marginBottom": "1rem"}}>User Settings for {props.user?.username}</h1>
+      <section className={`${style.unsafe_options} + ${style.options}`}>
         <button className={style.unsafe} onClick={deleteAccount}>Delete Account</button>
-        <button className={style.unsafe}>Logout</button>
-        <button className={style.unsafe}>Reset Account</button>
+        <button className={style.unsafe} onClick={logout}>Logout</button>
+        <button className={style.unsafe} onClick={resetAccount}>Reset Account</button>
       </section>
     </>
   );

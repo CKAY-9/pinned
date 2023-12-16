@@ -12,6 +12,7 @@ use diesel::{
     RunQueryDsl
 };
 use pinned_db::create_connection;
+use pinned_db_schema::schema::{posts, self};
 use pinned_db_schema::schema::users::dsl::*;
 use pinned_db_schema::{
     models::User, 
@@ -42,6 +43,19 @@ pub async fn delete_user(
     match user {
         Ok(user) => {
             let _ = diesel::delete(users::table.find(user.id)).execute(connection)?;
+            
+            let _ = diesel::delete(posts::table)
+                .filter(schema::posts::creator.eq(user.id))
+                .execute(connection);
+
+            let _ = diesel::delete(schema::comments::table)
+                .filter(schema::comments::creator.eq(user.id))
+                .execute(connection);
+            
+            let _ = diesel::delete(schema::collections::table)
+                .filter(schema::collections::creator.eq(user.id))
+                .execute(connection);
+
             let success_message = Message {
                 message: "Deleted user account".to_string(),
             };

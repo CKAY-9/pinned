@@ -12,14 +12,15 @@ export const newPost = async (
 ): Promise<NewPostResponseDTO | null> => {
   try {
     let dest = "";
-    if (upload_file != null) {
+    if (upload_file !== null) {
       const dest_response = await uploadFile(upload_file, {
         "folder_id": `user_${user_id}`,
         "previous_file_dest": ""
       });
-      if (dest_response !== null) {
-        dest = dest_response.dest;
+      if (dest_response === null) {
+        return null;
       }
+      dest = dest_response.dest;
     }
 
     const post_request = await axios({
@@ -70,6 +71,9 @@ export const deletePost = async (post_id: number) => {
       "method": "DELETE",
       "data": {
         "post_id": post_id
+      },
+      "headers": {
+        "Authorization": getCookie("token") || ""
       }
     });
 
@@ -88,6 +92,9 @@ export const likePost = async (like_type: number, post_id: number) => {
       "data": {
         "post_id": post_id,
         "like_type": like_type
+      },
+      "headers": {
+        "Authorization": getCookie("token") || ""
       }
     });
     return like_request.data;
