@@ -34,8 +34,9 @@
 
 .post_image_expanded {
   object-fit: contain;
-  width: 90rem;
-  height: auto; 
+  width: auto;
+  max-width: 95vh;
+  height: 85vh; 
   border-radius: 0.5rem;
 }
 

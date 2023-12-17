@@ -5,8 +5,20 @@
   background-color: var(--secondary);
   width: fit-content;
   border-radius: 2rem;
+  position: relative;
+  overflow: hidden;
+
+  .like_ratio {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    transition: 0.35s ease all;
+    z-index: 1;
+    background-color: var(--primary);
+  }
 
   .like {
+    z-index: 2;
     background-color: transparent;
     transition: 0.35s ease all;
     display: flex;

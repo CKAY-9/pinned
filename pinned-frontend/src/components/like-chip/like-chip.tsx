@@ -6,6 +6,7 @@ import { BaseSyntheticEvent, useState } from "react";
 import { User } from "@/api/user/dto";
 import { likePost } from "@/api/post/post.client";
 import { likeCollection } from "@/api/collections/collections.client";
+import { likeComment } from "@/api/comments/comment.client";
 
 const LikeChip = (props: {
   likes: number[],
@@ -29,6 +30,7 @@ const LikeChip = (props: {
         await likeCollection(like_type, props.post_id);
         break;
       case "comment":
+        await likeComment(props.post_id, like_type);
         break;
     }
 
@@ -65,6 +67,7 @@ const LikeChip = (props: {
   return (
     <>
       <section className={style.like_chip}>
+        <div className={style.like_ratio} style={{"width": `${likes.length / (likes.length + dislikes.length) * 100}%`}}></div>
         <button onClick={async (e: BaseSyntheticEvent) => {
           await like(e, 1);
         }} className={style.like}>

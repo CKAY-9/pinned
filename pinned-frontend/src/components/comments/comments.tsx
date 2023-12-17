@@ -9,15 +9,18 @@ import { Comment } from "@/api/comments/dto";
 import Image from "next/image";
 import Popup from "../popup/popup";
 import { createNotification } from "@/utils/notification";
+import LikeChip from "../like-chip/like-chip";
 
 const Comment = (props: {
-  comment: Comment 
+  comment: Comment,
+  user: User | null
   index: number
 }) => {
   return (
     <div className={style.comment} style={{"animationDelay": `${200 * props.index}ms`}}>
       <UserChip user_id={props.comment.creator} />
       <p>{props.comment.content}</p>
+      <LikeChip dislikes={props.comment.dislikes} likes={props.comment.likes} user={props.user} post_id={props.comment.id} post_type="comment" />
     </div>
   );
 }
@@ -92,7 +95,7 @@ const Comments = (props: {
         <div style={{"height": show_comments ? "fit-content" : "0px", "overflow": "hidden"}}>
           <div className={style.comments}>
           {comments.map((comment: Comment, index: number) => {
-            return (<Comment index={index} key={index} comment={comment} />);
+            return (<Comment user={props.user} index={index} key={index} comment={comment} />);
           })}
           </div>
           {((current_index + 1) * 15) < props.comment_ids.length &&

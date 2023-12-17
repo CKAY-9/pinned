@@ -9,7 +9,16 @@ const Header = (props: {
   return (
     <header className={style.header}>
       <section>
-        <Link href="/">LOGO</Link>
+        <Link href="/">
+          <Image 
+            src="/marks/pinned-mark-white.png"
+            alt="Pinned"
+            sizes="100%"
+            width={0}
+            height={0}
+            className={style.logo}
+          />
+        </Link>
         {props.user !== null &&
           <Link href="/post/new">
             <Image

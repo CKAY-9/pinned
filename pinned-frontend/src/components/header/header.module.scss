@@ -2,6 +2,7 @@
   padding: 0.5rem 5rem;
   display: flex;
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
   background-color: var(--secondary);
 
@@ -16,6 +17,11 @@
     width: 2rem;
     height: 2rem;
     filter: invert(1);
+  }
+
+  .logo {
+    height: 2rem;
+    width: auto;
   }
 }
 

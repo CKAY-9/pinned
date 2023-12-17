@@ -21,8 +21,16 @@ const LoginPage = async () => {
   return (
     <>
       <main className={style.container} style={{"gap": "1rem"}}>
-        <Link href="/">Back</Link>
-        <h1 style={{"textAlign": "center", "fontSize": "3rem", "fontWeight": "900"}}>Pinned</h1>
+        <Link href="/">
+          <Image 
+            src="/marks/pinned-mark-white.png"
+            alt="Pinned"
+            sizes="100%"
+            width={0}
+            height={0}
+            className={style.logo}
+          />
+        </Link>
         <div className={style.oauths}>
           {DISCORD_OAUTH_LINK !== undefined &&
             <Link className={style.oauth} style={{"backgroundColor": "#5865F2"}} href={DISCORD_OAUTH_LINK}>

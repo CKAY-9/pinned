@@ -5,6 +5,17 @@
   gap: 3rem;
   background-color: var(--secondary);
 
+  .name {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .logo {
+    width: 2rem;
+    height: auto;
+  }
+
   section {
     display: flex;
     flex-direction: column;

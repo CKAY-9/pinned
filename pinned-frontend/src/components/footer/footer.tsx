@@ -10,7 +10,17 @@ const Footer = (props: {
   return (
     <footer id="footer_main" className={style.footer}>
       <section>
-        <h1>Pinned</h1>
+        <div className={style.name}>
+          <Image 
+            src="/marks/pinned-mark-white.png"
+            alt="Pinned"
+            sizes="100%"
+            width={0}
+            height={0}
+            className={style.logo}
+          />
+          <h1>Pinned</h1>
+        </div>
         <span>Made with ❤️ by <Link href="/team">the team</Link></span>
         <div className={style.links}>
           <Link href="https://github.com/CKAY-9/pinned">
