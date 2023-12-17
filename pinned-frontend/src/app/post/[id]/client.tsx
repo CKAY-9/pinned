@@ -45,7 +45,7 @@ const PostPicture = (props: {
   const [expand, setExpand] = useState<boolean>(false);
 
   return (
-    <div style={{"position": "relative", "width": "fit-content"}}>
+    <div style={{"position": "relative"}}>
       {expand &&
         <Popup>
           <button style={{"backgroundColor": "transparent"}} onClick={() => setExpand(false)}>X</button>
@@ -60,23 +60,25 @@ const PostPicture = (props: {
           />
         </Popup>
       }
-      <Image 
-        src={props.pic_url}
-        alt="Post Image"
-        sizes="100%"
-        width={0}
-        height={0}
-        className={style.post_image}
-      />
-      <button className={style.expand_image} onClick={() => setExpand(true)}>
+      <div className={style.post_post}>
         <Image 
-          src="/icons/expand.svg"
-          alt="Expand"
+          src={props.pic_url}
+          alt="Post Image"
           sizes="100%"
           width={0}
           height={0}
+          className={style.post_image}
         />
-      </button>
+        <button className={style.expand_image} onClick={() => setExpand(true)}>
+          <Image 
+            src="/icons/expand.svg"
+            alt="Expand"
+            sizes="100%"
+            width={0}
+            height={0}
+          />
+        </button>
+      </div>
     </div>
   );
 }

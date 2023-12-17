@@ -1,11 +1,11 @@
 .post_container {
+  position: relative;
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid var(--text);
   gap: 1rem;
   padding-bottom: 1rem;
   margin-bottom: 1rem;
-
 }
 
 .post_interaction {
@@ -62,5 +62,30 @@
     width: 2rem;
     height: 2rem;
     filter: invert(1);
+  }
+}
+
+.post_post {
+  width: fit-content;
+  position: relative;
+}
+
+@media only screen and (max-width: 600px)  {
+  .post_interaction {
+    flex-direction: column;
+  }
+
+  .post_image_expanded {
+    width: 90vw;
+    height: auto;
+  }
+
+  .post_post {
+    width: 100%;
+  }
+
+  .post_image {
+    width: 100%;
+    height: auto;
   }
 }
