@@ -156,7 +156,7 @@ const PostClient = (props: {
           {is_owner && <button className="impact" onClick={deleteP}>Delete Post</button>
           }
         </section>
-        <Comments post_id={props.post.id} user={props.user} comment_ids={props.post.comments} />
+        <Comments comments_only={false} post_id={props.post.id} user={props.user} comment_ids={props.post.comments} />
       </div>
       <div>
         <h2>More Posts Like This</h2>

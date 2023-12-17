@@ -10,6 +10,8 @@ import UserPosts from "./posts";
 import UserCollections from "./collections";
 import UserComments from "./comments";
 import Link from "next/link";
+import { Collection } from "@/api/collections/dto";
+import { Comment } from "@/api/comments/dto";
 
 export const UserInteraction = (props: {
   profile: User,
@@ -33,8 +35,8 @@ export const UserCreations = (props: {
 
   const [current_view, setCurrentView] = useState<number>(0);
   const [user_posts, setUserPosts] = useState<Post[] | null>(null);
-  const [user_collections, setUserCollections] = useState<[] | null>(null);
-  const [user_comments, setUserComments] = useState<[] | null>(null);
+  const [user_collections, setUserCollections] = useState<Collection[] | null>(null);
+  const [user_comments, setUserComments] = useState<Comment[] | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -94,7 +96,7 @@ export const UserCreations = (props: {
           <UserCollections collections={user_collections} />
         </div>
         <div style={{"display": current_view === 2 ? "flex" : "none"}} className={style.creation}>  
-          <UserComments comments={user_comments} />
+          <UserComments user={props.user} comments={user_comments} />
         </div>
       </section>
     </>

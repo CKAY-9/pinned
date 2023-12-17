@@ -4,9 +4,11 @@ import CollectionPreview from "@/components/post-preview/collection-preview";
 import style from "@/components/post-preview/post-preview.module.scss";
 
 const UserCollections = (props: {
-  collections: [] | null
+  collections: Collection[] | null
 }) => {
-  if (props.collections === null) return;
+  if (props.collections === null || props.collections.length <= 0) {
+    return (<span>This user has no collections.</span>);
+  }
 
   return (
     <div className={style.posts}>

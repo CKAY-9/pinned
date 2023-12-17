@@ -5,7 +5,9 @@ import PostPreview from "@/components/post-preview/post-preview";
 const UserPosts = (props: {
   posts: Post[] | null
 }) => {
-  if (props.posts === null) return;
+  if (props.posts === null || props.posts.length <= 0) {
+    return (<span>This user has no posts.</span>);
+  }
 
   return (
     <div className={style.posts}>

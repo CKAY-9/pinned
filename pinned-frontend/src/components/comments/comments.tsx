@@ -28,9 +28,10 @@ const Comment = (props: {
 const Comments = (props: {
   comment_ids: number[]
   user: User | null,
-  post_id: number
+  post_id: number,
+  comments_only: boolean
 }) => {
-  const [show_comments, setShowComments] = useState<boolean>(false);
+  const [show_comments, setShowComments] = useState<boolean>(props.comments_only);
   const [comments, setComments] = useState<Comment[]>([]);
   const [current_index, setCurrentIndex] = useState<number>(0);
   const [show_new_comment, setShowNewComment] = useState<boolean>(false);
@@ -54,6 +55,7 @@ const Comments = (props: {
   }, [current_index]);
 
   const postComment = async (e: BaseSyntheticEvent) => {
+    if (props.comments_only || props.user === null) return;
     e.preventDefault();
     const comment = await createComment(new_comment_content, props.post_id);
     if (comment !== null) {
@@ -68,7 +70,7 @@ const Comments = (props: {
 
   return (
     <>
-      {(show_new_comment && props.user !== null) &&
+      {(show_new_comment && props.user !== null && !props.comments_only) &&
         <Popup>
           <button onClick={() => setShowNewComment(false)}>X</button>
           <h1>New Comment</h1>
@@ -79,18 +81,22 @@ const Comments = (props: {
       }
       <div className={style.comments_container}>
         <div className={style.comments_header}>
-          <button onClick={() => setShowComments(!show_comments)} className={style.expand}>
-            <span>Comments</span>
-            <Image 
-              src="/icons/menu_expand.svg"
-              alt="Expand"
-              sizes="100%"
-              width={0}
-              height={0}
-              style={{"transform": show_comments ? "rotate(180deg)" : "rotate(0deg)"}}
-            />
-          </button>
-          {props.user !== null && <button onClick={() => setShowNewComment(true)} className="impact">New Comment</button>}
+          {!props.comments_only &&
+            <>
+              <button onClick={() => setShowComments(!show_comments)} className={style.expand}>
+                <span>Comments</span>
+                <Image 
+                  src="/icons/menu_expand.svg"
+                  alt="Expand"
+                  sizes="100%"
+                  width={0}
+                  height={0}
+                  style={{"transform": show_comments ? "rotate(180deg)" : "rotate(0deg)"}}
+                />
+              </button>
+              {props.user !== null && <button onClick={() => setShowNewComment(true)} className="impact">New Comment</button>}
+            </>
+          }
         </div>
         <div style={{"height": show_comments ? "fit-content" : "0px", "overflow": "hidden"}}>
           <div className={style.comments}>
