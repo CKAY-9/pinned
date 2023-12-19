@@ -40,3 +40,15 @@ pub struct LikePostDTO {
     pub like_type: i32,
     pub post_id: i32
 }
+
+#[derive(Deserialize)]
+pub struct SearchPostsDTO {
+    pub name: String,
+    pub post_id: i32
+}
+
+#[derive(Serialize)]
+pub struct SearchPostsMessages {
+    pub message: String,
+    pub posts: Vec<Post>
+}

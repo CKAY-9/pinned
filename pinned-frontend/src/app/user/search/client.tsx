@@ -4,6 +4,8 @@ import { BaseSyntheticEvent, useEffect, useState } from "react";
 import style from "./search.module.scss";
 import { User } from "@/api/user/dto";
 import { searchUsers } from "@/api/user/user.client";
+import UserChip from "@/components/user-chip/user-chip";
+import UserPreview from "@/components/user-preview/preview";
 
 const UserSearchClient = () => {
   const [username, setUsername] = useState<string>("");
@@ -33,7 +35,14 @@ const UserSearchClient = () => {
         </section>
       </div>
       <div className={style.results}>
-        {searching && <span>Searching...</span>}
+        {searching 
+          ? <span>Searching...</span>
+          : <>
+            {results.map((result: User, index: number) => {
+              return (<UserPreview user={result} />);
+            })}
+          </>
+        }
       </div>
     </>
   );

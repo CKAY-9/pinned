@@ -15,6 +15,7 @@ import { deletePost } from "@/api/post/post.client";
 import { CDN_URL } from "@/api/resources";
 import LikeChip from "@/components/like-chip/like-chip";
 import Comments from "@/components/comments/comments";
+import { createComment } from "@/api/comments/comment.client";
 
 const AddToCollection = (props: {
   collection: Collection,
@@ -43,7 +44,7 @@ const PostPicture = (props: {
   post_title: string
 }) => {
   const [expand, setExpand] = useState<boolean>(false);
-
+  
   return (
     <div style={{"position": "relative"}}>
       {expand &&
@@ -92,6 +93,8 @@ const PostClient = (props: {
   const [my_collections, setMyCollections] = useState<Collection[]>([]);
   const [show_new_collection, setShowNewCollection] = useState<boolean>(false);
   const [new_collection_name, setNewCollectionName] = useState<string>("");
+  const [show_new_comment, setShowNewComment] = useState<boolean>(false);
+  const [new_comment_content, setNewCommentContent] = useState<string>("");
 
   useEffect(() => {
     (async () => {
@@ -125,9 +128,18 @@ const PostClient = (props: {
     setPopup(false);
   }
 
+  const newComment = async (e: BaseSyntheticEvent) => {
+    e.preventDefault();
+    const creation = await createComment(new_comment_content, props.post.id);
+    if (creation !== null) {
+      window.location.reload();
+      return;
+    }
+  }
+
   return (
     <>
-      {popup && 
+      {(popup && props.user !== null) && 
         <Popup>
           <button onClick={() => setPopup(false)}>X</button>
           <div style={{"display": "flex", "flexDirection": "column", "gap": "1rem"}}>
@@ -143,6 +155,15 @@ const PostClient = (props: {
               </div>
             }
           </div>
+        </Popup>
+      }
+      {(show_new_comment && props.user !== null) &&
+        <Popup>
+          <button style={{"backgroundColor": "transparent"}} onClick={() => setShowNewComment(false)}>X</button>
+          <h1>New Comment</h1>
+          <label>Comment</label>
+          <textarea rows={10} cols={30} placeholder="Your Comment"  onChange={(e: BaseSyntheticEvent) => setNewCommentContent(e.target.value)} />
+          <button onClick={newComment}>Post</button>
         </Popup>
       }
       <div className={style.post_container}>

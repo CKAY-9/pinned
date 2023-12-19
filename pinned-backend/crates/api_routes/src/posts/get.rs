@@ -2,7 +2,9 @@ use crate::{
     dto::Message,
     posts::dto::{
         GetPostDTO, 
-        GetPostMessage
+        GetPostMessage,
+        SearchPostsDTO,
+        SearchPostsMessages
     },
 };
 use actix_web::{
@@ -85,4 +87,39 @@ pub async fn get_today_pinned() -> Result<impl Responder, Box<dyn std::error::Er
     }
 
     Ok(HttpResponse::Ok().body("test"))
+}
+
+#[get("/search")]
+pub async fn search_posts(query: web::Query<SearchPostsDTO>) -> Result<impl Responder, Box<dyn std::error::Error>> {
+    let connection = &mut create_connection();
+    let mut posts_vec: Vec<Post> = Vec::new();
+
+    if query.post_id != 0 {
+        let post_result: QueryResult<Post> = posts::table
+            .find(query.post_id)
+            .first::<Post>(connection);
+        if post_result.is_ok() {
+            let post = post_result.unwrap();
+            posts_vec.push(post);
+        }   
+    }
+
+    let all_posts_result: QueryResult<Vec<Post>> = posts::table
+        .load(connection);
+
+    if all_posts_result.is_ok() {
+        let all_posts = all_posts_result.unwrap();
+        let mut index = 0;
+        for post in all_posts {
+            if index > 15 {
+                break;
+            }
+            if post.title.contains(query.name.as_str()) {
+                posts_vec.push(post);
+            }
+            index += 1;
+        }
+    }
+
+    Ok(HttpResponse::Ok().json(SearchPostsMessages { message: "Fetched posts".to_string(), posts: posts_vec }))
 }

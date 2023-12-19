@@ -5,7 +5,7 @@ import { getCookie, setCookie } from "@/utils/cookies";
 
 export const searchUsers = async (username: string = "", id: number = 0): Promise<User[]> => {
   try {
-    const users_request: AxiosResponse<User[]> = await axios({
+    const users_request = await axios({
       "url": API_URL + "/users/search",
       "method": "GET",
       "params": {
@@ -13,8 +13,7 @@ export const searchUsers = async (username: string = "", id: number = 0): Promis
         "id": id
       }
     });
-
-    return users_request.data || [];
+    return users_request.data.users; 
   } catch (ex) {
     console.log(ex);
     return [];

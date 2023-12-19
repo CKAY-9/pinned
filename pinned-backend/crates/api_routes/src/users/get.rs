@@ -12,7 +12,7 @@ use crate::users::dto::{
     UserCommentsMessage,
     UserPostsDTO, 
     UserPostsMessage, 
-    UserSearchResponse,
+    SearchRequestMessage,
 };
 use actix_web::{
     get,
@@ -485,26 +485,35 @@ pub async fn get_users_comments(
 pub async fn get_search_users(
     data: web::Query<SearchRequest>,
 ) -> Result<impl Responder, Box<dyn std::error::Error>> {
-    let name: String = data.username.clone();
-
     let connection = &mut create_connection();
-    let results: QueryResult<Vec<User>> = users::table
-        .filter(users::username.eq(name))
-        .limit(10)
-        .select(User::as_select())
-        .load(connection);
+    let mut users_vec: Vec<User> = Vec::new();
 
-    if results.is_err() {
-        let results_error_message = Message {
-            message: "Failed to complete search".to_string(),
-        };
-        return Ok(HttpResponse::Ok()
-            .status(StatusCode::NOT_FOUND)
-            .json(results_error_message));
+    if data.id != 0 {
+        let user_result: QueryResult<User> = users::table
+            .find(data.id)
+            .first::<User>(connection);
+        if user_result.is_ok() {
+            let user: User = user_result.unwrap();
+            users_vec.push(user);
+        }
     }
 
-    let response = UserSearchResponse {
-        users: results.unwrap(),
-    };
-    Ok(HttpResponse::Ok().json(response))
+    let user_results: QueryResult<Vec<User>> = users::table
+        .load(connection);
+
+    if user_results.is_ok() {
+        let users_unwrap: Vec<User> = user_results.unwrap();
+        let mut index = 0;
+        for user in users_unwrap {
+            if index > 15 {
+                break;
+            }
+            if user.username.contains(data.username.as_str()) {
+                users_vec.push(user);
+            }
+            index += 1;
+        }
+    }
+
+    Ok(HttpResponse::Ok().json(SearchRequestMessage { message: "Fetched users".to_string(), users: users_vec }))
 }

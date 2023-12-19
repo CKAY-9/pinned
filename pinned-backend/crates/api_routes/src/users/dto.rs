@@ -52,16 +52,22 @@ pub struct AccountID {
     pub id: i32,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize)]
 pub struct AccountResponse {
     pub message: String,
     pub user: User,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Deserialize)]
 pub struct SearchRequest {
     pub username: String,
     pub id: i32,
+}
+
+#[derive(Serialize)]
+pub struct SearchRequestMessage {
+    pub message: String,
+    pub users: Vec<User>
 }
 
 #[derive(Deserialize)]

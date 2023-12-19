@@ -77,3 +77,18 @@ export const deleteComment = async (comment_id: number) => {
     return null;
   }
 }
+
+export const getAllCommentsFromIds = async (comment_ids: number[]): Promise<Comment[]> => {
+  try {
+    const comments: Comment[] = [];
+    for (let i = 0; i < comment_ids.length; i++) {
+      const comment = await getCommentFromID(comment_ids[i]);
+      if (comment === null) continue;
+      comments.push(comment);
+    }
+    return comments;
+  } catch (ex) {
+    console.log(ex);
+    return [];
+  }
+}

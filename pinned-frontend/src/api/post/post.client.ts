@@ -2,7 +2,7 @@ import axios from "axios";
 import { uploadFile } from "../cdn/cdn.client";
 import { API_URL } from "../resources";
 import { getCookie } from "@/utils/cookies";
-import { NewPostResponseDTO } from "./dto";
+import { NewPostResponseDTO, Post } from "./dto";
 
 export const newPost = async (
   title: string, 
@@ -101,5 +101,22 @@ export const likePost = async (like_type: number, post_id: number) => {
   } catch (ex) {
     console.log(ex);
     return null;
+  }
+}
+
+export const searchPosts = async (name: string, id: number): Promise<Post[]> => {
+  try {
+    const search_request = await axios({
+      "url": API_URL + "/posts/search",
+      "method": "GET",
+      "params": {
+        "name": name,
+        "post_id": id
+      }
+    });
+    return search_request.data.posts;
+  } catch (ex) {
+    console.log(ex);
+    return [];
   }
 }
