@@ -83,7 +83,7 @@ pub async fn get_discord_user_authentication(
     let initial_response = client
         .post(format!("https://discord.com/api/oauth2/token"))
         .form(&initial_code_request_data)
-        .header("Content-Type", "application/x-www-form-urlencoded")
+        .header("content-Type", "application/x-www-form-urlencoded")
         .send()
         .await?;
     let initial_response_parsed: DiscordInitialResponse =
