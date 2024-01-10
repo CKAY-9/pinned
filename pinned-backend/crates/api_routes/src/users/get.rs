@@ -80,14 +80,14 @@ pub async fn get_discord_user_authentication(
     initial_code_request_data.insert("redirect_uri", get_local_api_url() + "/users/auth/discord");
 
     // Get authorization token and type
-    let inital_response = client
-        .post(format!("{}/oauth2/token", get_discord_api_url()))
+    let initial_response = client
+        .post(format!("https://discord.com/api/oauth2/token"))
         .form(&initial_code_request_data)
         .header("Content-Type", "application/x-www-form-urlencoded")
         .send()
         .await?;
-    let inital_response_parsed: DiscordInitialResponse =
-        serde_json::from_str(inital_response.text().await?.as_str())?;
+    let initial_response_parsed: DiscordInitialResponse =
+        serde_json::from_str(initial_response.text().await?.as_str())?;
 
     // Get user with auth token and type
     let user_response = client
@@ -96,7 +96,7 @@ pub async fn get_discord_user_authentication(
             "authorization",
             format!(
                 "{} {}",
-                inital_response_parsed.token_type, inital_response_parsed.access_token
+                initial_response_parsed.token_type, initial_response_parsed.access_token
             ),
         )
         .send()

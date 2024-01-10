@@ -14,7 +14,7 @@ pub struct OAuthCode {
     pub code: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct DiscordInitialResponse {
     pub access_token: String,
     pub token_type: String,

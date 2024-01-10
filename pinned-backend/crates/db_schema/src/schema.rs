@@ -53,4 +53,9 @@ diesel::table! {
     }
 }
 
-diesel::allow_tables_to_appear_in_same_query!(collections, comments, posts, users,);
+diesel::allow_tables_to_appear_in_same_query!(
+    collections,
+    comments,
+    posts,
+    users,
+);
