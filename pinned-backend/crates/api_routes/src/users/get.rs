@@ -184,35 +184,28 @@ pub async fn get_github_user_authentication(
     data: web::Query<OAuthCode>,
 ) -> Result<Redirect, Box<dyn std::error::Error>> {
     let client = reqwest::Client::new();
-
     let initial_token_response = client
         .post("https://github.com/login/oauth/access_token")
         .form(&[
             ("code", data.code.to_owned()),
-            ("client_id", get_env_var("GITHUB_CLIENT_ID")),
-            ("client_secret", get_env_var("GITHUB_CLIENT_SECRET")),
+            ("client_id", get_env_var("GITHUB_OAUTH_ID")),
+            ("client_secret", get_env_var("GITHUB_OAUTH_SECRET")),
         ])
         .header("accept", "application/json")
         .send()
         .await?;
-    let initial_response_parsed: GithubInitialResponse =
-        serde_json::from_str(initial_token_response.text().await?.as_str())?;
-
+    let initial_response_parsed: GithubInitialResponse = serde_json::from_str::<GithubInitialResponse>(initial_token_response.text().await?.as_str())?;
     let user_response = client
         .get("https://api.github.com/user")
-        .header(
-            "authorization",
-            format!(
-                "{} {}",
-                initial_response_parsed.token_type, initial_response_parsed.access_token
-            ),
-        )
+        .header("authorization", format!("{} {}", initial_response_parsed.token_type, initial_response_parsed.access_token))
         .header("accept", "application/vnd.github+json")
         .header("user-agent", "request")
         .send()
         .await?;
-    let user_response_parsed: GithubUserResponse =
-        serde_json::from_str(user_response.text().await?.as_str())?;
+    if user_response.status() != 200 {
+        return Ok(Redirect::to(format!("{}/users/login?msg=ue", get_env_var("FRONTEND_URL"))).permanent());
+    }
+    let user_response_parsed: GithubUserResponse = serde_json::from_str::<GithubUserResponse>(user_response.text().await?.as_str())?;
     let oauth = format!("gituhb-{}", user_response_parsed.id);
     let connection = &mut create_connection();
     let user: QueryResult<User> = users.filter(oauth_id.eq(oauth)).first::<User>(connection);
