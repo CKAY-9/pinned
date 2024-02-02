@@ -75,7 +75,7 @@ pub async fn get_discord_user_authentication(
     let mut initial_code_request_data = HashMap::new();
     initial_code_request_data.insert("client_id", get_env_var("DISCORD_CLIENT_ID"));
     initial_code_request_data.insert("client_secret", get_env_var("DISCORD_CLIENT_SECRET"));
-    initial_code_request_data.insert("code", data.code.to_string());
+    initial_code_request_data.insert("code", data.code.to_owned());
     initial_code_request_data.insert("grant_type", "authorization_code".to_string());
     initial_code_request_data.insert("redirect_uri", get_local_api_url() + "/users/auth/discord");
 
@@ -83,7 +83,7 @@ pub async fn get_discord_user_authentication(
     let initial_response = client
         .post(format!("https://discord.com/api/oauth2/token"))
         .form(&initial_code_request_data)
-        .header("content-Type", "application/x-www-form-urlencoded")
+        .header("content-type", "application/x-www-form-urlencoded")
         .send()
         .await?;
     let initial_response_parsed: DiscordInitialResponse =
@@ -184,12 +184,13 @@ pub async fn get_github_user_authentication(
     data: web::Query<OAuthCode>,
 ) -> Result<Redirect, Box<dyn std::error::Error>> {
     let client = reqwest::Client::new();
+    println!("{}", data.code.clone());
     let initial_token_response = client
         .post("https://github.com/login/oauth/access_token")
         .form(&[
             ("code", data.code.to_owned()),
-            ("client_id", get_env_var("GITHUB_OAUTH_ID")),
-            ("client_secret", get_env_var("GITHUB_OAUTH_SECRET")),
+            ("client_id", get_env_var("GITHUB_CLIENT_ID")),
+            ("client_secret", get_env_var("GITHUB_CLIENT_SECRET")),
         ])
         .header("accept", "application/json")
         .send()
