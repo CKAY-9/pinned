@@ -207,7 +207,7 @@ pub async fn get_github_user_authentication(
         return Ok(Redirect::to(format!("{}/users/login?msg=ue", get_env_var("FRONTEND_URL"))).permanent());
     }
     let user_response_parsed: GithubUserResponse = serde_json::from_str::<GithubUserResponse>(user_response.text().await?.as_str())?;
-    let oauth = format!("gituhb-{}", user_response_parsed.id);
+    let oauth = format!("github-{}", user_response_parsed.id);
     let connection = &mut create_connection();
     let user: QueryResult<User> = users.filter(oauth_id.eq(oauth)).first::<User>(connection);
 
