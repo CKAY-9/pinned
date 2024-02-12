@@ -18,6 +18,11 @@ messaging.
 
 Docker support may be added
 
+### TODO
+1. Theme changing
+2. Role updates
+3. Pre-existing content
+
 ### Folder Structure
 - pinned-frontend: NextJS web application
 - pinned-backend: Actix and Diesel rust application
