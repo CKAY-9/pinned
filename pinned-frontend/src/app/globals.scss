@@ -8,6 +8,16 @@
   --accent: #3117eb;
 }
 
+@media (prefers-color-scheme: light) {
+  :root {
+    --text: #fbfbfb;
+    --background: #181818;
+    --primary: #444444;
+    --secondary: #333333;
+    --accent: #4c9fec;
+  }
+}
+
 * {
   font-family: "Nunito Sans", sans-serif;
 }
