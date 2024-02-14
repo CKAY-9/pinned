@@ -1,6 +1,7 @@
 import { getUserFromToken } from "@/api/user/user";
 import Footer from "@/components/footer/footer";
 import Header from "@/components/header/header";
+import SlideGallery from "@/components/slide_gallery/gallery";
 import { Metadata } from "next";
 
 export const generateMetadata = (): Metadata => {
@@ -18,6 +19,8 @@ const PostExplorePage = async () => {
       <Header user={user} /> 
       <main className="container">
         <h1>Explore Posts</h1>
+        <SlideGallery gallery_title="Recently Uploaded">
+        </SlideGallery>
       </main>
       <Footer user={user} />
     </>

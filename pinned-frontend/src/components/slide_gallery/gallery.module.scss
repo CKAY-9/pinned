@@ -1,0 +1,19 @@
+.slide_gallery {
+  display: flex;
+  flex-direction: column;
+
+  h1 {
+    padding: 1rem 2rem;
+    background-color: var(--primary);
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    color: #fff;
+  }
+}
+
+.gallery {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  overflow-x: auto;
+}

@@ -18,6 +18,11 @@ pub struct UpdatePostDTO {
     pub post_id: i32,
 }
 
+#[derive(Deserialize)]
+pub struct SearchFilterDTO {
+
+}
+
 #[derive(Serialize)]
 pub struct NewPostOTD {
     pub message: String,

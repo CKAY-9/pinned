@@ -4,7 +4,6 @@ import { BaseSyntheticEvent, useEffect, useState } from "react";
 import style from "./search.module.scss";
 import { User } from "@/api/user/dto";
 import { searchUsers } from "@/api/user/user.client";
-import UserChip from "@/components/user-chip/user-chip";
 import UserPreview from "@/components/user-preview/preview";
 
 const UserSearchClient = () => {
@@ -20,6 +19,10 @@ const UserSearchClient = () => {
       setResults(search_results);
       setSearching(false);
     })();
+
+    if (id === undefined || id === null || id <= 0) {
+      setID(0);
+    }
   }, [username, id]);
 
   return (

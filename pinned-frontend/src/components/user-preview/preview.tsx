@@ -1,12 +1,13 @@
 import { User } from "@/api/user/dto"
 import style from "./preview.module.scss"
 import Image from "next/image"
+import Link from "next/link"
 
 const UserPreview = (props: {
   user: User
 }) => {
   return (
-    <div className={style.preview}>
+    <Link href={`/user/${props.user.id}`} className={style.preview}>
       <Image 
         src={props.user.avatar}
         alt="PFP"
@@ -17,7 +18,7 @@ const UserPreview = (props: {
       />
       <span className={style.name}>{props.user.username}</span>
       <span className={style.id}>{props.user.id}</span>
-    </div>
+    </Link>
   );
 }
 
