@@ -21,7 +21,7 @@
 }
 
 .expand {
-  background-color: transparent;
+  background-color: var(--secondary);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -52,5 +52,6 @@
     background-color: var(--accent);
     padding: 1rem;
     border-radius: 0.5rem;
+    color: #fff;
   }
 }

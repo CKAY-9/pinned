@@ -12,7 +12,7 @@ messaging.
 ### Team Members
 - <a href="https://github.com/CKAY-9">CKAY9</a>
 - <a href="https://github.com/hwvnk">Hwvn</a>
-- Regrettinq
+- <a href="https://github.com/Regrettinq">Regrettinq</a>
 
 ## Developing
 

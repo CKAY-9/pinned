@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import "./globals.scss"
+import ThemeHandler from "@/components/theme-button/theme-handler"
 
 export const metadata: Metadata = {
   title: "Pinned",
@@ -14,6 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <ThemeHandler />
         <div id="notifications_main" className="notifications"></div>
         {children}
       </body>

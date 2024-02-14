@@ -8,16 +8,6 @@
   --accent: #3117eb;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --text: #fbfbfb;
-    --background: #181818;
-    --primary: #444444;
-    --secondary: #333333;
-    --accent: #4c9fec;
-  }
-}
-
 * {
   font-family: "Nunito Sans", sans-serif;
 }
@@ -91,7 +81,7 @@ button:hover, input[type="submit"]:hover {
 }
 
 .container {
-  margin: 5rem 10rem;
+  padding: 5rem 10rem;
   display: flex;
   flex-direction: column;
 }

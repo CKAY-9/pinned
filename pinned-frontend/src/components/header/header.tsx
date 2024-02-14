@@ -2,6 +2,7 @@ import Link from "next/link";
 import style from "./header.module.scss";
 import { User } from "@/api/user/dto";
 import Image from "next/image";
+import ThemeButton from "../theme-button/theme-button";
 
 const Header = (props: {
   user: User | null
@@ -19,6 +20,7 @@ const Header = (props: {
             className={style.logo}
           />
         </Link>
+        <ThemeButton />
         {props.user !== null &&
           <Link href="/post/new">
             <Image

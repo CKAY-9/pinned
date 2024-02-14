@@ -20,6 +20,10 @@
   align-items: center;
   font-size: 1rem;
   font-weight: 900;
+
+  button, a {
+    color: #fff;
+  }
 }
 
 .creation {
@@ -30,6 +34,7 @@
   .interact {
     width: fit-content;
     border-radius: 0.5rem;
+    color: #fff;
   }
 }
 
@@ -41,15 +46,14 @@
   gap: 1rem;
 
   button {
-    color: var(--text);
     border: none;
-    background-color: transparent;
+    background-color: var(--secondary) !important;
     transition: 0.35s ease all;
     padding: 1rem 2rem;
 
     &:hover {
       cursor: pointer;
-      background-color: var(--secondary) !important;
+      background-color: var(--primary) !important;
     }
 
     &:active, &:focus {

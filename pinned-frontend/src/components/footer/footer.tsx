@@ -2,7 +2,6 @@ import Link from "next/link";
 import style from "./footer.module.scss";
 import { User } from "@/api/user/dto";
 import Image from "next/image";
-import FooterClient from "./client";
 
 const Footer = (props: {
   user: User | null
@@ -54,7 +53,6 @@ const Footer = (props: {
           : <Link href={`/user/${props.user.id}`}>My Profile</Link>
         }
       </section>
-      <FooterClient />
     </footer>
   );
 }

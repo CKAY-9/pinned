@@ -20,6 +20,7 @@ const LoginPage = async () => {
 
   return (
     <>
+      <LoginClient />
       <main className={style.container} style={{"gap": "1rem"}}>
         <Link href="/">
           <Image 
@@ -57,7 +58,6 @@ const LoginPage = async () => {
             </Link>
           }
         </div>
-        <LoginClient />
       </main>
     </>
   );

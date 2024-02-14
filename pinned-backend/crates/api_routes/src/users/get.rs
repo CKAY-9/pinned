@@ -245,7 +245,7 @@ pub async fn get_github_user_authentication(
 
     let new_user = NewUser {
         username: user_response_parsed.login,
-        oauth_id: format!("discord-{}", user_response_parsed.id),
+        oauth_id: format!("github-{}", user_response_parsed.id),
         joined: iso8601(&SystemTime::now()),
         avatar: user_response_parsed.avatar_url,
         bio: "No bio provided.".to_string(),

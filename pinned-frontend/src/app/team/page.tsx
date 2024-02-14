@@ -43,7 +43,7 @@ const TeamPage = async () => {
         <div className={style.team_members}>
           <TeamMember name="CKAY9" avatar="/members/ckay.jpeg" description="Lead Programmer" />
           <TeamMember name="Hwvn" avatar="/members/kim.png" description="UI/UX Designer" />
-          <TeamMember name="Regrettinq" avatar="/members/wang.jpg" description="UI/UX Designer, Programmer" />
+          <TeamMember name="Regrettinq" avatar="/members/wang.jpg" description="Team Coordinator" />
         </div>
       </main>
       <Footer user={user} />

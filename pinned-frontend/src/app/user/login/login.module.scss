@@ -41,10 +41,14 @@
     border-radius: 0.5rem;
     opacity: 0;
     animation: fade_in 1s 0.5s ease forwards;
+    color: #fff;
 
     img {
       width: 2rem;
       height: 2rem;
+      background-color: transparent !important;
+      padding: 0 !important;
+      border-radius: 0 !important;
     }
   }
 }
