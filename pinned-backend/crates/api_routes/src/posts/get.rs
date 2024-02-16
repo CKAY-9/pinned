@@ -61,8 +61,8 @@ pub async fn get_post(
     }
 }
 
-#[get("/recent")]
-pub async fn get_recent_posts(data: web::Query<>)
+//#[get("/recent")]
+//pub async fn get_recent_posts(data: web::Query<>)
 
 #[get("/pinned")]
 pub async fn get_today_pinned() -> Result<impl Responder, Box<dyn std::error::Error>> {
