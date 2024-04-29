@@ -1,0 +1,9 @@
+.explore {
+  display: grid;
+	grid-template-columns: 25% 25% 25% 25%;
+	aspect-ratio: 1;
+}
+
+.item {
+	padding: 1rem;
+}

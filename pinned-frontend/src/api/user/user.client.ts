@@ -120,3 +120,17 @@ export const resetUser = async () => {
     console.log(ex);
   }
 }
+
+export const getExploreUsers = async (): Promise<User[]> => {
+  try {
+    const request = await axios({
+      url: API_URL + "/users/explore",
+      method: "GET"
+    });
+
+    return request.data;
+  } catch (ex) {
+    console.log(ex);
+    return []
+  }
+}

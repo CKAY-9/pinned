@@ -48,6 +48,7 @@ const Footer = (props: {
       <section>
         <strong>Users</strong>
         <Link href="/user/search">Search</Link> 
+        <Link href="/user/explore">Explore</Link>
         {props.user === null
           ? <Link href="/user/login">Login</Link>
           : <Link href={`/user/${props.user.id}`}>My Profile</Link>

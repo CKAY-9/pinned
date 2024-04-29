@@ -82,6 +82,12 @@ pub struct UserPostsMessage {
 }
 
 #[derive(Serialize)]
+pub struct UserExploreMessage {
+    pub message: String,
+    pub users: Vec<User>
+}
+
+#[derive(Serialize)]
 pub struct UserCollectionsMessage {
     pub message: String,
     pub collections: Vec<Collection>,
