@@ -11,6 +11,12 @@ pub struct NewPostDTO {
     pub description: String,
 }
 
+#[derive(Serialize)]
+pub struct PostExploreMessage {
+    pub message: String,
+    pub posts: Vec<Post>
+}
+
 #[derive(Deserialize)]
 pub struct UpdatePostDTO {
     pub title: String,

@@ -25,26 +25,17 @@ use comments::{
 use posts::{
     delete::delete_post,
     get::{
-        get_post, 
-        get_today_pinned
+        get_explore_posts, get_post, get_today_pinned
     },
     post::create_new_post,
     put::{
-        update_post, 
-        update_likes_on_post
+        update_likes_on_post, update_post
     },
 };
 use users::{
     delete::delete_user,
     get::{
-        get_account, 
-        get_discord_user_authentication, 
-        get_github_user_authentication, 
-        get_profile,
-        get_search_users, 
-        get_user_collections, 
-        get_users_comments, 
-        get_users_posts,
+        get_account, get_discord_user_authentication, get_explore_users, get_github_user_authentication, get_profile, get_search_users, get_user_collections, get_users_comments, get_users_posts
     },
     post::post_reset_user,
 };
@@ -60,6 +51,7 @@ pub fn configure_user_routes(cfg: &mut web::ServiceConfig) {
             .service(get_users_posts) // user id parameter
             .service(get_user_collections) // user id parameter
             .service(get_users_comments) // user id parameter
+            .service(get_explore_users)
             .service(
                 web::scope("/auth")
                     .service(get_discord_user_authentication) // code parameter - provided by oauth
@@ -77,6 +69,7 @@ pub fn configure_post_routes(cfg: &mut web::ServiceConfig) {
             .service(update_post) // auth header, post_id, title, descripition body
             .service(get_today_pinned) // no inputs 
             .service(update_likes_on_post) // post_id, type: -1 = dislike, 0 = reset, 1 = like, auth header
+            .service(get_explore_posts)
     );
 }
 

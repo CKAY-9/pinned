@@ -40,11 +40,12 @@
 
 .header_drop {
   padding: 0 1rem;
-  text-transform: uppercase;
   position: relative;
+  z-index: 1000;
 
   h2 {
     position: relative;
+    text-transform: uppercase;
     z-index: 1000;
   }
 

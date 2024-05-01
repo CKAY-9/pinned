@@ -127,8 +127,8 @@ export const getExploreUsers = async (): Promise<User[]> => {
       url: API_URL + "/users/explore",
       method: "GET"
     });
-
-    return request.data;
+    console.log(request.data);
+    return request.data.users;
   } catch (ex) {
     console.log(ex);
     return []

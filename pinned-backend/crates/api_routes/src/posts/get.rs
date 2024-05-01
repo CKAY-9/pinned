@@ -4,7 +4,8 @@ use crate::{
         GetPostDTO, 
         GetPostMessage,
         SearchPostsDTO,
-        SearchPostsMessages
+        SearchPostsMessages,
+        PostExploreMessage
     },
 };
 use actix_web::{
@@ -26,9 +27,9 @@ use diesel::{
 };
 use pinned_db::create_connection;
 use pinned_db_schema::{
-    models::Post, 
-    schema::posts
+    models::Post, schema::posts, 
 };
+use rand::{seq::IteratorRandom, thread_rng};
 use reqwest::StatusCode;
 
 #[get("")]
@@ -61,8 +62,36 @@ pub async fn get_post(
     }
 }
 
-//#[get("/recent")]
-//pub async fn get_recent_posts(data: web::Query<>)
+#[get("/explore")]
+pub async fn get_explore_posts() -> Result<impl Responder, Box<dyn std::error::Error>> {
+    let connection: &mut diesel::prelude::PgConnection = &mut create_connection();
+    let posts_result: QueryResult<Vec<Post>> = posts::table
+        .select(Post::as_select())
+        .load(connection);
+    if posts_result.is_err() {
+        return Ok(HttpResponse::Ok().json(Message {
+            message: "Failed to get posts".to_string()
+        }));
+    }
+
+    let max_return = 10;
+    let all_posts = posts_result.expect("Failed to get posts");
+
+    if all_posts.iter().count() <= max_return {
+        return Ok(HttpResponse::Ok().json(PostExploreMessage {
+            message: "Got posts".to_string(),
+            posts: all_posts
+        }));
+    }
+
+    let mut rng = thread_rng();
+    let ps: Vec<Post> = all_posts.into_iter().choose_multiple(&mut rng, max_return);
+
+    Ok(HttpResponse::Ok().json(PostExploreMessage {
+        message: "Got posts".to_string(),
+        posts: ps
+    }))
+}
 
 #[get("/pinned")]
 pub async fn get_today_pinned() -> Result<impl Responder, Box<dyn std::error::Error>> {

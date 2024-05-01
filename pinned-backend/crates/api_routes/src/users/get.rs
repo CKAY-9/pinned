@@ -306,34 +306,33 @@ pub async fn get_account(
 
 #[get("/explore")]
 pub async fn get_explore_users() -> Result<impl Responder, Box<dyn std::error::Error>> {
-    let connection = &mut create_connection();
+    let connection: &mut diesel::prelude::PgConnection = &mut create_connection();
     let users_result: QueryResult<Vec<User>> = users::table
         .select(User::as_select())
         .load(connection);
     if users_result.is_err() {
-        return Ok(HttpResponse::Ok());
+        return Ok(HttpResponse::Ok().json(Message {
+            message: "Failed to get users".to_string()
+        }));
     }
 
     let max_return = 10;
     let all_users = users_result.expect("Failed to get users");
 
-    if all_users.into_iter().count() <= max_return {
-        let small_users: UserExploreMessage = UserExploreMessage {
+    if all_users.iter().count() <= max_return {
+        return Ok(HttpResponse::Ok().json(UserExploreMessage {
             message: "Got users".to_string(),
             users: all_users
-        };
-        return Ok(HttpResponse::Ok().json(small_users));
+        }));
     }
 
     let mut rng = thread_rng();
     let us: Vec<User> = all_users.into_iter().choose_multiple(&mut rng, max_return);
 
-    let response_message: UserExploreMessage = UserExploreMessage {
-        message: "Get users".to_string(),
+    Ok(HttpResponse::Ok().json(UserExploreMessage {
+        message: "Got users".to_string(),
         users: us
-    };
-
-    Ok(HttpResponse::Ok().json(response_message))
+    }))
 }
 
 #[get("/public")]

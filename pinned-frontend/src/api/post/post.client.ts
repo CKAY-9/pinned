@@ -120,3 +120,16 @@ export const searchPosts = async (name: string, id: number): Promise<Post[]> => 
     return [];
   }
 }
+
+export const getExplorePosts = async (): Promise<Post[]> => {
+  try {
+    const explore_request = await axios({
+      "url": API_URL + "/posts/explore",
+      "method": "GET"
+    });
+    return explore_request.data.posts;
+  } catch (ex) {
+    console.log(ex);
+    return []
+  }
+}
