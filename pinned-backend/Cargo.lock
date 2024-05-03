@@ -1110,7 +1110,10 @@ version = "0.1.0"
 dependencies = [
  "diesel",
  "dotenv",
+ "pinned_db_schema",
  "pinned_utils",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
@@ -1141,6 +1144,7 @@ dependencies = [
 name = "pinned_utils"
 version = "0.1.0"
 dependencies = [
+ "actix-web",
  "chrono",
  "dotenv",
 ]

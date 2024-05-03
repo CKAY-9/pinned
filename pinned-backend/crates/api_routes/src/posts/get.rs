@@ -1,63 +1,37 @@
 use crate::{
     dto::Message,
     posts::dto::{
-        GetPostDTO, 
+        GetPostDTO,
         GetPostMessage,
         SearchPostsDTO,
         SearchPostsMessages,
-        PostExploreMessage
+        PostExploreMessage,
     },
 };
-use actix_web::{
-    get, 
-    web, 
-    HttpResponse, 
-    Responder
-};
-use chrono::{
-    DateTime, 
-    Local
-};
-use diesel::{
-    ExpressionMethods, 
-    QueryDsl, 
-    QueryResult, 
-    RunQueryDsl, 
-    SelectableHelper
-};
-use pinned_db::create_connection;
-use pinned_db_schema::{
-    models::Post, schema::posts, 
-};
-use rand::{seq::IteratorRandom, thread_rng};
+use actix_web::{ get, web, HttpResponse, Responder };
+use chrono::{ DateTime, Local };
+use diesel::{ ExpressionMethods, QueryDsl, QueryResult, RunQueryDsl, SelectableHelper };
+use pinned_db::{create_connection, crud::posts::get_post_from_id};
+use pinned_db_schema::{ models::Post, schema::posts };
+use rand::{ seq::IteratorRandom, thread_rng };
 use reqwest::StatusCode;
 
 #[get("")]
 pub async fn get_post(
-    data: web::Query<GetPostDTO>,
+    data: web::Query<GetPostDTO>
 ) -> Result<impl Responder, Box<dyn std::error::Error>> {
-    let connection = &mut create_connection();
-    let post: QueryResult<Post> = posts::table
-        .find(data.post_id)
-        .select(Post::as_select())
-        .first(connection);
-
+    let post = get_post_from_id(data.post_id);
     match post {
-        Ok(post) => {
-            let post_message = GetPostMessage {
+        Some(p) => {
+            Ok(HttpResponse::Ok().json(GetPostMessage {
                 message: "Fetched post".to_string(),
-                post,
-            };
-            Ok(HttpResponse::Ok().json(post_message))
-        }
-        Err(e) => {
-            println!("{}", e);
-            let error_message = Message {
+                post: p,
+            }))
+        },
+        None => {
+            Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(Message {
                 message: "Failed to get post".to_string(),
-            };
-            Ok(HttpResponse::Ok()
-                .status(StatusCode::NOT_FOUND)
-                .json(error_message))
+            }))
         }
     }
 }
@@ -69,28 +43,34 @@ pub async fn get_explore_posts() -> Result<impl Responder, Box<dyn std::error::E
         .select(Post::as_select())
         .load(connection);
     if posts_result.is_err() {
-        return Ok(HttpResponse::Ok().json(Message {
-            message: "Failed to get posts".to_string()
-        }));
+        return Ok(
+            HttpResponse::Ok().json(Message {
+                message: "Failed to get posts".to_string(),
+            })
+        );
     }
 
     let max_return = 10;
     let all_posts = posts_result.expect("Failed to get posts");
 
     if all_posts.iter().count() <= max_return {
-        return Ok(HttpResponse::Ok().json(PostExploreMessage {
-            message: "Got posts".to_string(),
-            posts: all_posts
-        }));
+        return Ok(
+            HttpResponse::Ok().json(PostExploreMessage {
+                message: "Got posts".to_string(),
+                posts: all_posts,
+            })
+        );
     }
 
     let mut rng = thread_rng();
     let ps: Vec<Post> = all_posts.into_iter().choose_multiple(&mut rng, max_return);
 
-    Ok(HttpResponse::Ok().json(PostExploreMessage {
-        message: "Got posts".to_string(),
-        posts: ps
-    }))
+    Ok(
+        HttpResponse::Ok().json(PostExploreMessage {
+            message: "Got posts".to_string(),
+            posts: ps,
+        })
+    )
 }
 
 #[get("/pinned")]
@@ -101,9 +81,9 @@ pub async fn get_today_pinned() -> Result<impl Responder, Box<dyn std::error::Er
         let posts_error_message = Message {
             message: "Failed to get posts".to_string(),
         };
-        return Ok(HttpResponse::Ok()
-            .status(StatusCode::INTERNAL_SERVER_ERROR)
-            .json(posts_error_message));
+        return Ok(
+            HttpResponse::Ok().status(StatusCode::INTERNAL_SERVER_ERROR).json(posts_error_message)
+        );
     }
 
     let posts_unwrap = posts.unwrap();
@@ -122,7 +102,9 @@ pub async fn get_today_pinned() -> Result<impl Responder, Box<dyn std::error::Er
 }
 
 #[get("/search")]
-pub async fn search_posts(query: web::Query<SearchPostsDTO>) -> Result<impl Responder, Box<dyn std::error::Error>> {
+pub async fn search_posts(
+    query: web::Query<SearchPostsDTO>
+) -> Result<impl Responder, Box<dyn std::error::Error>> {
     let connection = &mut create_connection();
     let mut posts_vec: Vec<Post> = Vec::new();
 
@@ -133,11 +115,10 @@ pub async fn search_posts(query: web::Query<SearchPostsDTO>) -> Result<impl Resp
         if post_result.is_ok() {
             let post = post_result.unwrap();
             posts_vec.push(post);
-        }   
+        }
     }
 
-    let all_posts_result: QueryResult<Vec<Post>> = posts::table
-        .load(connection);
+    let all_posts_result: QueryResult<Vec<Post>> = posts::table.load(connection);
 
     if all_posts_result.is_ok() {
         let all_posts = all_posts_result.unwrap();
@@ -153,5 +134,10 @@ pub async fn search_posts(query: web::Query<SearchPostsDTO>) -> Result<impl Resp
         }
     }
 
-    Ok(HttpResponse::Ok().json(SearchPostsMessages { message: "Fetched posts".to_string(), posts: posts_vec }))
+    Ok(
+        HttpResponse::Ok().json(SearchPostsMessages {
+            message: "Fetched posts".to_string(),
+            posts: posts_vec,
+        })
+    )
 }

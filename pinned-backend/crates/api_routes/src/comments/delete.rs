@@ -1,31 +1,9 @@
-use actix_web::{
-    delete, 
-    web, 
-    HttpRequest, 
-    HttpResponse, 
-    Responder
+use actix_web::{ delete, web, HttpRequest, HttpResponse, Responder };
+use pinned_db::crud::{
+    comments::{ delete_comment_from_id, get_comment_from_id },
+    users::get_user_from_token,
 };
-use diesel::{
-    ExpressionMethods, 
-    QueryDsl, 
-    QueryResult, 
-    RunQueryDsl, 
-    SelectableHelper
-};
-use pinned_db::create_connection;
-use pinned_db_schema::{
-    models::{
-        Comment, 
-        User
-    },
-    schema::{
-        comments::{self},
-        users::{
-            self, 
-            token
-        },
-    },
-};
+use pinned_utils::extract_header_value;
 use reqwest::StatusCode;
 use crate::dto::Message;
 use super::dto::GetCommentDTO;
@@ -33,64 +11,59 @@ use super::dto::GetCommentDTO;
 #[delete("")]
 pub async fn delete_comment(
     request: HttpRequest,
-    data: web::Json<GetCommentDTO>,
+    data: web::Json<GetCommentDTO>
 ) -> Result<impl Responder, Box<dyn std::error::Error>> {
-    let auth_header = request.headers().get("Authorization");
-    if auth_header.is_none() {
-        let error_message = Message {
-            message: "Failed to parse auth header".to_string(),
-        };
-        return Ok(HttpResponse::Ok()
-            .status(StatusCode::BAD_REQUEST)
-            .json(error_message));
+    let token_option = extract_header_value(&request, "Authorization");
+    if token_option.is_none() {
+        return Ok(
+            HttpResponse::Ok().status(StatusCode::BAD_REQUEST).json(Message {
+                message: "Failed to get user token".to_string(),
+            })
+        );
     }
 
-    let auth_header_result = auth_header.unwrap().to_str().unwrap();
-
-    let connection = &mut create_connection();
-    let user: QueryResult<User> = users::table
-        .filter(token.eq(auth_header_result))
-        .first::<User>(connection);
-    match user {
-        Ok(user) => {
-            let comment_result: QueryResult<Comment> = comments::table
-                .find(data.comment_id)
-                .select(Comment::as_select())
-                .first(connection);
-
-            if comment_result.is_err() {
-                let comment_failed_message = Message {
-                    message: "Failed to get comment".to_string(),
-                };
-                return Ok(HttpResponse::Ok()
-                    .status(StatusCode::NOT_FOUND)
-                    .json(comment_failed_message));
-            }
-
-            let comment = comment_result.unwrap();
-            if comment.creator != user.id {
-                let user_doesnt_own_comment_message = Message {
-                    message: "User doesn't own comment".to_string(),
-                };
-                return Ok(HttpResponse::Ok()
-                    .status(StatusCode::UNAUTHORIZED)
-                    .json(user_doesnt_own_comment_message));
-            }
-
-            let _ = diesel::delete(comments::table.find(data.comment_id)).execute(connection)?;
-            let message = Message {
-                message: "Deleted comment".to_string(),
-            };
-            Ok(HttpResponse::Ok().json(message))
-        }
-        Err(e) => {
-            println!("{}", e);
-            let error_message = Message {
+    let user_option = get_user_from_token(token_option.unwrap());
+    if user_option.is_none() {
+        return Ok(
+            HttpResponse::Ok().status(StatusCode::UNAUTHORIZED).json(Message {
                 message: "Failed to get user".to_string(),
-            };
-            Ok(HttpResponse::Ok()
-                .status(StatusCode::UNAUTHORIZED)
-                .json(error_message))
-        }
+            })
+        );
+    }
+
+    let comment_option = get_comment_from_id(data.comment_id);
+    if comment_option.is_none() {
+        return Ok(
+            HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(Message {
+                message: "Failed to get comment".to_string(),
+            })
+        );
+    }
+
+    let comment = comment_option.unwrap();
+    let user = user_option.unwrap();
+
+    if comment.creator != user.id {
+        return Ok(
+            HttpResponse::Ok().status(StatusCode::UNAUTHORIZED).json(Message {
+                message: "Invalid permissions".to_string(),
+            })
+        );
+    }
+
+    let delete = delete_comment_from_id(comment.id);
+    match delete {
+        true =>
+            Ok(
+                HttpResponse::Ok().json(Message {
+                    message: "Deleted comment".to_string(),
+                })
+            ),
+        _ =>
+            Ok(
+                HttpResponse::Ok().status(StatusCode::INTERNAL_SERVER_ERROR).json(Message {
+                    message: "Failed to delete comment".to_string(),
+                })
+            ),
     }
 }

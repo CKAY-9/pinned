@@ -1,32 +1,13 @@
-use crate::{
-    comments::dto::{
-        GetCommentDTO, 
-        GetCommentMessage
-    },
-    dto::Message,
-};
-use actix_web::{
-    get, 
-    web, 
-    HttpResponse, 
-    Responder
-};
-use diesel::{
-    QueryDsl, 
-    QueryResult, 
-    RunQueryDsl, 
-    SelectableHelper
-};
+use crate::{ comments::dto::{ GetCommentDTO, GetCommentMessage }, dto::Message };
+use actix_web::{ get, web, HttpResponse, Responder };
+use diesel::{ QueryDsl, QueryResult, RunQueryDsl, SelectableHelper };
 use pinned_db::create_connection;
-use pinned_db_schema::{
-    models::Comment, 
-    schema::comments
-};
+use pinned_db_schema::{ models::Comment, schema::comments };
 use reqwest::StatusCode;
 
 #[get("")]
 pub async fn get_comment(
-    data: web::Query<GetCommentDTO>,
+    data: web::Query<GetCommentDTO>
 ) -> Result<impl Responder, Box<dyn std::error::Error>> {
     let connection = &mut create_connection();
     let comment: QueryResult<Comment> = comments::table
@@ -47,9 +28,7 @@ pub async fn get_comment(
             let error_message = Message {
                 message: "Failed to get comment".to_string(),
             };
-            Ok(HttpResponse::Ok()
-                .status(StatusCode::NOT_FOUND)
-                .json(error_message))
+            Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(error_message))
         }
     }
 }

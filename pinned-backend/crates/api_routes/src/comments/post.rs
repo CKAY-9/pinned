@@ -1,126 +1,78 @@
-use actix_web::{
-    post, 
-    web, 
-    HttpRequest, 
-    HttpResponse, 
-    Responder
+use actix_web::{ post, web, HttpRequest, HttpResponse, Responder };
+use pinned_db::crud::{
+    comments::create_comment,
+    posts::{ get_post_from_id, update_post_from_id },
+    users::get_user_from_token,
 };
-use diesel::{
-    ExpressionMethods, 
-    QueryDsl, 
-    QueryResult, 
-    RunQueryDsl, 
-    SelectableHelper
-};
-use pinned_db::create_connection;
-use pinned_db_schema::{
-    models::{
-        NewComment, 
-        Post, 
-        User
-    },
-    schema::{
-        comments,
-        posts::{self},
-        users::{
-            self, 
-            token
-        },
-    },
-};
-use pinned_utils::iso8601;
+use pinned_db_schema::models::NewComment;
+use pinned_utils::{ extract_header_value, iso8601 };
 use reqwest::StatusCode;
 use std::time::SystemTime;
 use crate::dto::Message;
-use super::dto::{
-    NewCommentDTO, 
-    NewCommentMessage
-};
+use super::dto::{ NewCommentDTO, NewCommentMessage };
 
 #[post("")]
 pub async fn create_new_comment(
     request: HttpRequest,
-    post: web::Json<NewCommentDTO>,
+    data: web::Json<NewCommentDTO>
 ) -> Result<impl Responder, Box<dyn std::error::Error>> {
-    let auth_header = request.headers().get("Authorization");
-    if auth_header.is_none() {
-        let error_message = Message {
-            message: "Failed to parse auth header".to_string(),
-        };
-        return Ok(HttpResponse::Ok()
-            .status(StatusCode::BAD_REQUEST)
-            .json(error_message));
+    let token_option = extract_header_value(&request, "Authorization");
+    if token_option.is_none() {
+        return Ok(
+            HttpResponse::Ok().status(StatusCode::BAD_REQUEST).json(Message {
+                message: "Failed to get user token".to_string(),
+            })
+        );
     }
 
-    let auth_header_result = auth_header.unwrap().to_str().unwrap();
+    let user_option = get_user_from_token(token_option.unwrap());
+    if user_option.is_none() {
+        return Ok(
+            HttpResponse::Ok().status(StatusCode::UNAUTHORIZED).json(Message {
+                message: "Failed to get user".to_string(),
+            })
+        );
+    }
 
-    let connection = &mut create_connection();
-    let user: QueryResult<User> = users::table
-        .filter(token.eq(auth_header_result))
-        .first::<User>(connection);
-    match user {
-        Ok(user) => {
-            let parent_post: QueryResult<Post> = posts::table
-                .filter(posts::id.eq(post.post_id.clone()))
-                .select(Post::as_select())
-                .first::<Post>(connection);
+    let post_option = get_post_from_id(data.post_id);
+    if post_option.is_none() {
+        return Ok(
+            HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(Message {
+                message: "Failed to get parent post".to_string(),
+            })
+        );
+    }
 
-            if parent_post.is_err() {
-                let post_error_message = Message {
-                    message: "Failed to get post".to_string(),
-                };
-                return Ok(HttpResponse::Ok()
-                    .status(StatusCode::NOT_FOUND)
-                    .json(post_error_message));
-            }
+    let user = user_option.unwrap();
+    let mut post = post_option.unwrap();
 
-            let mut post_unwrap = parent_post.unwrap();
-
-            let new_comment = NewComment {
-                content: post.content.clone(),
-                posted: iso8601(&SystemTime::now()),
-                post: post.post_id.clone(),
-                creator: user.id,
-                likes: vec![],
-                dislikes: vec![],
-            };
-
-            let insert_result = diesel::insert_into(comments::table)
-                .values(new_comment)
-                .get_result::<(i32, i32, i32, String, String, Vec<i32>, Vec<i32>)>(connection);
-
-            if insert_result.is_err() {
-                let insert_error_message = Message {
-                    message: "Failed to insert post".to_string(),
-                };
-                return Ok(HttpResponse::Ok()
-                    .status(StatusCode::NOT_FOUND)
-                    .json(insert_error_message));
-            }
-
-            let insert = insert_result.unwrap();
-
-            post_unwrap.comments.push(insert.0);
-
-            let _ = diesel::update(posts::table)
-                .filter(posts::id.eq(post.post_id.clone()))
-                .set(posts::comments.eq(post_unwrap.comments))
-                .execute(connection);
-
-            let success_message = NewCommentMessage {
-                message: "Created new comment".to_string(),
-                comment_id: insert.0,
-            };
-            Ok(HttpResponse::Ok().json(success_message))
-        }
-        Err(e) => {
-            println!("{}", e);
-            let error_message = Message {
+    let new_comment = NewComment {
+        content: data.content.clone(),
+        posted: iso8601(&SystemTime::now()),
+        post: data.post_id.clone(),
+        creator: user.id,
+        likes: vec![],
+        dislikes: vec![],
+    };
+    let insert_option = create_comment(new_comment);
+    if insert_option.is_none() {
+        return Ok(
+            HttpResponse::Ok().status(StatusCode::INTERNAL_SERVER_ERROR).json(Message {
                 message: "Failed to create comment".to_string(),
-            };
-            Ok(HttpResponse::Ok()
-                .status(StatusCode::BAD_REQUEST)
-                .json(error_message))
-        }
+            })
+        );
     }
+
+    let insert = insert_option.unwrap();
+
+    post.comments.push(insert.id);
+    let post_update = serde_json::from_str(serde_json::to_string(&post).unwrap().as_str()).unwrap();
+    let _ = update_post_from_id(post.id, post_update);
+
+    Ok(
+        HttpResponse::Ok().json(NewCommentMessage {
+            message: "Created new comment".to_string(),
+            comment_id: insert.id,
+        })
+    )
 }

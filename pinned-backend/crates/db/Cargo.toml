@@ -15,3 +15,6 @@ doctest = false
 dotenv = { workspace = true }
 diesel = { workspace = true }
 pinned_utils = { workspace = true }
+pinned_db_schema = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }

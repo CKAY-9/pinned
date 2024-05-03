@@ -1,37 +1,22 @@
 use crate::dto::Message;
-use actix_web::{
-    delete, 
-    HttpRequest, 
-    HttpResponse, 
-    Responder
-};
-use diesel::{
-    ExpressionMethods, 
-    QueryDsl, 
-    QueryResult, 
-    RunQueryDsl
-};
+use actix_web::{ delete, HttpRequest, HttpResponse, Responder };
+use diesel::{ ExpressionMethods, QueryDsl, QueryResult, RunQueryDsl };
 use pinned_db::create_connection;
-use pinned_db_schema::schema::{posts, self};
+use pinned_db_schema::schema::{ posts, self };
 use pinned_db_schema::schema::users::dsl::*;
-use pinned_db_schema::{
-    models::User, 
-    schema::users
-};
+use pinned_db_schema::{ models::User, schema::users };
 use reqwest::StatusCode;
 
 #[delete("")]
 pub async fn delete_user(
-    request: HttpRequest,
+    request: HttpRequest
 ) -> Result<impl Responder, Box<dyn std::error::Error>> {
     let auth_header = request.headers().get("Authorization");
     if auth_header.is_none() {
         let error_message = Message {
             message: "Failed to parse auth header".to_string(),
         };
-        return Ok(HttpResponse::Ok()
-            .status(StatusCode::BAD_REQUEST)
-            .json(error_message));
+        return Ok(HttpResponse::Ok().status(StatusCode::BAD_REQUEST).json(error_message));
     }
 
     let auth_header_result = auth_header.unwrap().to_str().unwrap();
@@ -43,16 +28,19 @@ pub async fn delete_user(
     match user {
         Ok(user) => {
             let _ = diesel::delete(users::table.find(user.id)).execute(connection)?;
-            
-            let _ = diesel::delete(posts::table)
+
+            let _ = diesel
+                ::delete(posts::table)
                 .filter(schema::posts::creator.eq(user.id))
                 .execute(connection);
 
-            let _ = diesel::delete(schema::comments::table)
+            let _ = diesel
+                ::delete(schema::comments::table)
                 .filter(schema::comments::creator.eq(user.id))
                 .execute(connection);
-            
-            let _ = diesel::delete(schema::collections::table)
+
+            let _ = diesel
+                ::delete(schema::collections::table)
                 .filter(schema::collections::creator.eq(user.id))
                 .execute(connection);
 
@@ -65,9 +53,7 @@ pub async fn delete_user(
             let error_message = Message {
                 message: e.to_string(),
             };
-            Ok(HttpResponse::Ok()
-                .status(StatusCode::NOT_FOUND)
-                .json(error_message))
+            Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(error_message))
         }
     }
 }

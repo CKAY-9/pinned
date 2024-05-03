@@ -1,96 +1,69 @@
 use crate::dto::Message;
-use actix_web::{
-    delete, 
-    web, 
-    HttpRequest, 
-    HttpResponse, 
-    Responder
+use actix_web::{ delete, web, HttpRequest, HttpResponse, Responder };
+use pinned_db::crud::{
+    posts::{ delete_post_from_id, get_post_from_id },
+    users::get_user_from_token,
 };
-use diesel::{
-    ExpressionMethods, 
-    QueryDsl, 
-    QueryResult, 
-    RunQueryDsl, 
-    SelectableHelper
-};
-use pinned_db::create_connection;
-use pinned_db_schema::{
-    models::{
-        Post, 
-        User
-    },
-    schema::{
-        posts,
-        users::{
-            self, 
-            token
-        },
-    },
-};
+use pinned_utils::extract_header_value;
 use reqwest::StatusCode;
 use super::dto::GetPostDTO;
 
 #[delete("")]
 pub async fn delete_post(
     request: HttpRequest,
-    data: web::Json<GetPostDTO>,
+    data: web::Json<GetPostDTO>
 ) -> Result<impl Responder, Box<dyn std::error::Error>> {
-    let auth_header = request.headers().get("Authorization");
-    if auth_header.is_none() {
-        let error_message = Message {
-            message: "Failed to parse auth header".to_string(),
-        };
-        return Ok(HttpResponse::Ok()
-            .status(StatusCode::BAD_REQUEST)
-            .json(error_message));
+    let token_option = extract_header_value(&request, "Authorization");
+    if token_option.is_none() {
+        return Ok(
+            HttpResponse::Ok().status(StatusCode::BAD_REQUEST).json(Message {
+                message: "Failed to get user token".to_string(),
+            })
+        );
     }
 
-    let auth_header_result = auth_header.unwrap().to_str().unwrap();
-
-    let connection = &mut create_connection();
-    let user: QueryResult<User> = users::table
-        .filter(token.eq(auth_header_result))
-        .first::<User>(connection);
-    match user {
-        Ok(user) => {
-            let post_result: QueryResult<Post> = posts::table
-                .find(data.post_id)
-                .select(Post::as_select())
-                .first(connection);
-
-            if post_result.is_err() {
-                let post_failed_message = Message {
-                    message: "Failed to get post".to_string(),
-                };
-                return Ok(HttpResponse::Ok()
-                    .status(StatusCode::NOT_FOUND)
-                    .json(post_failed_message));
-            }
-
-            let post = post_result.unwrap();
-            if post.creator != user.id {
-                let user_doesnt_own_post_message = Message {
-                    message: "User doesn't own post".to_string(),
-                };
-                return Ok(HttpResponse::Ok()
-                    .status(StatusCode::UNAUTHORIZED)
-                    .json(user_doesnt_own_post_message));
-            }
-
-            let _ = diesel::delete(posts::table.find(data.post_id)).execute(connection)?;
-            let message = Message {
-                message: "Deleted post".to_string(),
-            };
-            Ok(HttpResponse::Ok().json(message))
-        }
-        Err(e) => {
-            println!("{}", e);
-            let error_message = Message {
+    let user_option = get_user_from_token(token_option.unwrap());
+    if user_option.is_none() {
+        return Ok(
+            HttpResponse::Ok().status(StatusCode::UNAUTHORIZED).json(Message {
                 message: "Failed to get user".to_string(),
-            };
-            Ok(HttpResponse::Ok()
-                .status(StatusCode::UNAUTHORIZED)
-                .json(error_message))
-        }
+            })
+        );
+    }
+
+    let post_option = get_post_from_id(data.post_id);
+    if post_option.is_none() {
+        return Ok(
+            HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(Message {
+                message: "Failed to get post".to_string(),
+            })
+        );
+    }
+
+    let post = post_option.unwrap();
+    let user = user_option.unwrap();
+
+    if post.creator != user.id {
+        return Ok(
+            HttpResponse::Ok().status(StatusCode::UNAUTHORIZED).json(Message {
+                message: "Invalid permissions".to_string(),
+            })
+        );
+    }
+
+    let delete = delete_post_from_id(post.id);
+    match delete {
+        true =>
+            Ok(
+                HttpResponse::Ok().json(Message {
+                    message: "Deleted post".to_string(),
+                })
+            ),
+        _ =>
+            Ok(
+                HttpResponse::Ok().status(StatusCode::INTERNAL_SERVER_ERROR).json(Message {
+                    message: "Failed to delete post".to_string(),
+                })
+            ),
     }
 }

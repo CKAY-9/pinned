@@ -1,8 +1,5 @@
 use pinned_db_schema::models::Comment;
-use serde::{
-    Deserialize, 
-    Serialize
-};
+use serde::{ Deserialize, Serialize };
 
 #[derive(Deserialize)]
 pub struct GetCommentDTO {
@@ -30,5 +27,5 @@ pub struct NewCommentMessage {
 #[derive(Deserialize)]
 pub struct LikeCommentDTO {
     pub comment_id: i32,
-    pub like_type: i32
+    pub like_type: i32,
 }

@@ -1,5 +1,5 @@
 use diesel::prelude::*;
-use serde::{Deserialize, Serialize};
+use serde::{ Deserialize, Serialize };
 
 #[derive(Queryable, Selectable, Serialize, Deserialize)]
 #[diesel(table_name = crate::schema::users)]
@@ -15,7 +15,7 @@ pub struct User {
     pub collections: Vec<i32>,
 }
 
-#[derive(Insertable, AsChangeset)]
+#[derive(Insertable, AsChangeset, Deserialize)]
 #[diesel(table_name = crate::schema::users)]
 pub struct NewUser {
     pub token: String,
@@ -42,7 +42,7 @@ pub struct Post {
     pub comments: Vec<i32>,
 }
 
-#[derive(Insertable, Debug)]
+#[derive(Insertable, Debug, AsChangeset, Deserialize)]
 #[diesel(table_name = crate::schema::posts)]
 pub struct NewPost {
     pub file_id: String,
@@ -68,7 +68,7 @@ pub struct Comment {
     pub dislikes: Vec<i32>,
 }
 
-#[derive(Insertable)]
+#[derive(Insertable, AsChangeset, Deserialize)]
 #[diesel(table_name = crate::schema::comments)]
 pub struct NewComment {
     pub creator: i32,
@@ -90,11 +90,12 @@ pub struct Collection {
     pub linked_comments: Vec<i32>,
     pub recommended_collections: Vec<i32>,
     pub creator: i32,
+    pub collaborators: Vec<i32>,
     pub likes: Vec<i32>,
     pub dislikes: Vec<i32>,
 }
 
-#[derive(Insertable)]
+#[derive(Insertable, AsChangeset, Deserialize)]
 #[diesel(table_name = crate::schema::collections)]
 pub struct NewCollection {
     pub name: String,
@@ -103,6 +104,7 @@ pub struct NewCollection {
     pub linked_comments: Vec<i32>,
     pub recommended_collections: Vec<i32>,
     pub creator: i32,
+    pub collaborators: Vec<i32>,
     pub likes: Vec<i32>,
     pub dislikes: Vec<i32>,
 }

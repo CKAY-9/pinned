@@ -1,4 +1,5 @@
-use chrono::prelude::{DateTime, Utc};
+use actix_web::HttpRequest;
+use chrono::prelude::{ DateTime, Utc };
 use std::env;
 
 pub fn get_env_var(key: &str) -> String {
@@ -21,4 +22,12 @@ pub fn get_local_api_url() -> String {
 pub fn iso8601(st: &std::time::SystemTime) -> String {
     let dt: DateTime<Utc> = st.clone().into();
     format!("{}", dt.format("%+"))
+}
+
+pub fn extract_header_value(request: &HttpRequest, header_key: &str) -> Option<String> {
+    let auth_header = request.headers().get(header_key);
+    if auth_header.is_none() {
+        return None;
+    }
+    Some(auth_header.unwrap().to_str().unwrap().to_string())
 }

@@ -3,7 +3,6 @@
   flex-direction: column;
   gap: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--text);
 
   .options {
     display: flex;
@@ -16,4 +15,10 @@
       gap: 0.5rem;
     }
   }
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }

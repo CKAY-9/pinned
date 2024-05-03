@@ -1,47 +1,22 @@
-use actix_web::{
-    put, 
-    web, 
-    HttpRequest, 
-    HttpResponse, 
-    Responder
-};
-use diesel::{
-    ExpressionMethods, 
-    QueryDsl, 
-    QueryResult, 
-    RunQueryDsl
-};
+use actix_web::{ put, web, HttpRequest, HttpResponse, Responder };
+use diesel::{ ExpressionMethods, QueryDsl, QueryResult, RunQueryDsl };
 use pinned_db::create_connection;
-use pinned_db_schema::{
-    models::{
-        Post, 
-        User
-    },
-    schema::{
-        posts, 
-        users
-    },
-};
+use pinned_db_schema::{ models::{ Post, User }, schema::{ posts, users } };
 use reqwest::StatusCode;
 use crate::dto::Message;
-use super::dto::{
-    UpdatePostDTO, 
-    LikePostDTO
-};
+use super::dto::{ UpdatePostDTO, LikePostDTO };
 
 #[put("")]
 pub async fn update_post(
     request: HttpRequest,
-    data: web::Json<UpdatePostDTO>,
+    data: web::Json<UpdatePostDTO>
 ) -> Result<impl Responder, Box<dyn std::error::Error>> {
     let auth_header = request.headers().get("Authorization");
     if auth_header.is_none() {
         let error_message = Message {
             message: "Failed to parse auth header".to_string(),
         };
-        return Ok(HttpResponse::Ok()
-            .status(StatusCode::BAD_REQUEST)
-            .json(error_message));
+        return Ok(HttpResponse::Ok().status(StatusCode::BAD_REQUEST).json(error_message));
     }
 
     let auth_header_result = auth_header.unwrap().to_str().unwrap();
@@ -60,9 +35,9 @@ pub async fn update_post(
                 let post_error_message = Message {
                     message: "Failed to get post".to_string(),
                 };
-                return Ok(HttpResponse::Ok()
-                    .status(StatusCode::NOT_FOUND)
-                    .json(post_error_message));
+                return Ok(
+                    HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(post_error_message)
+                );
             }
 
             let post_unwrap = post_result.unwrap();
@@ -70,12 +45,13 @@ pub async fn update_post(
                 let user_ownership_message = Message {
                     message: "User doesn't own post".to_string(),
                 };
-                return Ok(HttpResponse::Ok()
-                    .status(StatusCode::UNAUTHORIZED)
-                    .json(user_ownership_message));
+                return Ok(
+                    HttpResponse::Ok().status(StatusCode::UNAUTHORIZED).json(user_ownership_message)
+                );
             }
 
-            let _ = diesel::update(posts::table)
+            let _ = diesel
+                ::update(posts::table)
                 .filter(posts::id.eq(data.post_id.clone()))
                 .set((
                     posts::title.eq(data.title.clone()),
@@ -92,23 +68,22 @@ pub async fn update_post(
             let error_message = Message {
                 message: e.to_string(),
             };
-            Ok(HttpResponse::Ok()
-                .status(StatusCode::UNAUTHORIZED)
-                .json(error_message))
+            Ok(HttpResponse::Ok().status(StatusCode::UNAUTHORIZED).json(error_message))
         }
     }
 }
 
 #[put("/like")]
-pub async fn update_likes_on_post(request: HttpRequest, data: web::Json<LikePostDTO>) -> Result<impl Responder, Box<dyn std::error::Error>> {
+pub async fn update_likes_on_post(
+    request: HttpRequest,
+    data: web::Json<LikePostDTO>
+) -> Result<impl Responder, Box<dyn std::error::Error>> {
     let auth_header = request.headers().get("Authorization");
     if auth_header.is_none() {
         let error_message = Message {
             message: "Failed to parse auth header".to_string(),
         };
-        return Ok(HttpResponse::Ok()
-            .status(StatusCode::BAD_REQUEST)
-            .json(error_message));
+        return Ok(HttpResponse::Ok().status(StatusCode::BAD_REQUEST).json(error_message));
     }
 
     let auth_header_result = auth_header.unwrap().to_str().unwrap();
@@ -117,21 +92,20 @@ pub async fn update_likes_on_post(request: HttpRequest, data: web::Json<LikePost
     let user: QueryResult<User> = users::table
         .filter(users::token.eq(auth_header_result))
         .first::<User>(connection);
-    
+
     match user {
         Ok(user) => {
-            let post: QueryResult<Post> = posts::table
-                .find(data.post_id)
-                .first::<Post>(connection);
-            
+            let post: QueryResult<Post> = posts::table.find(data.post_id).first::<Post>(connection);
+
             match post {
                 Ok(mut post) => {
                     let like_type = data.like_type;
-                    let mut index = 0; 
+                    let mut index = 0;
                     let mut flag = false;
 
                     match like_type {
-                        -1 => { // Dislike
+                        -1 => {
+                            // Dislike
                             for dislike in post.dislikes.iter() {
                                 if dislike.to_owned() == user.id {
                                     post.dislikes.remove(index);
@@ -150,8 +124,9 @@ pub async fn update_likes_on_post(request: HttpRequest, data: web::Json<LikePost
                                 }
                                 post.dislikes.push(user.id);
                             }
-                        },
-                        1 => { // Like
+                        }
+                        1 => {
+                            // Like
                             for like in post.likes.iter() {
                                 if like.to_owned() == user.id {
                                     post.likes.remove(index);
@@ -170,12 +145,13 @@ pub async fn update_likes_on_post(request: HttpRequest, data: web::Json<LikePost
                                 }
                                 post.likes.push(user.id);
                             }
-                        },
-                        _ => { // Reset
+                        }
+                        _ => {
+                            // Reset
                             for like in post.likes.iter() {
                                 if like.to_owned() == user.id {
                                     post.likes.remove(index);
-                                    break; 
+                                    break;
                                 }
                                 index += 1;
                             }
@@ -188,33 +164,35 @@ pub async fn update_likes_on_post(request: HttpRequest, data: web::Json<LikePost
                                 index += 1;
                             }
                         }
-                    };
+                    }
 
-                    let update_result = diesel::update(posts::table)
+                    let update_result = diesel
+                        ::update(posts::table)
                         .filter(posts::id.eq(post.id))
-                        .set((
-                            posts::likes.eq(post.likes),
-                            posts::dislikes.eq(post.dislikes)
-                        ))
+                        .set((posts::likes.eq(post.likes), posts::dislikes.eq(post.dislikes)))
                         .execute(connection);
 
                     match update_result {
                         Ok(_update) => {
                             let success_message = Message { message: "Updated post".to_string() };
                             Ok(HttpResponse::Ok().json(success_message))
-                        },
+                        }
                         Err(e) => {
                             let update_message = Message { message: e.to_string() };
-                            Ok(HttpResponse::Ok().status(StatusCode::INTERNAL_SERVER_ERROR).json(update_message))
+                            Ok(
+                                HttpResponse::Ok()
+                                    .status(StatusCode::INTERNAL_SERVER_ERROR)
+                                    .json(update_message)
+                            )
                         }
                     }
-                },
+                }
                 Err(_e) => {
                     let post_message = Message { message: "Failed to get post".to_string() };
                     Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(post_message))
                 }
             }
-        },
+        }
         Err(e) => {
             let error_message = Message { message: e.to_string() };
             Ok(HttpResponse::Ok().status(StatusCode::UNAUTHORIZED).json(error_message))

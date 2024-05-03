@@ -1,8 +1,5 @@
 use pinned_db_schema::models::Post;
-use serde::{
-    Deserialize, 
-    Serialize
-};
+use serde::{ Deserialize, Serialize };
 
 #[derive(Deserialize)]
 pub struct NewPostDTO {
@@ -14,7 +11,7 @@ pub struct NewPostDTO {
 #[derive(Serialize)]
 pub struct PostExploreMessage {
     pub message: String,
-    pub posts: Vec<Post>
+    pub posts: Vec<Post>,
 }
 
 #[derive(Deserialize)]
@@ -25,9 +22,7 @@ pub struct UpdatePostDTO {
 }
 
 #[derive(Deserialize)]
-pub struct SearchFilterDTO {
-
-}
+pub struct SearchFilterDTO {}
 
 #[derive(Serialize)]
 pub struct NewPostOTD {
@@ -49,17 +44,17 @@ pub struct GetPostMessage {
 #[derive(Deserialize)]
 pub struct LikePostDTO {
     pub like_type: i32,
-    pub post_id: i32
+    pub post_id: i32,
 }
 
 #[derive(Deserialize)]
 pub struct SearchPostsDTO {
     pub name: String,
-    pub post_id: i32
+    pub post_id: i32,
 }
 
 #[derive(Serialize)]
 pub struct SearchPostsMessages {
     pub message: String,
-    pub posts: Vec<Post>
+    pub posts: Vec<Post>,
 }

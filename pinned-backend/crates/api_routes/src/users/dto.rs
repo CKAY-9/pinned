@@ -1,13 +1,5 @@
-use pinned_db_schema::models::{
-    Collection, 
-    Comment, 
-    Post, 
-    User
-};
-use serde::{
-    Deserialize, 
-    Serialize
-};
+use pinned_db_schema::models::{ Collection, Comment, Post, User };
+use serde::{ Deserialize, Serialize };
 
 #[derive(Deserialize)]
 pub struct OAuthCode {
@@ -67,7 +59,7 @@ pub struct SearchRequest {
 #[derive(Serialize)]
 pub struct SearchRequestMessage {
     pub message: String,
-    pub users: Vec<User>
+    pub users: Vec<User>,
 }
 
 #[derive(Deserialize)]
@@ -84,7 +76,7 @@ pub struct UserPostsMessage {
 #[derive(Serialize)]
 pub struct UserExploreMessage {
     pub message: String,
-    pub users: Vec<User>
+    pub users: Vec<User>,
 }
 
 #[derive(Serialize)]

@@ -6,6 +6,7 @@ CREATE TABLE collections (
   linked_comments         INTEGER[] NOT NULL,
   recommended_collections INTEGER[] NOT NULL,
   creator                 INTEGER NOT NULL,
+  collaborators           INTEGER[] DEFAULT []
   likes                   INTEGER[] NOT NULL,
   dislikes                INTEGER[] NOT NULL
 );

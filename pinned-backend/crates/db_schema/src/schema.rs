@@ -9,6 +9,7 @@ diesel::table! {
         linked_comments -> Array<Int4>,
         recommended_collections -> Array<Int4>,
         creator -> Int4,
+        collaborators -> Array<Int4>,
         likes -> Array<Int4>,
         dislikes -> Array<Int4>,
     }
@@ -53,9 +54,4 @@ diesel::table! {
     }
 }
 
-diesel::allow_tables_to_appear_in_same_query!(
-    collections,
-    comments,
-    posts,
-    users,
-);
+diesel::allow_tables_to_appear_in_same_query!(collections, comments, posts, users);
