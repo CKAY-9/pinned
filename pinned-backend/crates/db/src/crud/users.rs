@@ -75,3 +75,16 @@ pub fn update_user_from_id(user_id: i32, update: NewUser) -> Option<User> {
         Err(_e) => None,
     }
 }
+
+pub fn delete_user_from_id(user_id: i32) -> bool {
+    let connection = &mut create_connection();
+    let user_delete = diesel
+        ::delete(users::table)
+        .filter(users::id.eq(user_id))
+        .execute(connection);
+
+    match user_delete {
+        Ok(_d) => true,
+        Err(_e) => false,
+    }
+}

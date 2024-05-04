@@ -55,6 +55,7 @@
   bottom: 0;
   right: 0;
   background-color: transparent;
+  box-shadow: none;
 
   img {
     opacity: 0;
@@ -62,6 +63,10 @@
     width: 2rem;
     height: 2rem;
     filter: invert(1);
+  }
+
+  &:hover, &:active, &:focus {
+    box-shadow: none;
   }
 }
 

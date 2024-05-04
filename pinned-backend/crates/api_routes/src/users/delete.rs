@@ -1,59 +1,31 @@
 use crate::dto::Message;
 use actix_web::{ delete, HttpRequest, HttpResponse, Responder };
-use diesel::{ ExpressionMethods, QueryDsl, QueryResult, RunQueryDsl };
-use pinned_db::create_connection;
-use pinned_db_schema::schema::{ posts, self };
-use pinned_db_schema::schema::users::dsl::*;
-use pinned_db_schema::{ models::User, schema::users };
+use pinned_db::crud::users::{delete_user_from_id, get_user_from_token};
+use pinned_utils::extract_header_value;
 use reqwest::StatusCode;
 
 #[delete("")]
 pub async fn delete_user(
     request: HttpRequest
 ) -> Result<impl Responder, Box<dyn std::error::Error>> {
-    let auth_header = request.headers().get("Authorization");
-    if auth_header.is_none() {
-        let error_message = Message {
-            message: "Failed to parse auth header".to_string(),
-        };
-        return Ok(HttpResponse::Ok().status(StatusCode::BAD_REQUEST).json(error_message));
+    let token_option = extract_header_value(&request, "Authorization");
+    if token_option.is_none() {
+        return Ok(HttpResponse::Ok().status(StatusCode::BAD_REQUEST).json(Message {
+            message: "Failed to get user token".to_string()
+        }));
     }
 
-    let auth_header_result = auth_header.unwrap().to_str().unwrap();
-
-    let connection = &mut create_connection();
-    let user: QueryResult<User> = users
-        .filter(token.eq(auth_header_result))
-        .first::<User>(connection);
-    match user {
-        Ok(user) => {
-            let _ = diesel::delete(users::table.find(user.id)).execute(connection)?;
-
-            let _ = diesel
-                ::delete(posts::table)
-                .filter(schema::posts::creator.eq(user.id))
-                .execute(connection);
-
-            let _ = diesel
-                ::delete(schema::comments::table)
-                .filter(schema::comments::creator.eq(user.id))
-                .execute(connection);
-
-            let _ = diesel
-                ::delete(schema::collections::table)
-                .filter(schema::collections::creator.eq(user.id))
-                .execute(connection);
-
-            let success_message = Message {
-                message: "Deleted user account".to_string(),
-            };
-            Ok(HttpResponse::Ok().json(success_message))
-        }
-        Err(e) => {
-            let error_message = Message {
-                message: e.to_string(),
-            };
-            Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(error_message))
-        }
+    let user_option = get_user_from_token(token_option.unwrap());
+    if user_option.is_none() {
+        return Ok(HttpResponse::Ok().status(StatusCode::UNAUTHORIZED).json(Message {
+            message: "Failed to get user".to_string()
+        }));
     }
+
+    let user = user_option.unwrap();
+    let _ = delete_user_from_id(user.id);
+
+    Ok(HttpResponse::Ok().json(Message {
+        message: "Deleted user".to_string()
+    }))
 }

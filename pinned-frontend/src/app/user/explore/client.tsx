@@ -11,7 +11,7 @@ const ExploreUser = (props: { user: User }) => {
     <Link
       href={`/user/${props.user.id}`}
       className={style.item}
-      style={{ background: `url(${props.user.avatar})`, color: "white" }}
+      style={{ background: `url(${props.user.avatar})`, color: "white", "backgroundSize": "cover" }}
     >
       <div className={style.content}>
         <h1 style={{ fontSize: "4rem" }}>{props.user.username}</h1>

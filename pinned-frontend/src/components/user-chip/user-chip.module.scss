@@ -7,10 +7,17 @@
   align-items: center;
   background-color: var(--secondary);
   gap: 0.5rem;
+  box-shadow: var(--shdw1);
+  transition: 0.35s ease all;
 
   .pfp {
     width: 2rem;
     height: 2rem;
     border-radius: 50%;
+  }
+
+  &:hover {
+    box-shadow: var(--shdw2);
+    border-radius: 1rem;
   }
 }

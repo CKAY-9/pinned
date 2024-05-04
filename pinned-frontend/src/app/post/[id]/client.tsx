@@ -49,7 +49,7 @@ const PostPicture = (props: {
     <div style={{"position": "relative"}}>
       {expand &&
         <Popup>
-          <button style={{"backgroundColor": "transparent"}} onClick={() => setExpand(false)}>X</button>
+          <button style={{"mixBlendMode": "difference"}} onClick={() => setExpand(false)}>X</button>
           <h1 style={{"textAlign": "center"}}>{props.post_title}</h1>
           <Image 
             src={props.pic_url}
@@ -141,7 +141,7 @@ const PostClient = (props: {
     <>
       {(popup && props.user !== null) && 
         <Popup>
-          <button onClick={() => setPopup(false)}>X</button>
+          <button onClick={() => setPopup(false)} style={{"mixBlendMode": "difference"}}>X</button>
           <div style={{"display": "flex", "flexDirection": "column", "gap": "1rem"}}>
             <h2>Add to Collection</h2>
             {my_collections.map((collection: Collection, index: number) => {

@@ -5,6 +5,14 @@
   background: var(--accent);
   color: #fff;
   padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  box-shadow: var(--shdw1);
+  transition: 0.35s ease all;
+
+  &:hover {
+    box-shadow: var(--shdw2);
+    border-radius: 0;
+  }
 
   .icon {
     width: 2rem;

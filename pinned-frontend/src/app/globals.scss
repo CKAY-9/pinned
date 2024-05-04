@@ -6,6 +6,10 @@
   --primary: #948ade;
   --secondary: #2a1b95;
   --accent: #3117eb;
+
+  --shdw1: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  --shdw2: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  --shdw3: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 
 * {
@@ -49,6 +53,7 @@ h3 {
 
 input, textarea, button {
   background-color: var(--secondary);
+  box-shadow: var(--shdw1);
   color: var(--text);
   border: none;
   padding: 0.5rem 1rem;
@@ -58,11 +63,18 @@ input, textarea, button {
   &:active, &:focus {
     outline: none;
     border-radius: 0;
+    box-shadow: var(--shdw2);
   }
 }
 
 button:hover, input[type="submit"]:hover {
   cursor: pointer;
+  box-shadow: var(--shdw2);
+  transition: 0.35s ease all;
+
+  &:hover {
+    border-radius: 0;
+  }
 }
 
 .notifications {
