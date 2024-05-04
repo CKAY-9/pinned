@@ -9,9 +9,7 @@ const Index = async () => {
   return (
     <>
       <Header user={user} />
-      <main className="container">
-        <HomeClient user={user} />
-      </main>
+      <HomeClient user={user} />
       <Footer user={user} />
     </>
   );

@@ -7,7 +7,7 @@ const UserCollections = (props: {
   collections: Collection[] | null
 }) => {
   if (props.collections === null || props.collections.length <= 0) {
-    return (<span>This user has no collections.</span>);
+    return (<span>This user hasn&apos;t created any collections yet.</span>);
   }
 
   return (

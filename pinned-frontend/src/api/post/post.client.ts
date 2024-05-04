@@ -133,3 +133,16 @@ export const getExplorePosts = async (): Promise<Post[]> => {
     return []
   }
 }
+
+export const getPinnedPosts = async (): Promise<Post[]> => {
+  try {
+    const explore_request = await axios({
+      "url": API_URL + "/posts/pinned",
+      "method": "GET"
+    });
+    return explore_request.data.posts;
+  } catch (ex) {
+    console.log(ex);
+    return []
+  }
+}

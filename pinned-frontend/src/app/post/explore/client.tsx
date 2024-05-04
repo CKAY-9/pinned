@@ -2,51 +2,9 @@
 
 import { useEffect, useState } from "react";
 import style from "./explore.module.scss";
-import { User } from "@/api/user/dto";
-import { getExploreUsers } from "@/api/user/user.client";
-import Link from "next/link";
 import { getExplorePosts } from "@/api/post/post.client";
 import { Post } from "@/api/post/dto";
-import { CDN_URL } from "@/api/resources";
-import LikeChip from "@/components/like-chip/like-chip";
-
-const ExplorePost = (props: { post: Post }) => {
-  return (
-    <Link
-      href={`/post/${props.post.id}`}
-      className={style.item}
-      style={{
-        background: `url(${CDN_URL + props.post.file_id})`,
-        color: "white",
-        backgroundSize: "cover",
-        backgroundPositionX: "50%",
-      }}
-    >
-      <div
-        className={style.content}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
-        <section>
-          <h1 style={{ fontSize: "4rem" }}>{props.post.title}</h1>
-          <span>{props.post.description}</span>
-        </section>
-        <section>
-          <LikeChip
-            likes={props.post.likes}
-            dislikes={props.post.dislikes}
-            post_id={props.post.id}
-            post_type="post"
-            user={null}
-          ></LikeChip>
-        </section>
-      </div>
-    </Link>
-  );
-};
+import ExplorePost from "@/components/explore-post/explore-post";
 
 const ExplorePostsClient = () => {
   const [posts, setPosts] = useState<Post[]>([]);

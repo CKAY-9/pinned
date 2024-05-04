@@ -101,7 +101,7 @@ const PostClient = (props: {
       const collections = await getUserCollections(props.user?.id || 0);
       setMyCollections(collections);
     })();
-  }, []);
+  }, [props.user?.id]);
 
   const deleteP = async (e: BaseSyntheticEvent) => {
     e.preventDefault();

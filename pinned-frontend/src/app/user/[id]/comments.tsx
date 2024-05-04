@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { CDN_URL } from "@/api/resources";
 
-const Comment = (props: {
+const UserComment = (props: {
   user: User | null,
   comment: Comment
 }) => {
@@ -23,7 +23,7 @@ const Comment = (props: {
       const post = await getPostFromID(props.comment.post);
       setParentPost(post);
     })();
-  }, []);
+  }, [props.comment.post]);
 
   return (
     <div className={style.comment}>
@@ -58,14 +58,14 @@ const UserComments = (props: {
   user: User | null
 }) => {
   if (props.comments === null || props.comments.length <= 0) {
-    return (<span>This user has no comments.</span>);
+    return (<span>This user hasn&apos;t posted any comments yet.</span>);
   }
 
   return (
     <div className={style.comments}>
       {props.comments?.map((comment: Comment, index: number) => {
         return (
-          <Comment user={props.user} comment={comment} key={index} />            
+          <UserComment user={props.user} comment={comment} key={index} />            
         )
       })}
     </div>

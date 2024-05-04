@@ -1,7 +1,13 @@
 .theme_button {
+  box-shadow: none;
+
   img {
     width: 2rem;
     height: 2rem;
     filter: invert(1);
+  }
+
+  &:hover {
+    box-shadow: none;
   }
 }

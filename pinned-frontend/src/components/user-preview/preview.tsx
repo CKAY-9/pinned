@@ -7,7 +7,7 @@ const UserPreview = (props: {
   user: User
 }) => {
   return (
-    <Link href={`/user/${props.user.id}`} className={style.preview}>
+    <div className={style.preview}>
       <Image 
         src={props.user.avatar}
         alt="PFP"
@@ -18,7 +18,7 @@ const UserPreview = (props: {
       />
       <span className={style.name}>{props.user.username}</span>
       <span className={style.id}>{props.user.id}</span>
-    </Link>
+    </div>
   );
 }
 

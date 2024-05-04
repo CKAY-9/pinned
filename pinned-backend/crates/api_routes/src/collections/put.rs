@@ -113,7 +113,7 @@ pub async fn add_collaborator_to_collection(
     }
 
     // TODO: add user checking
-    collection.collaborators.append(&mut data.user_ids.clone());
+    collection.collaborators.push(data.user_id);
 
     let collection_update = serde_json
         ::from_str(serde_json::to_string(&collection).unwrap().as_str())

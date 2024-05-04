@@ -1,4 +1,4 @@
-use pinned_db_schema::models::Collection;
+use pinned_db_schema::models::{Collection, User};
 use serde::{ Deserialize, Serialize };
 
 #[derive(Deserialize)]
@@ -15,7 +15,7 @@ pub struct NewCollectionsMessage {
 
 #[derive(Deserialize)]
 pub struct AddCollaboratorsDTO {
-    pub user_ids: Vec<i32>,
+    pub user_id: i32,
     pub collection_id: i32,
 }
 
@@ -29,6 +29,12 @@ pub struct UpdateCollectionDTO {
 #[derive(Deserialize)]
 pub struct GetCollectionDTO {
     pub collection_id: i32,
+}
+
+#[derive(Serialize)]
+pub struct GetCollaboratorsMessage {
+    pub message: String,
+    pub collaborators: Vec<User>
 }
 
 #[derive(Serialize)]

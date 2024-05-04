@@ -9,10 +9,10 @@ use crate::{
     },
 };
 use actix_web::{ get, web, HttpResponse, Responder };
-use chrono::{ DateTime, Local };
 use diesel::{ ExpressionMethods, QueryDsl, QueryResult, RunQueryDsl, SelectableHelper };
-use pinned_db::{create_connection, crud::posts::get_post_from_id};
+use pinned_db::{ create_connection, crud::posts::get_post_from_id };
 use pinned_db_schema::{ models::Post, schema::posts };
+use pinned_utils::iso8601;
 use rand::{ seq::IteratorRandom, thread_rng };
 use reqwest::StatusCode;
 
@@ -23,15 +23,19 @@ pub async fn get_post(
     let post = get_post_from_id(data.post_id);
     match post {
         Some(p) => {
-            Ok(HttpResponse::Ok().json(GetPostMessage {
-                message: "Fetched post".to_string(),
-                post: p,
-            }))
-        },
+            Ok(
+                HttpResponse::Ok().json(GetPostMessage {
+                    message: "Fetched post".to_string(),
+                    post: p,
+                })
+            )
+        }
         None => {
-            Ok(HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(Message {
-                message: "Failed to get post".to_string(),
-            }))
+            Ok(
+                HttpResponse::Ok().status(StatusCode::NOT_FOUND).json(Message {
+                    message: "Failed to get post".to_string(),
+                })
+            )
         }
     }
 }
@@ -76,29 +80,38 @@ pub async fn get_explore_posts() -> Result<impl Responder, Box<dyn std::error::E
 #[get("/pinned")]
 pub async fn get_today_pinned() -> Result<impl Responder, Box<dyn std::error::Error>> {
     let connection = &mut create_connection();
-    let posts: QueryResult<Vec<Post>> = posts::table.order(posts::likes.desc()).load(connection);
-    if posts.is_err() {
-        let posts_error_message = Message {
-            message: "Failed to get posts".to_string(),
-        };
+    let posts_result: QueryResult<Vec<Post>> = posts::table
+        .order(posts::likes.desc())
+        .load(connection);
+    if posts_result.is_err() {
         return Ok(
-            HttpResponse::Ok().status(StatusCode::INTERNAL_SERVER_ERROR).json(posts_error_message)
+            HttpResponse::Ok().status(StatusCode::INTERNAL_SERVER_ERROR).json(Message {
+                message: "Failed to get posts".to_string(),
+            })
         );
     }
 
-    let posts_unwrap = posts.unwrap();
+    let posts = posts_result.unwrap();
+    let mut pinned_posts = vec![];
+    let date = iso8601::date(&iso8601(&std::time::SystemTime::now())).unwrap().to_string(); // eg 1999-01-31
+    let date_split = date.split("-").collect::<Vec<&str>>();
+    let today = date_split.get(date_split.len() - 1); // get last index (hopefully date)
+    for post in posts {
+        let post_date = iso8601::date(&post.posted).unwrap().to_string();
+        let post_split = post_date.split("-").collect::<Vec<&str>>();
+        let post_day = post_split.get(post_split.len() - 1); // get last index (hopefully date)
 
-    let dt = Local::now();
-    let naive_utc = dt.naive_utc();
-    let offset = dt.offset().clone();
-    let _dt_new = DateTime::<Local>::from_naive_utc_and_offset(naive_utc, offset);
+        if post_day != today {
+            continue;
+        }
 
-    for post in posts_unwrap {
-        let _date_posted: iso8601::DateTime = iso8601::datetime(post.posted.as_str()).unwrap();
-        // TODO: purge posts older than a day
+        pinned_posts.push(post);
     }
 
-    Ok(HttpResponse::Ok().body("test"))
+    Ok(HttpResponse::Ok().json(PostExploreMessage {
+        message: "Got pinned posts".to_string(),
+        posts: pinned_posts
+    }))
 }
 
 #[get("/search")]

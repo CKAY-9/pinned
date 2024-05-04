@@ -11,7 +11,7 @@ import Popup from "../popup/popup";
 import { createNotification } from "@/utils/notification";
 import LikeChip from "../like-chip/like-chip";
 
-const Comment = (props: {
+const UserComment = (props: {
   comment: Comment,
   user: User | null
   index: number
@@ -35,13 +35,15 @@ const Comments = (props: {
   const [comments, setComments] = useState<Comment[]>([]);
   const [show_new_comment, setShowNewComment] = useState<boolean>(false);
   const [new_comment_content, setNewCommentContent] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     (async () => {
       const _comments = await getAllCommentsFromIds(props.comment_ids);
       setComments(_comments);
+      setLoading(false);
     })();
-  }, []);
+  }, [props.comment_ids]);
 
   const postComment = async (e: BaseSyntheticEvent) => {
     if (props.comments_only || props.user === null) return;
@@ -55,6 +57,10 @@ const Comments = (props: {
     }
     createNotification("Failed to create comment!");
     setShowNewComment(false);
+  }
+
+  if (loading) {
+    return (<></>);
   }
 
   return (
@@ -72,29 +78,32 @@ const Comments = (props: {
         <div className={style.comments_header}>
           {!props.comments_only &&
             <>
-              <button onClick={() => setShowComments(!show_comments)} className={style.expand}>
-                <span>Comments</span>
-                <Image 
-                  src="/icons/menu_expand.svg"
-                  alt="Expand"
-                  sizes="100%"
-                  width={0}
-                  height={0}
-                  style={{"transform": show_comments ? "rotate(180deg)" : "rotate(0deg)"}}
-                />
-              </button>
+              {(!loading && comments.length >= 1) ?
+                <button onClick={() => setShowComments(!show_comments)} className={style.expand}>
+                  <span>Comments</span>
+                  <Image 
+                    src="/icons/menu_expand.svg"
+                    alt="Expand"
+                    sizes="100%"
+                    width={0}
+                    height={0}
+                    style={{"transform": show_comments ? "rotate(180deg)" : "rotate(0deg)"}}
+                  />
+                </button> : <h2>Comments</h2>
+              }
               {props.user !== null && <button onClick={() => setShowNewComment(true)} className="impact">New Comment</button>}
-            </>
+            </> 
           }
         </div>
         <div style={{"height": show_comments ? "fit-content" : "0px", "overflow": "hidden"}}>
           <div className={style.comments}>
             {comments.map((comment: Comment, index: number) => {
-              return (<Comment user={props.user} index={index} key={index} comment={comment} />);
+              return (<UserComment user={props.user} index={index} key={index} comment={comment} />);
             })}
           </div>
         </div>
       </div>
+      {(!loading && comments.length <= 0) && <span>There are no comments...</span>}
     </>
   );
 }

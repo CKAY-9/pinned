@@ -40,7 +40,7 @@ const PostSearchClient = () => {
         ? <LoadingWheel size_in_rems={5} />
         : <div className={style.results}>
           {search_results.map((post: Post, index: number) => {
-            return (<PostPreview post={post} />);
+            return (<PostPreview key={index} post={post} />);
           })}
         </div>
       }

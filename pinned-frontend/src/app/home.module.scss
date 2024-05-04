@@ -1,5 +1,10 @@
 .pinned {
+  display: grid;
+	grid-template-columns: 25% 25% 25% 25%;
+}
+
+.pinned_splash {
   font-size: 4rem;
-  text-transform: uppercase;
   font-weight: 900;
+  text-transform: uppercase;
 }

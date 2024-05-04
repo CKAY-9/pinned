@@ -5,31 +5,38 @@
 }
 
 .post {
-    color: #fff;
-    display: flex;
-    min-height: 300px;
-    aspect-ratio: 1;
-    flex-direction: column;
-    border-radius: 0.5rem;
-        
-    img {
-      width: auto;
-      object-fit: cover;
-      height: 100%;
-    }
+  color: #fff;
+  display: flex;
+  min-height: 300px;
+  aspect-ratio: 1;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  box-shadow: var(--shdw1);
+  transition: 0.35s ease all;
 
-    h1, span { 
-      justify-content: space-between;
-      background: var(--secondary);
-      padding: 0.5rem 1rem;
-    }
+  img {
+    width: auto;
+    object-fit: cover;
+    height: 100%;
+  }
 
-    h1 {
-      flex: 1;
-    }
-} 
+  h1,
+  span {
+    justify-content: space-between;
+    background: var(--secondary);
+    padding: 0.5rem 1rem;
+  }
 
-@media only screen and (max-width: 600px)  {
+  h1 {
+    flex: 1;
+  }
+
+  &:hover {
+    box-shadow: var(--shdw2);
+  }
+}
+
+@media only screen and (max-width: 600px) {
   .posts {
     place-content: center;
     grid-template-columns: repeat(auto-fit, 100%);

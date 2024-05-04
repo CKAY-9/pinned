@@ -5,6 +5,7 @@ import style from "./search.module.scss";
 import { User } from "@/api/user/dto";
 import { searchUsers } from "@/api/user/user.client";
 import UserPreview from "@/components/user-preview/preview";
+import Link from "next/link";
 
 const UserSearchClient = () => {
   const [username, setUsername] = useState<string>("");
@@ -42,7 +43,11 @@ const UserSearchClient = () => {
           ? <span>Searching...</span>
           : <>
             {results.map((result: User, index: number) => {
-              return (<UserPreview user={result} />);
+              return (
+                <Link href={`/user/${result.id}`}>
+                  <UserPreview key={index} user={result} />
+                </Link>
+              );
             })}
           </>
         }

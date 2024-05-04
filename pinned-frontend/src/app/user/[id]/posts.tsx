@@ -6,7 +6,7 @@ const UserPosts = (props: {
   posts: Post[] | null
 }) => {
   if (props.posts === null || props.posts.length <= 0) {
-    return (<span>This user has no posts.</span>);
+    return (<span>This user hasn&apos;t posted anything yet.</span>);
   }
 
   return (

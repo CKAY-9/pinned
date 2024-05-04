@@ -1,6 +1,7 @@
 import axios from "axios";
 import { API_URL } from "../resources";
 import { getCookie } from "@/utils/cookies";
+import { User } from "../user/dto";
 
 export const newCollection = async (name: string, description: string) => {
   try {
@@ -115,5 +116,36 @@ export const likeCollection = async (collection_id: number, like_type: number) =
   } catch (ex) {
     console.log(ex);
     return null;
+  }
+}
+
+export const addCollaboratorToCollection = async (collection_id: number, user_id: number): Promise<boolean> => {
+  try {
+    const request = await axios({
+      url: API_URL + "/collections/add_collaborator",
+      method: "PUT",
+      params: {
+        collection_id,
+        user_id
+      }
+    });
+    return true;
+  } catch (ex) {
+    return false;
+  }
+}
+
+export const getCollectionCollaborators = async (collection_id: number): Promise<User[]> => {
+  try {
+    const request = await axios({
+      url: API_URL + "/collections/collaborators",
+      method: "GET",
+      params: {
+        "collection_id": collection_id
+      }
+    });
+    return request.data.collaborators;
+  } catch (ex) {
+    return [];
   }
 }
