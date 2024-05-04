@@ -14,7 +14,7 @@ const NewCollectionClient = () => {
     const collection = await newCollection(name, description);
     if (collection !== null) {
       createNotification("Created new collection!");
-      window.location.href = `/post/collection/${collection}`
+      window.location.href = `/post/collection/${collection.id}`
       return;
     }
     createNotification("Failed to create collection!");

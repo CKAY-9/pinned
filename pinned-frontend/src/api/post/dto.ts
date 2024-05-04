@@ -1,6 +1,6 @@
 export interface NewPostResponseDTO {
   message: string,
-  post_id: number
+  post: Post
 }
 
 export interface Post {

@@ -32,6 +32,12 @@ const Posts = (props: { posts: number[] }) => {
     })();
   }, [props.posts]);
 
+  if (posts.length <= 0) {
+    return (
+      <span>No posts have been added to this collection yet.</span>
+    )
+  }
+
   return (
     <div className={posts_style.posts}>
       {posts.map((post: Post, index: number) => {

@@ -18,7 +18,7 @@ const NewPostClient = (props: {
     const result = await newPost(title, description, file, props.user.id);
     if (result !== null) {
       createNotification("Successfully created post, redirecting...");
-      window.location.href = `/post/${result.post_id}`
+      window.location.href = `/post/${result.id}`
       return;
     }
     createNotification("Failed to create post!");

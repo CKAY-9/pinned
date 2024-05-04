@@ -2,8 +2,9 @@ import axios from "axios";
 import { API_URL } from "../resources";
 import { getCookie } from "@/utils/cookies";
 import { User } from "../user/dto";
+import { Collection } from "./dto";
 
-export const newCollection = async (name: string, description: string) => {
+export const newCollection = async (name: string, description: string): Promise<Collection | null> => {
   try {
     const collection_request = await axios({
       "url": API_URL + "/collections",
@@ -16,7 +17,7 @@ export const newCollection = async (name: string, description: string) => {
         "Authorization": getCookie("token") || ""
       }
     });
-    return collection_request.data.collection_id;
+    return collection_request.data.collection;
   } catch (ex) {
     console.log(ex);
     return null;

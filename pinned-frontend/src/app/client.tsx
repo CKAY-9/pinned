@@ -28,6 +28,7 @@ const HomeClient = (props: { user: User | null }) => {
           }}
         >
           <h1 className={style.pinned_splash}>Today&apos;s Pinned</h1>
+          <span>View the top posts of today.</span>
         </div>
         {pinned_posts.length <= 0 ? (
           <div

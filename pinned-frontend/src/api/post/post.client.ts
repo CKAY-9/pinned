@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { uploadFile } from "../cdn/cdn.client";
 import { API_URL } from "../resources";
 import { getCookie } from "@/utils/cookies";
@@ -9,7 +9,7 @@ export const newPost = async (
   description: string, 
   upload_file: File | null, 
   user_id: number
-): Promise<NewPostResponseDTO | null> => {
+): Promise<Post | null> => {
   try {
     let dest = "";
     if (upload_file !== null) {
@@ -23,7 +23,7 @@ export const newPost = async (
       dest = dest_response.dest;
     }
 
-    const post_request = await axios({
+    const post_request: AxiosResponse<NewPostResponseDTO> = await axios({
       "url": API_URL + "/posts",
       "method": "POST",
       "data": {
@@ -36,7 +36,7 @@ export const newPost = async (
       }
     });
 
-    return post_request.data;
+    return post_request.data.post;
   } catch (ex) {
     console.log(ex);
     return null;
