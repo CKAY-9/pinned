@@ -112,7 +112,6 @@ pub async fn add_collaborator_to_collection(
         );
     }
 
-    // TODO: add user checking
     collection.collaborators.push(data.user_id);
 
     let collection_update = serde_json
@@ -130,6 +129,80 @@ pub async fn add_collaborator_to_collection(
             Ok(
                 HttpResponse::Ok().status(StatusCode::INTERNAL_SERVER_ERROR).json(Message {
                     message: "Failed to add collaborator".to_string(),
+                })
+            ),
+    }
+}
+
+#[put("/remove_collaborator")]
+pub async fn remove_collaborator_from_collection(
+    request: HttpRequest,
+    data: web::Json<AddCollaboratorsDTO>
+) -> Result<impl Responder, Box<dyn std::error::Error>> {
+    let token = extract_header_value(&request, "Authorization");
+    if token.is_none() {
+        return Ok(
+            HttpResponse::Ok().status(StatusCode::BAD_REQUEST).json(Message {
+                message: "Failed to get user token".to_string(),
+            })
+        );
+    }
+
+    let user_option = get_user_from_token(token.unwrap());
+    if user_option.is_none() {
+        return Ok(
+            HttpResponse::Ok().status(StatusCode::UNAUTHORIZED).json(Message {
+                message: "Failed to get user".to_string(),
+            })
+        );
+    }
+
+    let collection_option = get_collection_from_id(data.collection_id);
+    if collection_option.is_none() {
+        return Ok(
+            HttpResponse::Ok().status(StatusCode::UNAUTHORIZED).json(Message {
+                message: "Failed to get collection".to_string(),
+            })
+        );
+    }
+
+    let user = user_option.unwrap();
+    let mut collection = collection_option.unwrap();
+
+    if collection.creator != user.id {
+        return Ok(
+            HttpResponse::Ok().status(StatusCode::UNAUTHORIZED).json(Message {
+                message: "Invalid permissions".to_string(),
+            })
+        );
+    }
+
+    for i in 0..collection.collaborators.len() {
+        let temp_collab = collection.collaborators.get(i);
+        if temp_collab.is_none() {
+            continue;
+        }
+        if temp_collab.unwrap() == &data.user_id {
+            collection.collaborators.remove(i);
+            break;
+        }
+    }
+
+    let collection_update = serde_json
+        ::from_str(serde_json::to_string(&collection).unwrap().as_str())
+        .unwrap();
+    let update_option = update_collection_from_id(collection.id, collection_update);
+    match update_option {
+        Some(_c) =>
+            Ok(
+                HttpResponse::Ok().json(Message {
+                    message: "Removed collaborator".to_string(),
+                })
+            ),
+        None =>
+            Ok(
+                HttpResponse::Ok().status(StatusCode::INTERNAL_SERVER_ERROR).json(Message {
+                    message: "Failed to remove collaborator".to_string(),
                 })
             ),
     }

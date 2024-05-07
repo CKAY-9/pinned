@@ -11,10 +11,7 @@ use collections::{
     get::{ get_collection, get_collection_collaborators },
     post::create_new_collection,
     put::{
-        add_collaborator_to_collection,
-        update_add_to_collection,
-        update_collection,
-        update_likes_on_collection,
+        add_collaborator_to_collection, remove_collaborator_from_collection, update_add_to_collection, update_collection, update_likes_on_collection
     },
 };
 use comments::{
@@ -104,5 +101,6 @@ pub fn configure_collections_routes(cfg: &mut web::ServiceConfig) {
             .service(delete_collection)
             .service(update_likes_on_collection)
             .service(add_collaborator_to_collection)
+            .service(remove_collaborator_from_collection)
     );
 }

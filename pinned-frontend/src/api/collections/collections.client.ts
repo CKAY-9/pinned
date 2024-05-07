@@ -125,9 +125,31 @@ export const addCollaboratorToCollection = async (collection_id: number, user_id
     const request = await axios({
       url: API_URL + "/collections/add_collaborator",
       method: "PUT",
-      params: {
-        collection_id,
-        user_id
+      data: {
+        collection_id: collection_id,
+        user_id: user_id
+      },
+      headers: {
+        Authorization: getCookie("token") || ""
+      }
+    });
+    return true;
+  } catch (ex) {
+    return false;
+  }
+}
+
+export const removeCollaboratorFromCollection = async (collection_id: number, user_id: number): Promise<boolean> => {
+  try {
+    const request = await axios({
+      url: API_URL + "/collections/remove_collaborator",
+      method: "PUT",
+      data: {
+        collection_id: collection_id,
+        user_id: user_id
+      },
+      headers: {
+        Authorization: getCookie("token") || ""
       }
     });
     return true;
