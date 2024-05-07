@@ -118,7 +118,7 @@ const PostClient = (props: {
       return;
     }
     createNotification("Created collection");
-    const add_response = await addToCollection(create_collection, props.post.id);
+    const add_response = await addToCollection(create_collection.id, props.post.id);
     if (add_response !== null) {
       createNotification("Updated collection");
       window.location.href = `/post/collection/${create_collection}`;

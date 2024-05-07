@@ -11,7 +11,10 @@ pub fn create_collection(new_collection: NewCollection) -> Option<Collection> {
         .get_result::<Collection>(connection);
     match insert {
         Ok(c) => { Some(c) }
-        Err(_e) => { None }
+        Err(_e) => { 
+            println!("{}", _e);
+            None
+        }
     }
 }
 

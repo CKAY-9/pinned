@@ -26,9 +26,6 @@ Docker support may be added
 ### TODO
 
 1. Sorting/Featuring posts
-2. User explore page
-3. User collaboration
-4. Better navigation
 
 ### Running
 

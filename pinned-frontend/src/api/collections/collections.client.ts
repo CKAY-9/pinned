@@ -17,7 +17,7 @@ export const newCollection = async (name: string, description: string): Promise<
         "Authorization": getCookie("token") || ""
       }
     });
-    return collection_request.data.collection;
+    return collection_request.data;
   } catch (ex) {
     console.log(ex);
     return null;

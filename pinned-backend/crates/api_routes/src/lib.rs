@@ -22,7 +22,7 @@ use comments::{
 };
 use posts::{
     delete::delete_post,
-    get::{ get_explore_posts, get_post, get_today_pinned },
+    get::{ get_explore_posts, get_post, get_today_pinned, search_posts },
     post::create_new_post,
     put::{ update_likes_on_post, update_post },
 };
@@ -75,6 +75,7 @@ pub fn configure_post_routes(cfg: &mut web::ServiceConfig) {
             .service(get_today_pinned)
             .service(update_likes_on_post)
             .service(get_explore_posts)
+            .service(search_posts)
     );
 }
 

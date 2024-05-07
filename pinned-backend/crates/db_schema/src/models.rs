@@ -79,7 +79,7 @@ pub struct NewComment {
     pub dislikes: Vec<i32>,
 }
 
-#[derive(Queryable, Selectable, Serialize, Deserialize)]
+#[derive(Queryable, Selectable, Serialize, Deserialize, Clone)]
 #[diesel(table_name = crate::schema::collections)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Collection {

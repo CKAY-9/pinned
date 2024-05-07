@@ -3,7 +3,7 @@ use pinned_db::crud::{ collections::create_collection, users::get_user_from_toke
 use pinned_db_schema::models::NewCollection;
 use pinned_utils::extract_header_value;
 use reqwest::StatusCode;
-use crate::{ collections::dto::{ NewCollectionDTO, GetCollectionMessage }, dto::Message };
+use crate::{ collections::dto::NewCollectionDTO, dto::Message };
 
 #[post("")]
 pub async fn create_new_collection(
@@ -42,13 +42,7 @@ pub async fn create_new_collection(
     };
     let insert = create_collection(new_collection);
     match insert {
-        Some(c) =>
-            Ok(
-                HttpResponse::Ok().json(GetCollectionMessage {
-                    message: "Created collection".to_string(),
-                    collection: c,
-                })
-            ),
+        Some(c) => Ok(HttpResponse::Ok().json(c)),
         None =>
             Ok(
                 HttpResponse::Ok().status(StatusCode::INTERNAL_SERVER_ERROR).json(Message {

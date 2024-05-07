@@ -7,5 +7,6 @@ export interface Collection {
   recommended_collections: number[],
   creator: number,
   likes: number[],
-  dislikes: number[]
+  dislikes: number[],
+  collaborators: number[]
 }

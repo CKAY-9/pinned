@@ -42,13 +42,20 @@ pub fn get_user_posts_from_id(user_id: i32) -> Vec<Post> {
 pub fn get_user_collections_from_id(user_id: i32) -> Vec<Collection> {
     let connection = &mut create_connection();
     let collections = collections::table
-        .filter(collections::creator.eq(user_id))
         .select(Collection::as_select())
         .load(connection);
     if collections.is_err() {
         return vec![];
     }
-    collections.unwrap()
+
+    let mut final_collection: Vec<Collection> = vec![];
+    for collection in collections.unwrap().iter() {
+        if collection.creator == user_id || collection.collaborators.contains(&user_id) {
+            final_collection.push(collection.clone());
+        }
+    }
+
+    final_collection
 }
 
 pub fn get_user_comments_from_id(user_id: i32) -> Vec<Comment> {
