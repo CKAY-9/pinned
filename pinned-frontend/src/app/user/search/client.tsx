@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import style from "./search.module.scss";
@@ -13,35 +13,40 @@ const UserSearchClient = () => {
   const [results, setResults] = useState<User[]>([]);
   const [searching, setSearching] = useState<boolean>(false);
 
-  useEffect(() => {
-    (async () => {
-      setSearching(true);
-      const search_results = await searchUsers(username, id); 
-      setResults(search_results);
-      setSearching(false);
-    })();
-
-    if (id === undefined || id === null || id <= 0) {
-      setID(0);
-    }
-  }, [username, id]);
+  const executeSearch = async (e: BaseSyntheticEvent) => {
+    e.preventDefault();
+    setSearching(true);
+    const search_results = await searchUsers(username, id);
+    setResults(search_results);
+    setSearching(false);
+  };
 
   return (
     <>
       <h1>Search Users</h1>
       <div className={style.search}>
-        <input onChange={(e: BaseSyntheticEvent) => setUsername(e.target.value)} type="text" placeholder="Username" />
+        <input
+          onChange={(e: BaseSyntheticEvent) => setUsername(e.target.value)}
+          type="text"
+          placeholder="Username"
+        />
         <section className={style.options}>
           <section className={style.additional_option}>
             <label>User ID</label>
-            <input onChange={(e: BaseSyntheticEvent) => setID(e.target.value)} type="number" placeholder="User ID" />
+            <input
+              onChange={(e: BaseSyntheticEvent) => setID(e.target.value)}
+              type="number"
+              placeholder="User ID"
+            />
           </section>
+          <button onClick={executeSearch}>Search</button>
         </section>
       </div>
       <div className={style.results}>
-        {searching 
-          ? <span>Searching...</span>
-          : <>
+        {searching ? (
+          <span>Searching...</span>
+        ) : (
+          <>
             {results.map((result: User, index: number) => {
               return (
                 <Link href={`/user/${result.id}`}>
@@ -50,10 +55,10 @@ const UserSearchClient = () => {
               );
             })}
           </>
-        }
+        )}
       </div>
     </>
   );
-}
+};
 
 export default UserSearchClient;

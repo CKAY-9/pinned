@@ -95,3 +95,8 @@ pub struct UserCommentsMessage {
 pub struct UserSearchResponse {
     pub users: Vec<User>,
 }
+
+#[derive(Deserialize)]
+pub struct UserUpdateDTO {
+    pub bio: String
+}

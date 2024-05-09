@@ -41,9 +41,9 @@ const TeamPage = async () => {
       <main className="container">
         <h1 style={{"textAlign": "center"}}>About The Team</h1>
         <div className={style.team_members}>
-          <TeamMember name="CKAY9" avatar="/members/ckay.jpeg" description="Lead Programmer" />
-          <TeamMember name="Hwvn" avatar="/members/kim.png" description="UI/UX Designer" />
-          <TeamMember name="Regrettinq" avatar="/members/wang.jpg" description="Team Coordinator" />
+          <TeamMember name="CKAY9" avatar="https://avatars.githubusercontent.com/u/53030585?v=4" description="Lead Programmer" />
+          <TeamMember name="Hwvn" avatar="https://avatars.githubusercontent.com/u/116260123?v=4" description="UI/UX Designer" />
+          <TeamMember name="Regrettinq" avatar="https://avatars.githubusercontent.com/u/160052254?v=4" description="Team Coordinator" />
         </div>
       </main>
       <Footer user={user} />

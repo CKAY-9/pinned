@@ -39,7 +39,7 @@ use users::{
         get_users_comments,
         get_users_posts,
     },
-    post::post_reset_user,
+    post::post_reset_user, put::update_user,
 };
 
 pub fn configure_user_routes(cfg: &mut web::ServiceConfig) {
@@ -55,6 +55,7 @@ pub fn configure_user_routes(cfg: &mut web::ServiceConfig) {
             .service(get_user_collections)
             .service(get_users_comments)
             .service(get_explore_users)
+            .service(update_user)
             .service(
                 web
                     ::scope("/auth")

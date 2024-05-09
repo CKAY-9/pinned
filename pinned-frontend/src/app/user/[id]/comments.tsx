@@ -30,8 +30,8 @@ const UserComment = (props: {
       <div style={{"display": "flex", "alignItems": "center", "gap": "1rem"}}>
         <UserChip user_id={props.comment.creator} />
         {parent_post !== null && 
-          <div style={{"backgroundColor": "var(--secondary)", "padding": "0.5rem 1rem", "borderRadius": "2rem"}}>
-            <Link href={`/post/${props.comment.post}`} style={{"display": "flex", "alignItems": "center", "gap": "0.5rem"}}>
+          <div style={{"backgroundColor": "var(--secondary)", "padding": "0.5rem 1rem", "borderRadius": "2rem", "boxShadow": "var(--shdw1)"}}>
+            <Link href={`/post/${props.comment.post}`} style={{"display": "flex", "alignItems": "center", "gap": "0.5rem", "color": "#fff"}}>
               Post: {parent_post.title}
               {parent_post.file_id.length >= 1 &&
                 <Image 

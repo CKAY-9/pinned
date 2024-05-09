@@ -1,6 +1,8 @@
 .user_header {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  text-align: center;
   gap: 1rem;
   align-items: center;
   border-bottom: 1px solid var(--text);

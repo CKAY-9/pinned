@@ -3,6 +3,24 @@ import { User } from "./dto";
 import { API_URL } from "../resources";
 import { getCookie, setCookie } from "@/utils/cookies";
 
+export const updateUser = async (bio: string): Promise<User | null> => {
+  try {
+    const request = await axios({
+      url: API_URL + "/users",
+      method: "PUT",
+      data: {
+        bio: bio
+      },
+      headers: {
+        Authorization: getCookie("token") || ""
+      }
+    });
+    return request.data;
+  } catch (ex) {
+    return null
+  }
+}
+
 export const searchUsers = async (username: string = "", id: number = 0): Promise<User[]> => {
   try {
     const users_request = await axios({
