@@ -23,7 +23,7 @@ use comments::{
 use posts::{
     delete::delete_post,
     get::{ get_explore_posts, get_post, get_today_pinned, search_posts },
-    post::create_new_post,
+    post::{create_new_post, favourite_post},
     put::{ update_likes_on_post, update_post },
 };
 use users::{
@@ -39,7 +39,7 @@ use users::{
         get_users_comments,
         get_users_posts,
     },
-    post::post_reset_user, put::update_user,
+    post::post_reset_user, put::{pin_post_to_profile, update_user},
 };
 
 pub fn configure_user_routes(cfg: &mut web::ServiceConfig) {
@@ -56,6 +56,7 @@ pub fn configure_user_routes(cfg: &mut web::ServiceConfig) {
             .service(get_users_comments)
             .service(get_explore_users)
             .service(update_user)
+            .service(pin_post_to_profile)
             .service(
                 web
                     ::scope("/auth")
@@ -77,6 +78,7 @@ pub fn configure_post_routes(cfg: &mut web::ServiceConfig) {
             .service(update_likes_on_post)
             .service(get_explore_posts)
             .service(search_posts)
+            .service(favourite_post)
     );
 }
 

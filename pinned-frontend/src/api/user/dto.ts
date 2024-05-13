@@ -5,5 +5,7 @@ export interface User {
   joined: string,
   avatar: string,
   id: number,
-  collections: number[]
+  collections: number[],
+  favourites: number[],
+  pinned: number[]
 }

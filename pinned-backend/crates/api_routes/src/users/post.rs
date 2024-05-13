@@ -40,6 +40,8 @@ pub async fn post_reset_user(
         token: user.token,
         oauth_id: user.oauth_id,
         collections: Vec::new(),
+        favourites: vec![],
+        pinned: vec![]
     };
 
     let _ = update_user_from_id(user.id, reset_user);

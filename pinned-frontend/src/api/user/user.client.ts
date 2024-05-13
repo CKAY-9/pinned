@@ -152,3 +152,23 @@ export const getExploreUsers = async (): Promise<User[]> => {
     return []
   }
 }
+
+export const pinPostToProfile = async (post_id: number, remove?: boolean): Promise<boolean> => {
+  try {
+    const request = await axios({
+      url: API_URL + "/users/pin",
+      method: "PUT",
+      data: {
+        post_id: post_id,
+        remove: remove || false
+      },
+      headers: {
+        Authorization: getCookie("token") || ""
+      }
+    });
+    return true;
+  } catch (ex) {
+    console.log(ex);
+    return false;
+  }
+}

@@ -51,7 +51,14 @@ diesel::table! {
         token -> Text,
         joined -> Text,
         collections -> Array<Int4>,
+        favourites -> Array<Int4>,
+        pinned -> Array<Int4>,
     }
 }
 
-diesel::allow_tables_to_appear_in_same_query!(collections, comments, posts, users);
+diesel::allow_tables_to_appear_in_same_query!(
+    collections,
+    comments,
+    posts,
+    users,
+);

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import style from "./explore.module.scss";
+import e_style from "@/components/explore-post/explore-post.module.scss";
 import { getExplorePosts } from "@/api/post/post.client";
 import { Post } from "@/api/post/dto";
 import ExplorePost from "@/components/explore-post/explore-post";
@@ -21,13 +22,13 @@ const ExplorePostsClient = () => {
 
   return (
     <div className={style.explore}>
-      <div className={style.item} style={{ padding: "1rem" }}>
+      <div className={e_style.item} style={{ padding: "1rem" }}>
         <h1 style={{ fontSize: "4rem" }}>EXPLORE POSTS</h1>
         <span>Find posts on Pinned and explore them.</span>
       </div>
       {loading && (
         <div
-          className={style.item}
+          className={e_style.item}
           style={{
             backgroundColor: "var(--primary)",
             color: "white",
@@ -40,7 +41,7 @@ const ExplorePostsClient = () => {
       )}
       {posts.length <= 0 && !loading && (
         <div
-          className={style.item}
+          className={e_style.item}
           style={{
             backgroundColor: "var(--primary)",
             color: "white",

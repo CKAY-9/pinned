@@ -124,6 +124,7 @@ pub async fn search_posts(
     if query.post_id != 0 {
         let post_result: QueryResult<Post> = posts::table
             .find(query.post_id)
+            .limit(15)
             .first::<Post>(connection);
         if post_result.is_ok() {
             let post = post_result.unwrap();

@@ -137,6 +137,8 @@ pub async fn get_discord_user_authentication(
         bio: "No bio provided.".to_string(),
         token: user_token.clone(),
         collections: vec![],
+        favourites: vec![],
+        pinned: vec![]
     };
 
     let _ = diesel
@@ -234,6 +236,8 @@ pub async fn get_github_user_authentication(
         bio: "No bio provided.".to_string(),
         token: user_token.clone(),
         collections: vec![],
+        favourites: vec![],
+        pinned: vec![]
     };
 
     let _ = diesel

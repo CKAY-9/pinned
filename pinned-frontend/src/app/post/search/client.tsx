@@ -44,6 +44,7 @@ const PostSearchClient = () => {
           })}
         </div>
       }
+      {search_results.length <= 0 && <span>No posts found.</span>}
     </>
   );
 }

@@ -9,6 +9,8 @@
 
 .loading {
   filter: invert(1);
+  opacity: 0.5;
+  mix-blend-mode: difference;
   img {
     animation: loading_wheel 1.5s ease infinite; 
   }

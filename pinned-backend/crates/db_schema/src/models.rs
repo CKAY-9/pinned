@@ -13,6 +13,8 @@ pub struct User {
     pub token: String,
     pub joined: String,
     pub collections: Vec<i32>,
+    pub favourites: Vec<i32>,
+    pub pinned: Vec<i32>
 }
 
 #[derive(Insertable, AsChangeset, Deserialize)]
@@ -25,6 +27,8 @@ pub struct NewUser {
     pub username: String,
     pub avatar: String,
     pub collections: Vec<i32>,
+    pub favourites: Vec<i32>,
+    pub pinned: Vec<i32>
 }
 
 #[derive(Queryable, Selectable, Serialize, Deserialize)]

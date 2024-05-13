@@ -12,6 +12,7 @@ import UserComments from "./comments";
 import Link from "next/link";
 import { Collection } from "@/api/collections/dto";
 import { Comment } from "@/api/comments/dto";
+import { getPostFromID } from "@/api/post/post";
 
 export const UserInteraction = (props: {
   profile: User,
@@ -40,7 +41,14 @@ export const UserCreations = (props: {
 
   useEffect(() => {
     (async () => {
-      const posts = await getUserPosts(props.profile.id);
+      const pinned_posts: Post[] = [];
+      for (let i = 0; i < props.profile.pinned.length; i++) {
+        const temp_post = await getPostFromID(props.profile.pinned[i]);
+        if (temp_post === null) break;
+        pinned_posts.push(temp_post);
+      }
+      const all_posts: Post[] = await getUserPosts(props.profile.id);
+      const posts = pinned_posts.concat(all_posts);
       setUserPosts(posts);
 
       const collections = await getUserCollections(props.profile.id);

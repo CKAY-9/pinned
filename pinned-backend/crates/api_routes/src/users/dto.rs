@@ -100,3 +100,9 @@ pub struct UserSearchResponse {
 pub struct UserUpdateDTO {
     pub bio: String
 }
+
+#[derive(Deserialize)]
+pub struct UserPinDTO {
+    pub post_id: i32,
+    pub remove: bool
+}

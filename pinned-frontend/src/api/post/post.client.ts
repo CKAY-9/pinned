@@ -146,3 +146,22 @@ export const getPinnedPosts = async (): Promise<Post[]> => {
     return []
   }
 }
+
+export const favouritePost = async (post_id: number): Promise<boolean> => {
+  try {
+    const request = await axios({
+      url: API_URL + "/posts/favourite",
+      method: "POST",
+      data: {
+        post_id: post_id
+      },
+      headers: {
+        Authorization: getCookie("token") || ""
+      }
+    });
+    return true;
+  } catch (ex) {
+    console.log(ex);
+    return false;
+  }
+}

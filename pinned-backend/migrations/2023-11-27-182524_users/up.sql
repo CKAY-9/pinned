@@ -6,5 +6,7 @@ CREATE TABLE users (
   bio         TEXT NOT NULL,
   token       TEXT NOT NULL,
   joined      TEXT NOT NULL,
-  collections INTEGER[] NOT NULL
+  collections INTEGER[] NOT NULL,
+  favourites  INTEGER[] NOT NULL DEFAULT '{}',
+  pinned      INTEGER[] NOT NULL DEFAULT '{}'
 );
