@@ -8,8 +8,10 @@ const CollectionPreview = (props: {
   return (
     <>
       <Link href={`/post/collection/${props.collection.id}`} className={style.post}>
-        <h1>{props.collection.name}</h1>
-        <span>{props.collection.description.substring(0, 50)}</span>
+        <section className={style.info} style={{"flexDirection": "column", "alignItems": "flex-start"}}>
+          <h1>{props.collection.name}</h1>
+          <span>{props.collection.description.substring(0, 50)}</span>
+        </section>
       </Link>
     </>
   );

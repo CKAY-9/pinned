@@ -85,6 +85,7 @@ const AddCollaborator = (props: {
 
   const addCollaborator = async (e: BaseSyntheticEvent, user_id: number) => {
     e.preventDefault();
+    if (props.collection.creator === user_id) return;
     const add = await addCollaboratorToCollection(props.collection.id, user_id);
     if (add) {
       setUsers([]);
@@ -96,6 +97,7 @@ const AddCollaborator = (props: {
 
   const removeCollaborator = async (e: BaseSyntheticEvent, user_id: number) => {
     e.preventDefault();
+    if (props.collection.creator === user_id) return;
     const remove = await removeCollaboratorFromCollection(
       props.collection.id,
       user_id

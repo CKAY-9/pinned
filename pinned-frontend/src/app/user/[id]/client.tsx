@@ -48,6 +48,13 @@ export const UserCreations = (props: {
         pinned_posts.push(temp_post);
       }
       const all_posts: Post[] = await getUserPosts(props.profile.id);
+      for (let i = 0; i < all_posts.length; i++) {
+        for (let j = 0; j < pinned_posts.length; j++) {
+          if (pinned_posts[j].id === all_posts[i].id) {
+            all_posts.splice(i);
+          }
+        }
+      }
       const posts = pinned_posts.concat(all_posts);
       setUserPosts(posts);
 
@@ -94,7 +101,7 @@ export const UserCreations = (props: {
             <Link className={`${style.interact} impact`} href="/post/new">New Post</Link> 
           </>
           }
-          <UserPosts posts={user_posts} />
+          <UserPosts user={props.profile} posts={user_posts} />
         </div>
         <div style={{"display": current_view === 1 ? "flex" : "none"}} className={style.creation}>
           {is_user && <>

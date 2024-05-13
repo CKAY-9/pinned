@@ -27,7 +27,12 @@ const Header = (props: { user: User | null }) => {
         <HeaderDrop section="Posts">
           <Link href="/post/explore">Explore</Link>
           <Link href="/post/search">Search</Link>
-          {props.user !== null && <Link href="/post/new">Create</Link>}
+          {props.user !== null && (
+            <>
+            <Link href="/post/favourites">Favourites</Link>
+            <Link href="/post/new">Create</Link>
+            </>
+          )}
         </HeaderDrop>
         <HeaderDrop section="Users">
           <Link href="/user/explore">Explore</Link>
