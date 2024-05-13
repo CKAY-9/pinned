@@ -195,27 +195,6 @@ const PostClient = (props: { post: Post; user: User | null }) => {
           </div>
         </Popup>
       )}
-      {show_new_comment && props.user !== null && (
-        <Popup>
-          <button
-            style={{ backgroundColor: "transparent" }}
-            onClick={() => setShowNewComment(false)}
-          >
-            X
-          </button>
-          <h1>New Comment</h1>
-          <label>Comment</label>
-          <textarea
-            rows={10}
-            cols={30}
-            placeholder="Your Comment"
-            onChange={(e: BaseSyntheticEvent) =>
-              setNewCommentContent(e.target.value)
-            }
-          />
-          <button onClick={newComment}>Post</button>
-        </Popup>
-      )}
       <div className={style.post_container}>
         <h1>{props.post.title}</h1>
         {props.post.file_id.length >= 1 && (

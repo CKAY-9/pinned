@@ -69,7 +69,6 @@ const Comments = (props: {
         <Popup>
           <button onClick={() => setShowNewComment(false)}>X</button>
           <h1>New Comment</h1>
-          <label>Content</label>
           <textarea rows={10} cols={50} onChange={(e: BaseSyntheticEvent) => setNewCommentContent(e.target.value)} />
           <button onClick={postComment} style={{"width": "fit-content", "marginTop": "1rem"}}>Comment</button>
         </Popup>
