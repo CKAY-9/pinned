@@ -4,7 +4,7 @@ import { Collection } from "@/api/collections/dto";
 import UserChip from "@/components/user-chip/user-chip";
 import style from "./collection.module.scss";
 import posts_style from "@/components/post-preview/post-preview.module.scss";
-import { BaseSyntheticEvent, useEffect, useState } from "react";
+import { BaseSyntheticEvent, use, useEffect, useState } from "react";
 import { Post } from "@/api/post/dto";
 import { getPostFromID } from "@/api/post/post";
 import {
@@ -12,6 +12,7 @@ import {
   deleteCollection,
   getCollectionCollaborators,
   removeCollaboratorFromCollection,
+  updateCollection,
 } from "@/api/collections/collections.client";
 import { createNotification } from "@/utils/notification";
 import PostPreview from "@/components/post-preview/post-preview";
@@ -171,6 +172,9 @@ const CollectionClient = (props: {
 }) => {
   const [show_add_collab, setShowAddCollab] = useState<boolean>(false);
   const [collabs, setCollabs] = useState<number[]>(props.collection.collaborators);
+  const [show_edit, setShowEdit] = useState<boolean>(false);
+  const [name, setName] = useState<string>(props.collection.name);
+  const [description, setDescription] = useState<string>(props.collection.description);
 
   const deleteColl = async (e: BaseSyntheticEvent) => {
     e.preventDefault();
@@ -187,6 +191,15 @@ const CollectionClient = (props: {
     e.preventDefault();
     setShowAddCollab(true);
   };
+
+  const update = async (e: BaseSyntheticEvent) => {
+    e.preventDefault();
+    const u = await updateCollection(props.collection.id, name, description);
+    if (u !== null) {
+      setShowEdit(false);
+      window.location.reload();
+    }
+  }
 
   const is_creator = props.collection.creator === props.user?.id;
 
@@ -208,6 +221,22 @@ const CollectionClient = (props: {
           />
         </Popup>
       )}
+      {show_edit && (
+        <Popup>
+          <button
+            onClick={() => setShowEdit(false)}
+            style={{ mixBlendMode: "difference" }}
+          >
+            X
+          </button>
+          <h2>Edit Collection</h2>
+          <div style={{ "display": "flex", "flexDirection": "column", "gap": "1rem" }}>
+            <input type="text" placeholder="Name" defaultValue={name} onChange={(e: BaseSyntheticEvent) => setName(e.target.value)} />
+            <textarea placeholder="Description" defaultValue={description} onChange={(e: BaseSyntheticEvent) => setDescription(e.target.value)} cols={50} rows={10}></textarea>
+            <button onClick={update}>Update</button>
+          </div>
+        </Popup>
+      )}
       <div className={style.collection_header}>
         <h1>{props.collection.name}</h1>
         <p>{props.collection.description}</p>
@@ -227,6 +256,13 @@ const CollectionClient = (props: {
           }}
         >
           <UserChip user_id={props.collection.creator} />
+          {(is_creator || props.collection.collaborators.includes(props.user?.id || 0)) && (
+            <>
+              <button className="impact" onClick={() => setShowEdit(!show_edit)}>
+                Edit
+              </button>
+            </>
+          )}
           {is_creator && (
             <>
               <button className="impact" onClick={addCollab}>
