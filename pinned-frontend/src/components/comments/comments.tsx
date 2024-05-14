@@ -67,7 +67,7 @@ const Comments = (props: {
     <>
       {(show_new_comment && props.user !== null && !props.comments_only) &&
         <Popup>
-          <button onClick={() => setShowNewComment(false)}>X</button>
+          <button onClick={() => setShowNewComment(false)} style={{"mixBlendMode": "difference"}}>X</button>
           <h1>New Comment</h1>
           <textarea rows={10} cols={50} onChange={(e: BaseSyntheticEvent) => setNewCommentContent(e.target.value)} />
           <button onClick={postComment} style={{"width": "fit-content", "marginTop": "1rem"}}>Comment</button>
@@ -102,7 +102,7 @@ const Comments = (props: {
           </div>
         </div>
       </div>
-      {(!loading && comments.length <= 0) && <span>There are no comments...</span>}
+      {(!loading && comments.length <= 0) && <span>No one has posted a comment.</span>}
     </>
   );
 }

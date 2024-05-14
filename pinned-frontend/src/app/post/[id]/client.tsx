@@ -14,13 +14,16 @@ import {
   newCollection,
 } from "@/api/collections/collections.client";
 import { createNotification } from "@/utils/notification";
-import { deletePost } from "@/api/post/post.client";
+import { deletePost, getExplorePosts, updatePost } from "@/api/post/post.client";
 import { CDN_URL } from "@/api/resources";
 import LikeChip from "@/components/like-chip/like-chip";
 import Comments from "@/components/comments/comments";
 import { createComment } from "@/api/comments/comment.client";
 import FavouriteButton from "@/components/favourite/favourite";
 import PinPostButton from "@/components/pin/pin";
+import LoadingWheel from "@/components/loading/loading";
+import PostPreview from "@/components/post-preview/post-preview";
+import preview_style from "@/components/post-preview/post-preview.module.scss";
 
 const AddToCollection = (props: {
   collection: Collection;
@@ -106,11 +109,20 @@ const PostClient = (props: { post: Post; user: User | null }) => {
   const [new_collection_name, setNewCollectionName] = useState<string>("");
   const [show_new_comment, setShowNewComment] = useState<boolean>(false);
   const [new_comment_content, setNewCommentContent] = useState<string>("");
+  const [recommended_posts, setRecommendedPosts] = useState<Post[]>([]);
+  const [loading_rp, setLoadingRP] = useState<boolean>(true);
+  const [show_edit, setShowEdit] = useState<boolean>(false);
+  const [description, setDescription] = useState<string>(props.post.description);
+  const [title, setTitle] = useState<string>(props.post.title);
 
   useEffect(() => {
     (async () => {
       const collections = await getUserCollections(props.user?.id || 0);
       setMyCollections(collections);
+
+      const recommended = await getExplorePosts();
+      setRecommendedPosts(recommended);
+      setLoadingRP(false);
     })();
   }, [props.user?.id]);
 
@@ -154,6 +166,15 @@ const PostClient = (props: { post: Post; user: User | null }) => {
     }
   };
 
+  const update = async (e: BaseSyntheticEvent) => {
+    e.preventDefault();
+    const u = updatePost(props.post.id, title, description);
+    if (u !== null) {
+      setShowEdit(false);
+      window.location.reload();
+    }
+  }
+
   return (
     <>
       {popup && props.user !== null && (
@@ -195,6 +216,24 @@ const PostClient = (props: { post: Post; user: User | null }) => {
           </div>
         </Popup>
       )}
+      {show_edit && (
+        <Popup>
+          <button
+            onClick={() => setShowEdit(false)}
+            style={{ mixBlendMode: "difference" }}
+          >
+            X
+          </button>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+          >
+            <h2>Edit Post</h2>
+            <input type="text" placeholder="Title" defaultValue={title} onChange={(e: BaseSyntheticEvent) => setTitle(e.target.value)}></input>
+            <textarea placeholder="Description" defaultValue={description} onChange={(e: BaseSyntheticEvent) => setDescription(e.target.value)} cols={50} rows={10}></textarea>
+            <button onClick={update}>Update</button>
+          </div>
+        </Popup>
+      )}
       <div className={style.post_container}>
         <h1>{props.post.title}</h1>
         {props.post.file_id.length >= 1 && (
@@ -227,6 +266,7 @@ const PostClient = (props: { post: Post; user: User | null }) => {
           {(is_owner && props.user !== null) && (
             <>
               <PinPostButton user={props.user} post_id={props.post.id}></PinPostButton>
+              <button className="impact" onClick={() => setShowEdit(!show_edit)}>Edit</button>
               <button className="impact" onClick={deleteP}>
                 Delete Post
               </button>
@@ -242,6 +282,18 @@ const PostClient = (props: { post: Post; user: User | null }) => {
       </div>
       <div>
         <h2>More Posts Like This</h2>
+        {loading_rp ? <LoadingWheel size_in_rems={2} /> : (
+          <>
+            {recommended_posts.length <= 0 ? <span>Failed to get any posts.</span> : (
+              <div className={preview_style.posts}>
+                {recommended_posts.map((post, index) => {
+                  if (post.id === props.post.id) return;
+                  return (<PostPreview key={index} post={post} />);
+                })}
+              </div>
+            )}
+          </>
+        )}
       </div>
     </>
   );
