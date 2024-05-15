@@ -9,7 +9,6 @@
   display: flex;
   min-height: 300px;
   aspect-ratio: 1;
-  overflow: hidden;
   flex-direction: column;
   border-radius: 0.5rem;
   box-shadow: var(--shdw1);
@@ -22,6 +21,8 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
   }
 
   .preview {
@@ -29,6 +30,8 @@
     width: 100%;
     height: auto;
     object-fit: cover;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
   }
 
   section {

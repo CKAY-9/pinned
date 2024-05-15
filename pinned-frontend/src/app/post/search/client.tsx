@@ -6,8 +6,11 @@ import { searchPosts } from "@/api/post/post.client";
 import { Post } from "@/api/post/dto";
 import LoadingWheel from "@/components/loading/loading";
 import PostPreview from "@/components/post-preview/post-preview";
+import { User } from "@/api/user/dto";
 
-const PostSearchClient = () => {
+const PostSearchClient = (props: {
+  user: User | null
+}) => {
   const [title, setTitle] = useState<string>("");
   const [id, setID] = useState<number>(0);
   const [search_results, setSearchResults] = useState<Post[]>([]);
@@ -40,7 +43,7 @@ const PostSearchClient = () => {
         ? <LoadingWheel size_in_rems={5} />
         : <div className={style.results}>
           {search_results.map((post: Post, index: number) => {
-            return (<PostPreview key={index} post={post} />);
+            return (<PostPreview user={props.user} key={index} post={post} />);
           })}
         </div>
       }

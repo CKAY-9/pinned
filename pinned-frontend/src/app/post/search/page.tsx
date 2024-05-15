@@ -18,7 +18,7 @@ const PostSearchPage = async () => {
     <>
       <Header user={user} /> 
       <main className="container">
-        <PostSearchClient />
+        <PostSearchClient user={user} />
       </main>
       <Footer user={user} />
     </>

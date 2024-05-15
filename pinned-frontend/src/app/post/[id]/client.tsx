@@ -150,7 +150,7 @@ const PostClient = (props: { post: Post; user: User | null }) => {
     );
     if (add_response !== null) {
       createNotification("Updated collection");
-      window.location.href = `/post/collection/${create_collection}`;
+      window.location.href = `/post/collection/${create_collection.id}`;
       return;
     }
     createNotification("Failed to update collection");
@@ -288,7 +288,7 @@ const PostClient = (props: { post: Post; user: User | null }) => {
               <div className={preview_style.posts}>
                 {recommended_posts.map((post, index) => {
                   if (post.id === props.post.id) return;
-                  return (<PostPreview key={index} post={post} />);
+                  return (<PostPreview user={props.user} key={index} post={post} />);
                 })}
               </div>
             )}

@@ -15,7 +15,7 @@ const UserPosts = (props: {
     <div className={style.posts}>
       {props.posts.map((post: Post, index: number) => {
         return (
-          <PostPreview key={index} post={post} pinned={props.user.pinned.includes(post.id)} />
+          <PostPreview user={props.user} key={index} post={post} pinned={props.user.pinned.includes(post.id)} />
         )
       })} 
     </div>

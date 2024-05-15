@@ -22,7 +22,7 @@ import Popup from "@/components/popup/popup";
 import { searchUsers } from "@/api/user/user.client";
 import UserPreview from "@/components/user-preview/preview";
 
-const Posts = (props: { posts: number[] }) => {
+const Posts = (props: { posts: number[], user: User | null }) => {
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const Posts = (props: { posts: number[] }) => {
   return (
     <div className={posts_style.posts}>
       {posts.map((post: Post, index: number) => {
-        return <PostPreview post={post} key={index} />;
+        return <PostPreview user={props.user} post={post} key={index} />;
       })}
     </div>
   );
@@ -292,7 +292,7 @@ const CollectionClient = (props: {
         )}
       </div>
       <div>
-        <Posts posts={props.collection.linked_posts} />
+        <Posts user={props.user} posts={props.collection.linked_posts} />
       </div>
     </>
   );
