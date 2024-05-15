@@ -25,7 +25,7 @@ const PostPreview = (props: { post: Post; pinned?: boolean; user?: User | null})
     <>
       <div className={style.post}>
         <section className={style.info}>
-          <h1>{props.post.title}</h1>
+          <h1>{props.post.title.substring(0, 20)}</h1>
           <MoreMenu>
             <>
               {(props.user !== null && props.user !== undefined) && 

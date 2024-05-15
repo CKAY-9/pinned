@@ -284,7 +284,7 @@ const PostClient = (props: { post: Post; user: User | null }) => {
         <h2>More Posts Like This</h2>
         {loading_rp ? <LoadingWheel size_in_rems={2} /> : (
           <>
-            {recommended_posts.length <= 0 ? <span>Failed to get any posts.</span> : (
+            {recommended_posts.filter((v, i) => v.id !== props.post.id).length <= 0 ? <div style={{"paddingTop": "1rem"}}>Failed to get any posts.</div> : (
               <div className={preview_style.posts}>
                 {recommended_posts.map((post, index) => {
                   if (post.id === props.post.id) return;

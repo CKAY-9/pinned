@@ -59,7 +59,7 @@ pub async fn get_discord_user_authentication(
         .form(&initial_code_request_data)
         .header("content-type", "application/x-www-form-urlencoded")
         .send().await?;
-    let initial_response_parsed: DiscordInitialResponse = serde_json::from_str(
+    let initial_response_parsed = serde_json::from_str::<DiscordInitialResponse>(
         initial_response.text().await?.as_str()
     )?;
 
@@ -138,7 +138,7 @@ pub async fn get_discord_user_authentication(
         token: user_token.clone(),
         collections: vec![],
         favourites: vec![],
-        pinned: vec![]
+        pinned: vec![],
     };
 
     let _ = diesel
@@ -237,7 +237,7 @@ pub async fn get_github_user_authentication(
         token: user_token.clone(),
         collections: vec![],
         favourites: vec![],
-        pinned: vec![]
+        pinned: vec![],
     };
 
     let _ = diesel

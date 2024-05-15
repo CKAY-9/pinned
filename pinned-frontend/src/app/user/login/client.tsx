@@ -2,6 +2,7 @@
 
 import { getTheme } from "@/components/theme-button/theme-handler";
 import { setCookie } from "@/utils/cookies";
+import { createNotification } from "@/utils/notification";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -10,6 +11,7 @@ const LoginClient = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   if (token !== null) {
+    createNotification("Logging in...");
     setCookie("token", token, 365);
     window.location.href = "/"; 
   }

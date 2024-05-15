@@ -54,6 +54,7 @@ const UserSearchClient = () => {
                 </Link>
               );
             })}
+            {results.length <= 0 && <span>No users found.</span>}
           </>
         )}
       </div>

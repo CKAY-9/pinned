@@ -19,6 +19,12 @@ pub struct AddCollaboratorsDTO {
     pub collection_id: i32,
 }
 
+#[derive(Serialize)]
+pub struct CollectionExploreMessage {
+    pub message: String,
+    pub collections: Vec<Collection>
+}
+
 #[derive(Deserialize)]
 pub struct UpdateCollectionDTO {
     pub name: String,

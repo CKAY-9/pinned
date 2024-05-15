@@ -7,6 +7,7 @@ import LoadingWheel from "@/components/loading/loading"
 import { useEffect, useState } from "react"
 import preview_style from "@/components/post-preview/post-preview.module.scss";
 import PostPreview from "@/components/post-preview/post-preview"
+import Link from "next/link"
 
 const FavouritesClient = (props: {
   user: User
@@ -43,6 +44,7 @@ const FavouritesClient = (props: {
           );
         })}
       </div>
+      {posts.length <= 0 && <span>You haven't favourited any posts. We recommend finding some on our <Link href="/post/explore">Explore Page</Link></span>}
     </>
   );
 }

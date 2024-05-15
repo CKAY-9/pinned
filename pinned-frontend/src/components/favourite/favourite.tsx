@@ -12,11 +12,13 @@ const FavouriteButton = (props: {
 
     const favourite = async (e: BaseSyntheticEvent) => {
         e.preventDefault();
+        if (favs.includes(props.post_id)) {
+            setFavs(favs.filter((v, i) => v !== props.post_id));
+            return;
+        }
         const did_favourite = await favouritePost(props.post_id);
         if (did_favourite) {
             setFavs((old) => [...old, props.post_id]);
-        } else {
-            setFavs(favs.filter((v, i) => v !== props.post_id));
         }
     }
 

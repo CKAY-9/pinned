@@ -34,6 +34,11 @@ const Header = (props: { user: User | null }) => {
             </>
           )}
         </HeaderDrop>
+        <HeaderDrop section="Collections">
+            <Link href="/post/collection/explore">Explore</Link>
+            <Link href="/post/collection/search">Search</Link>
+            <Link href="/post/collection/new">Create</Link>
+        </HeaderDrop>
         <HeaderDrop section="Users">
           <Link href="/user/explore">Explore</Link>
           <Link href="/user/search">Search</Link>

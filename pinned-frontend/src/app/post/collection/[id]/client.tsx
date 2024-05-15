@@ -91,6 +91,7 @@ const AddCollaborator = (props: {
     if (add) {
       setUsers([]);
       const collabs = await getCollectionCollaborators(props.collection.id);
+      createNotification("Added collaborator.");
       updateCollabs(collabs);
       setExistingCollabs(collabs);
     }
@@ -106,6 +107,7 @@ const AddCollaborator = (props: {
     if (remove) {
       updateCollabs(existing_collabs.filter((v, i) => v.id !== user_id));
       setExistingCollabs((old) => old.filter((v, i) => v.id !== user_id));
+      createNotification("Removed collaborator.");
     }
   };
 

@@ -172,3 +172,33 @@ export const getCollectionCollaborators = async (collection_id: number): Promise
     return [];
   }
 }
+
+export const getExploreCollections = async (): Promise<Collection[]> => {
+  try {
+    const request = await axios({
+      url: API_URL + "/collections/explore",
+      method: "GET"
+    });
+    return request.data.collections;
+  } catch (ex) {
+    return [];
+  }
+}
+
+
+export const searchCollections = async (name: string, id: number): Promise<Collection[]> => {
+  try {
+    const search_request = await axios({
+      "url": API_URL + "/collections/search",
+      "method": "GET",
+      "params": {
+        "name": name,
+        "post_id": id
+      }
+    });
+    return search_request.data.collections;
+  } catch (ex) {
+    console.log(ex);
+    return [];
+  }
+}

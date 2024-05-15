@@ -2,6 +2,7 @@ import { getUserFromToken } from "@/api/user/user";
 import Footer from "@/components/footer/footer";
 import Header from "@/components/header/header";
 import { Metadata } from "next";
+import SearchCollectionsClient from "./client";
 
 export const generateMetadata = (): Metadata => {
   return {
@@ -17,7 +18,7 @@ const CollectionSearchPage = async () => {
     <>
       <Header user={user} />
       <main className="container">
-        <h1>Search Collections</h1>
+        <SearchCollectionsClient user={user} />
       </main>
       <Footer user={user} />
     </>

@@ -8,7 +8,7 @@ pub mod collections;
 
 use collections::{
     delete::delete_collection,
-    get::{ get_collection, get_collection_collaborators },
+    get::{ get_collection, get_collection_collaborators, get_explore_collections, search_collections },
     post::create_new_collection,
     put::{
         add_collaborator_to_collection, remove_collaborator_from_collection, update_add_to_collection, update_collection, update_likes_on_collection
@@ -106,5 +106,7 @@ pub fn configure_collections_routes(cfg: &mut web::ServiceConfig) {
             .service(update_likes_on_collection)
             .service(add_collaborator_to_collection)
             .service(remove_collaborator_from_collection)
+            .service(get_explore_collections)
+            .service(search_collections)
     );
 }
