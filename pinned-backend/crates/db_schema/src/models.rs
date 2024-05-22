@@ -59,15 +59,15 @@ pub struct NewPost {
     pub dislikes: Vec<i32>,
 }
 
-#[derive(Queryable, Selectable, Serialize, Deserialize)]
+#[derive(Queryable, Selectable, Serialize, Deserialize, Debug)]
 #[diesel(table_name = crate::schema::comments)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Comment {
     pub id: i32,
     pub post: i32,
     pub creator: i32,
-    pub posted: String,
     pub content: String,
+    pub posted: String,
     pub likes: Vec<i32>,
     pub dislikes: Vec<i32>,
 }
@@ -75,10 +75,10 @@ pub struct Comment {
 #[derive(Insertable, AsChangeset, Deserialize)]
 #[diesel(table_name = crate::schema::comments)]
 pub struct NewComment {
-    pub creator: i32,
     pub post: i32,
-    pub posted: String,
+    pub creator: i32,
     pub content: String,
+    pub posted: String,
     pub likes: Vec<i32>,
     pub dislikes: Vec<i32>,
 }

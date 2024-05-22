@@ -6,7 +6,7 @@ pub struct GetCommentDTO {
     pub comment_id: i32,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub struct GetCommentMessage {
     pub message: String,
     pub comment: Comment,
